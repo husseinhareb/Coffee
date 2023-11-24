@@ -33,11 +33,22 @@ def process_input(event):
     user_input = text_input.get("1.0", tk.END).strip()
     if user_input.startswith(update_expected_text()):
         command = user_input[len(update_expected_text()):].strip()
-        output_text = output(command)
-        text_output.insert(tk.END, f"\n\nUser entered: {user_input}\nOutput: {output_text}")
-        text_input.delete("1.0", tk.END)  # Clear the input area after processing
+        if command.startswith("cd "):  # Handle cd command separately
+            change_directory(command[3:])
+        else:
+            output_text = output(command)
+            text_output.insert(tk.END, f"\n\nUser entered: {user_input}\nOutput: {output_text}")
+            text_input.delete("1.0", tk.END)  # Clear the input area after processing
     else:
         messagebox.showerror("Error", "Invalid command format.")
+
+def change_directory(new_dir):
+    try:
+        subprocess.run(f"cd {new_dir}", shell=True, check=True)
+        text_input.delete("1.0", tk.END)
+        text_input.insert(tk.END, update_expected_text())
+    except subprocess.CalledProcessError:
+        messagebox.showerror("Error", f"Failed to change directory to {new_dir}")
 
 def output(command):
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -53,9 +64,9 @@ text_input.pack(side="top", fill="x", padx=20, pady=20, expand=True)
 text_input.insert(tk.END, update_expected_text())
 
 text_output = tk.Text(root, wrap=tk.WORD, height=10, width=60)
-text_output.pack(side="top", fill="both", padx=20, pady=20, expand=True)
+text_output.pack(side="bottom", fill="both", padx=20, pady=20, expand=True)
 
 text_input.bind("<KeyRelease>", on_entry_change)
-text_input.bind("<Return>", process_input)  
+text_input.bind("<Return>", process_input)
 
 root.mainloop()
