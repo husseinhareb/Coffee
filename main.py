@@ -1,5 +1,6 @@
 import tkinter as tk
 import subprocess
+import os
 from tkinter import messagebox
 from ttkbootstrap import Style
 
@@ -29,11 +30,19 @@ def on_entry_change(event):
         text_input.delete("1.0", tk.END)
         text_input.insert(tk.END, expected_text)
 
+def change_directory(new_dir):
+    try:
+        os.chdir(new_dir)
+        text_input.delete("1.0", tk.END)
+        text_input.insert(tk.END, update_expected_text())
+    except OSError:
+        messagebox.showerror("Error", f"Failed to change directory to {new_dir}")
+
 def process_input(event):
     user_input = text_input.get("1.0", tk.END).strip()
     if user_input.startswith(update_expected_text()):
         command = user_input[len(update_expected_text()):].strip()
-        if command.startswith("cd "):  # Handle cd command separately
+        if command.startswith("cd "):
             change_directory(command[3:])
         else:
             output_text = output(command)
@@ -41,15 +50,6 @@ def process_input(event):
             text_input.delete("1.0", tk.END)  # Clear the input area after processing
     else:
         messagebox.showerror("Error", "Invalid command format.")
-
-def change_directory(new_dir):
-    try:
-        subprocess.run(f"cd {new_dir}", shell=True, check=True)
-        text_input.delete("1.0", tk.END)
-        text_input.insert(tk.END, update_expected_text())
-    except subprocess.CalledProcessError:
-        messagebox.showerror("Error", f"Failed to change directory to {new_dir}")
-
 def output(command):
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     return result.stdout.strip()
