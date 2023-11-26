@@ -1,23 +1,19 @@
 import tkinter as tk
-import subprocess
 import os
 from tkinter import messagebox
 from ttkbootstrap import Style
 
-def hostname():
-    result = subprocess.run("hostname", shell=True, capture_output=True, text=True)
-    return result.stdout.strip()
+def get_hostname():
+    return os.uname().nodename
 
-def username():
-    result = subprocess.run("whoami", shell=True, capture_output=True, text=True)
-    return result.stdout.strip()
+def get_username():
+    return os.getlogin()
 
-def current_path():
-    result = subprocess.run("pwd", shell=True, capture_output=True, text=True)
-    return result.stdout.strip()
+def get_current_path():
+    return os.getcwd()
 
 def update_expected_text():
-    return current_path() + "\n" + hostname() + "@" + username() + ":"
+    return f"{get_current_path()}\n{get_hostname()}@{get_username()}:"
 
 def validate(new_value):
     expected_text = update_expected_text()
@@ -50,9 +46,10 @@ def process_input(event):
             text_input.delete("1.0", tk.END)  # Clear the input area after processing
     else:
         messagebox.showerror("Error", "Invalid command format.")
+
 def output(command):
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    return result.stdout.strip()
+    result = os.popen(command).read()
+    return result.strip()
 
 root = tk.Tk()
 root.title("Coffee")
