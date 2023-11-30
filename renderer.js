@@ -22,10 +22,9 @@ ipcRenderer.on('username', (event, output) => {
 });
 
 function updateOutput() {
-  const outputString = `${path}\n${hostname}@${username} ~>`;
-
+  const outputString = `${path}<br>${hostname}@${username} ~>`;
   const container = document.createElement('div');
-  container.appendChild(document.createTextNode(outputString));
+  container.innerHTML = outputString; // Use innerHTML instead of textContent
 
   const inputElement = document.createElement('input');
   inputElement.setAttribute('type', 'text');
@@ -39,8 +38,8 @@ function updateOutput() {
       // Send the userInput value to the main process
       ipcRenderer.send('userInput', userInput);
 
-      // Clear the input field after sending the value
-      e.target.value = '';
+      e.target.disabled = true; // Disable the input field after user input
+
     }
   });
 
@@ -53,41 +52,34 @@ function updateOutput() {
 
 // Call updateOutput() to initialize the interface
 updateOutput();
+
+
 ipcRenderer.on('executionResult', (event, result) => {
-  const outputElement = document.createElement("div");
-  outputElement.textContent = result;
-  
+  const outputElement = document.createElement('div');
+  outputElement.innerHTML = result;
+
   const rootElement = document.getElementById('root');
   if (rootElement) {
     rootElement.appendChild(outputElement);
     console.log(result);
 
-    // Assuming path, hostname, and username are defined elsewhere
-    const outputString = `${path}\n${hostname}@${username} ~>`;
+    const outputString = `${path}<br>${hostname}@${username} ~>`;
 
-    // Create container div
     const container = document.createElement('div');
-    container.textContent = outputString;
-
-    // Append container to rootElement or any other desired parent element
+    container.innerHTML = outputString;
     rootElement.appendChild(container);
 
-    // Create an input element
     const inputElement = document.createElement('input');
     inputElement.type = 'text';
     inputElement.placeholder = 'Enter text here';
     container.appendChild(inputElement);
 
-    // Listen for keypress event on the input field
     inputElement.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
-        const userInput = e.target.value.trim(); // Get the input value
-
-        // Send the userInput value to the main process
+        const userInput = e.target.value.trim();
         ipcRenderer.send('userInput', userInput);
 
-        // Clear the input field after sending the value
-        e.target.value = '';
+        e.target.disabled = true; // Disable the input field after user input
       }
     });
   } else {
