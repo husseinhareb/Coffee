@@ -1,31 +1,30 @@
-let { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow } = require('electron');
+const childProcess = require('child_process');
 
 function createWindow() {
-    win = new BrowserWindow({
-      width: 600,
-      height: 400,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-      },
-      autoHideMenuBar: true,
-    });
-  
-    win.loadFile(__dirname + "/index.html");
-  
-    win.addListener("ready-to-show", () => {
-      win.show();
-    });
-  }
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
 
-app.whenReady().then(() => {
+  win.loadFile('index.html');
+
+  const output = childProcess.execSync('ls', { encoding: 'utf-8' });
+  win.webContents.send('output', output);
+}
+
+app.on('ready', createWindow);
+
+app.on('window-all-closed', () => {
+  app.quit();
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
+  }
 });
-  
-app.addListener("window-all-closed", () => {
-    if (process.platform !== "darwin") {
-      app.quit();
-    }
-});
-  
-    
