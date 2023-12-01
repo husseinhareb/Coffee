@@ -91,9 +91,11 @@ ipcRenderer.on('executionResult', (event, result) => {
   }
 });
 
+
 function scrollToBottom() {
   const terminalElement = document.getElementById('terminal');
   terminalElement.scrollTop = terminalElement.scrollHeight;
 }
+
 
 
