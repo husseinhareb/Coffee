@@ -4,7 +4,7 @@ let path = '';
 let hostname = '';
 let username = '';
 
-const root = document.getElementById('root');
+const terminal = document.getElementById('terminal');
 
 ipcRenderer.on('path', (event, output) => {
   path = output;
@@ -44,8 +44,11 @@ function updateOutput() {
   });
 
   container.appendChild(inputElement);
-
-  const outputElement = document.getElementById('root');
+  container.addEventListener('mouseenter', function () {
+    inputElement.focus();
+  });
+  
+  const outputElement = document.getElementById('terminal');
   outputElement.innerHTML = '';
   outputElement.appendChild(container);
 }
@@ -55,19 +58,20 @@ updateOutput();
 
 
 ipcRenderer.on('executionResult', (event, result) => {
+  
   const outputElement = document.createElement('div');
   outputElement.innerHTML = result;
 
-  const rootElement = document.getElementById('root');
-  if (rootElement) {
-    rootElement.appendChild(outputElement);
+  const terminalElement = document.getElementById('terminal');
+  if (terminalElement) {
+    terminalElement.appendChild(outputElement);
     console.log(result);
 
     const outputString = `${path}<br>${hostname}@${username} ~>`;
 
     const container = document.createElement('div');
     container.innerHTML = outputString;
-    rootElement.appendChild(container);
+    terminalElement.appendChild(container);
 
     const inputElement = document.createElement('input');
     inputElement.type = 'text';
@@ -83,7 +87,7 @@ ipcRenderer.on('executionResult', (event, result) => {
       }
     });
   } else {
-    console.error("Element with id 'root' not found.");
+    console.error("Element with id 'terminal' not found.");
   }
 });
 
