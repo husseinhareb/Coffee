@@ -58,14 +58,12 @@ updateOutput();
 
 
 ipcRenderer.on('executionResult', (event, result) => {
-  
   const outputElement = document.createElement('div');
   outputElement.innerHTML = result;
 
   const terminalElement = document.getElementById('terminal');
   if (terminalElement) {
     terminalElement.appendChild(outputElement);
-    console.log(result);
 
     const outputString = `${path}<br>${hostname}@${username} ~>`;
 
@@ -82,12 +80,20 @@ ipcRenderer.on('executionResult', (event, result) => {
       if (e.key === 'Enter') {
         const userInput = e.target.value.trim();
         ipcRenderer.send('userInput', userInput);
-
         e.target.disabled = true; // Disable the input field after user input
+        scrollToBottom(); // Scroll to the bottom after command input
       }
     });
+
+    scrollToBottom(); // Scroll to the bottom after appending output
   } else {
     console.error("Element with id 'terminal' not found.");
   }
 });
+
+function scrollToBottom() {
+  const terminalElement = document.getElementById('terminal');
+  terminalElement.scrollTop = terminalElement.scrollHeight;
+}
+
 

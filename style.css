@@ -1,0 +1,46 @@
+/* Reset default margin and padding */
+html, body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Style for the terminal container */
+  #terminal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 40%;
+    overflow-y: auto;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+    padding: 10px;
+    box-sizing: border-box;
+    border-top: 1px solid #ffffff; /* Optional: add a top border */
+  }
+  
+  /* Style for the input field */
+  #terminal input[type="text"] {
+    width: calc(100% - 20px); /* Subtract padding from the width */
+    margin-top: 10px;
+    padding: 5px;
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border: none;
+    outline: none;
+    font-family: 'Courier New', monospace;
+  }
+  
+  /* Style for the command prompt */
+  #terminal::before {
+    content: '';
+    color: #00ff00; /* Change prompt color as needed */
+    margin-right: 5px;
+  }
+  
+  /* Style for the command ( ~> ) */
+  .command-symbol {
+    color: #00ff00; /* Change color for the command symbol */
+  }
+  
