@@ -4,7 +4,6 @@ html, body {
     padding: 0;
   }
   
-  /* Style for the terminal container */
   #terminal {
     position: fixed;
     bottom: 0;
@@ -17,12 +16,11 @@ html, body {
     font-family: 'Courier New', monospace;
     padding: 10px;
     box-sizing: border-box;
-    border-top: 1px solid #ffffff; /* Optional: add a top border */
+    border-top: 1px solid #ffffff; 
   }
   
-  /* Style for the input field */
   #terminal input[type="text"] {
-    width: calc(100% - 20px); /* Subtract padding from the width */
+    width: calc(100% - 20px);
     margin-top: 10px;
     padding: 5px;
     background-color: #2d2d2d;
@@ -32,16 +30,14 @@ html, body {
     font-family: 'Courier New', monospace;
   }
   
-  /* Style for the command prompt */
   #terminal::before {
     content: '';
-    color: #00ff00; /* Change prompt color as needed */
+    color: #00ff00; 
     margin-right: 5px;
   }
   
-  /* Style for the command ( ~> ) */
   .command-symbol {
-    color: #00ff00; /* Change color for the command symbol */
+    color: #00ff00; 
   }
   
 
