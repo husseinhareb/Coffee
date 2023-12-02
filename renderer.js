@@ -101,6 +101,7 @@ function scrollToBottom() {
 
 
 
+
 const autoCompletion = document.getElementById('editor');
 
 const pairs = [
@@ -145,5 +146,3 @@ tabOver.addEventListener('keydown', function(event) {
     this.selectionEnd = cursorPosition + 3;
   }
 });
-
-
