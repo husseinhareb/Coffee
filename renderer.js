@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+const fs = require('fs');
 
 let path = '';
 let hostname = '';
@@ -146,3 +147,19 @@ tabOver.addEventListener('keydown', function(event) {
     this.selectionEnd = cursorPosition + 3;
   }
 });
+
+
+fs.readFile('keywords.json', 'utf8', (err, jsonData) => {
+  if (err) {
+    console.error('Error reading JSON file:', err);
+    return;
+  }
+  try {
+    const data = JSON.parse(jsonData);
+    console.log(data); // Use the data as needed
+  } catch (parseErr) {
+    console.error('Error parsing JSON:', parseErr);
+  }
+});
+
+
