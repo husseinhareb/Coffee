@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
-
+const fs = require('fs');
 
 
 function createWindow() {
@@ -83,6 +83,16 @@ exec('ls', (error, stdout, stderr) => {
 });
 
 
+// index.js
+
+fs.readFile('index.js', 'utf8', (err, data) => {
+  if (err) {
+    console.error(`Error reading file: ${err}`);
+    return;
+  }
+
+  win.webContents.send('more', data);
+});
 
 }
 
