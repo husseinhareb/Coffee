@@ -1,7 +1,4 @@
 
-
-
-
 const autoCompletion = document.getElementById('editor');
 
 const pairs = [
@@ -30,35 +27,5 @@ autoCompletion.addEventListener('input', function(event) {
   });
 });
 
-
-const tabOver = document.getElementById('editor');
-
-tabOver.addEventListener('keydown', function(event) {
-  if (event.key === 'Tab') {
-    event.preventDefault(); // Prevent default tab behavior
-    const cursorPosition = this.selectionStart;
-    const textBeforeCursor = this.value.substring(0, cursorPosition);
-    const textAfterCursor = this.value.substring(cursorPosition);
-    const newText = textBeforeCursor + '   ' + textAfterCursor; // Three spaces
-
-    this.value = newText;
-    this.selectionStart = cursorPosition + 3; // Move cursor three positions forward
-    this.selectionEnd = cursorPosition + 3;
-  }
-});
-
-
-fs.readFile('keywords.json', 'utf8', (err, jsonData) => {
-  if (err) {
-    console.error('Error reading JSON file:', err);
-    return;
-  }
-  try {
-    const data = JSON.parse(jsonData);
-    console.log(data); // Use the data as needed
-  } catch (parseErr) {
-    console.error('Error parsing JSON:', parseErr);
-  }
-});
 
 
