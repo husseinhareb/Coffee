@@ -94,6 +94,17 @@ fs.readFile('index.js', 'utf8', (err, data) => {
   win.webContents.send('more', data);
 });
 
+
+ipcMain.on('get-file-content', (event, fileName) => {
+  fs.readFile(fileName, 'utf8', (err, data) => {
+    if (err) {
+      console.error(`Error reading file: ${err}`);
+      event.reply('file-content', ''); // Sending empty content on error
+      return;
+    }
+    event.reply('file-content', data);
+  });
+});
 }
 
 app.whenReady().then(createWindow);
