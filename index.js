@@ -12,62 +12,64 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
     },
-  });
+});
 
   win.loadFile('index.html');
 
   exec('pwd', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error executing command: ${error.message}`);
+    return;
+  }
+   if (stderr) {
+    console.error(`Command stderr: ${stderr}`);
+    return;
+  }
+  win.webContents.send('path', stdout);
+});
+
+exec('whoami', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error executing command: ${error.message}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`Command stderr: ${stderr}`);
+     return;
+  }
+  win.webContents.send('username', stdout);
+});
+
+exec('hostname', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error executing command: ${error.message}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`Command stderr: ${stderr}`);
+    return;
+  }
+  win.webContents.send('hostname', stdout);
+});
+
+
+
+ipcMain.on('userInput', (event, userInput) => {
+  exec(userInput, (error, stdout, stderr) => {
     if (error) {
-      console.error(`Error executing command: ${error.message}`);
+      event.sender.send('executionResult', `Error: ${error.message}`);
       return;
     }
     if (stderr) {
-      console.error(`Command stderr: ${stderr}`);
+      event.sender.send('executionResult', `stderr: ${stderr}`);
       return;
     }
-    win.webContents.send('path', stdout);
+    event.sender.send('executionResult', stdout);
   });
-
-  exec('whoami', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing command: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`Command stderr: ${stderr}`);
-      return;
-    }
-    win.webContents.send('username', stdout);
-  });
-
-  exec('hostname', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing command: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`Command stderr: ${stderr}`);
-      return;
-    }
-    win.webContents.send('hostname', stdout);
-  });
-
-  ipcMain.on('userInput', (event, userInput) => {
-    exec(userInput, (error, stdout, stderr) => {
-      if (error) {
-        event.sender.send('executionResult', `Error: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        event.sender.send('executionResult', `stderr: ${stderr}`);
-        return;
-      }
-      event.sender.send('executionResult', stdout);
-    });
-  });
+});
 
 
-// index.js
+
 exec('ls', (error, stdout, stderr) => {
   if (error) {
     console.error(`Error executing command: ${error.message}`);
@@ -83,7 +85,6 @@ exec('ls', (error, stdout, stderr) => {
 });
 
 
-// index.js
 
 fs.readFile('index.js', 'utf8', (err, data) => {
   if (err) {
@@ -95,11 +96,12 @@ fs.readFile('index.js', 'utf8', (err, data) => {
 });
 
 
+
 ipcMain.on('get-file-content', (event, fileName) => {
   fs.readFile(fileName, 'utf8', (err, data) => {
     if (err) {
       console.error(`Error reading file: ${err}`);
-      event.reply('file-content', ''); // Sending empty content on error
+      event.reply('file-content', ''); 
       return;
     }
     event.reply('file-content', data);
@@ -108,3 +110,4 @@ ipcMain.on('get-file-content', (event, fileName) => {
 }
 
 app.whenReady().then(createWindow);
+
