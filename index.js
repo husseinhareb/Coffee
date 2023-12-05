@@ -108,4 +108,3 @@ ipcMain.on('get-file-content', (event, fileName) => {
 }
 
 app.whenReady().then(createWindow);
-
