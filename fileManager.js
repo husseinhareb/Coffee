@@ -1,5 +1,6 @@
 // filesystem.js
 
+
 function getFileContent(fileName) {
   ipcRenderer.send('get-file-content', fileName);
 }
@@ -55,6 +56,8 @@ function addFile() {
       buttonWrapper.appendChild(newButton);
       fss.appendChild(buttonWrapper);
       textArea.remove();
+
+      ipcRenderer.send('file-creation-request', textArea.value);
     }
   });
   fss.appendChild(textArea);

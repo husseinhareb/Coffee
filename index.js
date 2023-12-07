@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const fs = require('fs');
-
+const path = require('path')
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -107,6 +107,24 @@ ipcMain.on('get-file-content', (event, fileName) => {
 });
 
 
+ipcMain.on('file-creation-request', (event, fileName) => {
+  const currentDir = app.getAppPath(); // Get the app directory
+  const fileContent = ''; // Specify the content you want in the new file
+  const filePath = path.join(currentDir, fileName); // Create the full path to the new file
+
+  // Handle the file creation here and send back the result to the renderer
+  fs.writeFile(filePath, fileContent, (err) => {
+    if (err) {
+      console.error('Error creating file:', err);
+      // Sending an error back to the renderer if file creation fails
+      event.sender.send('file-creation-error', err.message);
+      return;
+    }
+    console.log(`File "${fileName}" created successfully at ${currentDir}`);
+    // Sending a success message back to the renderer
+    event.sender.send('file-creation-success', fileName);
+  });
+});
 
 }
 
