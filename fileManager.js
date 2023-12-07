@@ -59,3 +59,42 @@ ipcRenderer.on('file-content', (event, fileContent) => {
   const textArea = document.getElementById('textArea');
   textArea.value = fileContent;
 });
+let path = ''; // Ensure that path is defined
+
+ipcRenderer.on('path', (event, output) => {
+  path = output;
+  updateOutput();
+});
+
+// Function to check for file changes periodically
+function checkForFileChanges() {
+  if (!path) {
+    console.error('Path is not defined.');
+    return;
+  }
+
+  // Check the directory for changes
+  fs.readdir(path, (err, files) => {
+    if (err) {
+      console.error('Error reading directory:', err);
+      return;
+    }
+
+    // Compare the files currently in the directory with the displayed buttons
+    const buttons = document.querySelectorAll('#fs button');
+    buttons.forEach(button => {
+      if (!files.includes(button.textContent)) {
+        // If the button's text (file name) is not found in the current files list, remove the button
+        button.parentNode.remove();
+      }
+    });
+  });
+}
+
+// Call the function periodically (e.g., every 5 seconds)
+const fileCheckInterval = setInterval(checkForFileChanges, 5000); // Change the interval as needed
+
+// Example: Clear the interval when closing the application
+window.addEventListener('beforeunload', () => {
+  clearInterval(fileCheckInterval);
+});
