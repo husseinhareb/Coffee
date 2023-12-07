@@ -12,14 +12,19 @@ ipcRenderer.on('file-content', (event, fileContent) => {
 
 let currentFilePath = ''; 
 
+
+
 ipcRenderer.on('files', (event, fileArray) => {
   const fss = document.getElementById('fs');
   fss.innerHTML = ''; // Clear the content to avoid duplication
 
   const addFileBtn = document.createElement('button');
   addFileBtn.textContent = "+";
-  addFileBtn.addEventListener('click',()=>addFile()); // Add the addFileBtn outside the forEach loop
+  addFileBtn.addEventListener('click', addFile);
   fss.appendChild(addFileBtn);
+
+  // Sort the file paths alphabetically
+  fileArray.sort();
 
   fileArray.forEach(filePath => {
     const button = document.createElement('button');
@@ -28,15 +33,33 @@ ipcRenderer.on('files', (event, fileArray) => {
 
     const buttonWrapper = document.createElement('div');
     buttonWrapper.appendChild(button);
-    // Remove the addFileBtn from here
     fss.appendChild(buttonWrapper);
   });
 });
 
-function addFile()
-{
-  const newFile = document.getElementById('')
+
+
+function addFile() {
+  const fss = document.getElementById('fs');
+  const newButton = document.createElement('button');
+  const textArea = document.createElement('input');
+  textArea.type = "text";
+  textArea.style.width = "80px"; 
+  textArea.style.height = "20px"
+  textArea.placeholder = "Enter button name";
+  textArea.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && textArea.value.trim() !== '') {
+      newButton.textContent = textArea.value;
+      newButton.addEventListener('click', () => openFile(textArea.value));
+      const buttonWrapper = document.createElement('div');
+      buttonWrapper.appendChild(newButton);
+      fss.appendChild(buttonWrapper);
+      textArea.remove();
+    }
+  });
+  fss.appendChild(textArea);
 }
+
 
 function openFile(filePath) {
   currentFilePath = filePath; 
