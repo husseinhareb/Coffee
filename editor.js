@@ -1,5 +1,5 @@
 
-const autoCompletion = document.getElementById('editor');
+const autoCompletion = document.getElementById('textArea');
 
 const pairs = [
   { open: '{', close: '}' },
