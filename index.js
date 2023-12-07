@@ -126,7 +126,46 @@ ipcMain.on('file-creation-request', (event, fileName) => {
   });
 });
 
-}
+ipcMain.on('get-file-content', (event, filePath) => {
+  // Here you can use the 'filePath' received from the renderer process
+  // For instance, you can read the content of the file using 'fs' module
+  fs.readFile(filePath, 'utf8', (err, fileContent) => {
+    if (err) {
+      // Handle errors when reading the file
+      console.error(err);
+      // Send an error message back to the renderer process if needed
+      event.reply('file-content-error', err.message);
+      return;
+    }
+    // Send the file content back to the renderer process
+    event.reply('file-content', fileContent);
+  });
+});
 
+// Handle saving file content from the renderer process
+ipcMain.on('save-file', (event, { filePath, content }) => {
+  // Check if 'content' is a string
+  if (typeof content !== 'string') {
+    // Handle the case where content is not a string
+    console.error('Invalid content type. Expected string.');
+    event.reply('file-save-error', 'Invalid content type. Expected string.');
+    return;
+  }
+
+  // Continue with the file writing process
+  fs.writeFile(filePath, content, 'utf8', (err) => {
+    if (err) {
+      // Handle errors when saving the file
+      console.error(err);
+      event.reply('file-save-error', err.message);
+      return;
+    }
+    // Send a confirmation message back to the renderer process
+    event.reply('file-saved', 'File saved successfully!');
+  });
+});
+
+
+}
 app.whenReady().then(createWindow);
 

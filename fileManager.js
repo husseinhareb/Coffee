@@ -24,7 +24,6 @@ ipcRenderer.on('files', (event, fileArray) => {
   addFileBtn.addEventListener('click', addFile);
   fss.appendChild(addFileBtn);
 
-  // Sort the file paths alphabetically
   fileArray.sort();
 
   fileArray.forEach(filePath => {
@@ -47,7 +46,7 @@ function addFile() {
   textArea.type = "text";
   textArea.style.width = "80px"; 
   textArea.style.height = "20px"
-  textArea.placeholder = "Enter button name";
+  textArea.placeholder = "fileName";
   textArea.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && textArea.value.trim() !== '') {
       newButton.textContent = textArea.value;
@@ -71,9 +70,8 @@ function openFile(filePath) {
 
 function saveChangesToFile() {
   const textArea = document.getElementById('textArea');
-  const fileContent = textArea.value; // Get the content from the textarea
+  const fileContent = textArea.value;
 
-  // Send an IPC message to the main process to save the content to the file associated with currentFilePath
   ipcRenderer.send('save-file', { filePath: currentFilePath, content: fileContent });
 }
 
@@ -82,3 +80,28 @@ ipcRenderer.on('file-content', (event, fileContent) => {
   textArea.value = fileContent;
 });
 
+const fileContentTextArea = document.getElementById('textArea');
+
+function saveChanges() {
+  const updatedContent = fileContentTextArea.value;
+
+  ipcRenderer.send('save-file', { filePath: currentFilePath, content: updatedContent });
+}
+
+
+document.addEventListener('keydown', (event) => {
+  if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+    event.preventDefault(); 
+    saveChanges(); 
+  }
+});
+
+ipcRenderer.on('file-saved', (event, message) => {
+  console.log(message);
+});
+
+function openFile(filePath) {
+  currentFilePath = filePath; 
+  console.log('File Path:', filePath); 
+  ipcRenderer.send('get-file-content', filePath);
+}
