@@ -46,9 +46,16 @@ ipcRenderer.on('files', (event, fileArray) => {
 
 
 
-function changeDirFn()
-{
+
+function changeDirFn() {
+  ipcRenderer.send('open-file-dialog');
 }
+
+// Listen for the selected directory from the main process
+ipcRenderer.on('selected-directory', (event, path) => {
+  console.log('Selected Directory:', path);
+  // Use the selected path in your application
+});
 
 
 function addFile() {
@@ -117,3 +124,5 @@ function openFile(filePath) {
   console.log('File Path:', filePath); 
   ipcRenderer.send('get-file-content', filePath);
 }
+
+

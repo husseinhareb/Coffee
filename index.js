@@ -1,5 +1,5 @@
 //index.js
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path')
@@ -168,7 +168,18 @@ ipcMain.on('save-file', (event, { filePath, content }) => {
   });
 });
 
-
+ipcMain.on('open-file-dialog', (event) => {
+  dialog.showOpenDialog({
+    properties: ['openDirectory']
+  }).then(result => {
+    if (!result.canceled) {
+      const selectedDirectory = result.filePaths[0];
+      event.sender.send('selected-directory', selectedDirectory);
+    }
+  }).catch(err => {
+    console.log(err);
+  });
+});
 }
 app.whenReady().then(createWindow);
 
