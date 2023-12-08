@@ -1,3 +1,4 @@
+//index.js
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const fs = require('fs');
@@ -15,6 +16,8 @@ function createWindow() {
   });
 
   win.loadFile('index.html');
+
+
 
   exec('pwd', (error, stdout, stderr) => {
     if (error) {

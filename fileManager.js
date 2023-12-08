@@ -24,6 +24,13 @@ ipcRenderer.on('files', (event, fileArray) => {
   addFileBtn.addEventListener('click', addFile);
   fss.appendChild(addFileBtn);
 
+
+  const changeDir = document.createElement('button');
+  changeDir.textContent = "change dir"
+  changeDir.addEventListener('click', changeDirFn);
+  fss.appendChild(changeDir);
+
+
   fileArray.sort();
 
   fileArray.forEach(filePath => {
@@ -37,6 +44,11 @@ ipcRenderer.on('files', (event, fileArray) => {
   });
 });
 
+
+
+function changeDirFn()
+{
+}
 
 
 function addFile() {
