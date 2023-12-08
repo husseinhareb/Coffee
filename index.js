@@ -161,9 +161,7 @@ ipcMain.on('open-file-dialog', (event) => {
       const selectedDirectory = result.filePaths[0];
       event.sender.send('selected-directory', selectedDirectory);
     }
-  }).catch(err => {
-    console.log(err);
-  });
+
 });
 
 
@@ -180,6 +178,7 @@ exec('ls', (error, stdout, stderr) => {
   const files = stdout.trim().split('\n');
   win.webContents.send('files', files);
 });
+
 
 
 ipcMain.on('open-file-dialog', (event) => {
