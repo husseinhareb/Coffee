@@ -181,7 +181,6 @@ exec('ls', (error, stdout, stderr) => {
   win.webContents.send('files', files);
 });
 
-// Other parts of your code...
 
 ipcMain.on('open-file-dialog', (event) => {
   dialog.showOpenDialog({
