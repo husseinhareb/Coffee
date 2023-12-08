@@ -71,21 +71,6 @@ ipcMain.on('userInput', (event, userInput) => {
 
 
 
-exec('ls', (error, stdout, stderr) => {
-  if (error) {
-    console.error(`Error executing command: ${error.message}`);
-    return;
-  }
-  if (stderr) {
-    console.error(`Command stderr: ${stderr}`);
-    return;
-  }
-
-  const files = stdout.trim().split('\n');
-  win.webContents.send('files', files);
-});
-
-
 
 fs.readFile('index.js', 'utf8', (err, data) => {
   if (err) {
@@ -180,6 +165,52 @@ ipcMain.on('open-file-dialog', (event) => {
     console.log(err);
   });
 });
+
+
+exec('ls', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error executing command: ${error.message}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`Command stderr: ${stderr}`);
+    return;
+  }
+
+  const files = stdout.trim().split('\n');
+  win.webContents.send('files', files);
+});
+
+// Other parts of your code...
+
+ipcMain.on('open-file-dialog', (event) => {
+  dialog.showOpenDialog({
+    properties: ['openDirectory']
+  }).then(result => {
+    if (!result.canceled) {
+      const selectedDirectory = result.filePaths[0];
+
+      exec(`ls ${selectedDirectory}`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error executing command: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`Command stderr: ${stderr}`);
+          return;
+        }
+
+        const files = stdout.trim().split('\n');
+        event.sender.send('files', files);
+      });
+    }
+  }).catch(err => {
+    console.log(err);
+  });
+});
+
+
+
 }
 app.whenReady().then(createWindow);
 
