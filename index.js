@@ -60,7 +60,7 @@ ipcMain.on('userInput', (event, userInput) => {
     if (error) {
       event.sender.send('executionResult', `Error: ${error.message}`);
       return;
-      z}
+    }
       if (stderr) {
         event.sender.send('executionResult', `stderr: ${stderr}`);
         return;
