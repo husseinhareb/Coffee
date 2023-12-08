@@ -197,8 +197,6 @@ ipcMain.on('open-file-dialog', (event) => {
   });
 });
 
-
-
 }
 app.whenReady().then(createWindow);
 
