@@ -1,6 +1,5 @@
 // filesystem.js
 
-
 function getFileContent(fileName) {
   ipcRenderer.send('get-file-content', fileName);
 }
