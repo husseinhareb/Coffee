@@ -1,11 +1,17 @@
 //index.js
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { exec } = require('child_process');
+const pty = require("node-pty");
+const path = require('path');
 const fs = require('fs');
-const path = require('path')
+const os = require("os");
+
+
+let mainWindow; // Define the mainWindow variable
+
 
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     resizable: false,
@@ -15,27 +21,39 @@ function createWindow() {
     },
   });
 
-  win.loadFile('index.html');
+  mainWindow.loadFile('index.html');
+
+  const shell = os.platform() === "win32" ? "powershell.exe" : "bash";
+  let ptyProcess;
+
+  ptyProcess = pty.spawn(shell, [], {
+    name: "xterm-color",
+    cols: 80,
+    rows: 30,
+    cwd: process.env.HOME,
+    env: process.env,
+  });
+
+  ptyProcess.on('data', function(data) {
+    mainWindow.webContents.send("terminal.incomingData", data);
+    console.log("Data sent");
+  });
+
+  ipcMain.on("terminal.keystroke", (event, key) => {
+    ptyProcess.write(key);
+  });
 
 
 
-
-
-
-
-
-
-
-
-
-fs.readFile('index.js', 'utf8', (err, data) => {
-  if (err) {
-    console.error(`Error reading file: ${err}`);
-    return;
-  }
-
-  win.webContents.send('more', data);
-});
+  fs.readFile('index.js', 'utf8', (err, data) => {
+    if (err) {
+      console.error(`Error reading file: ${err}`);
+      return;
+    }
+  
+    mainWindow.webContents.send('more', data);
+  });
+  
 
 
 
@@ -110,49 +128,67 @@ ipcMain.on('save-file', (event, { filePath, content }) => {
 });
 
 
-
-exec('ls', (error, stdout, stderr) => {
-  if (error) {
-    console.error(`Error executing command: ${error.message}`);
-    return;
-  }
-  if (stderr) {
-    console.error(`Command stderr: ${stderr}`);
-    return;
-  }
-
-  const files = stdout.trim().split('\n');
-  win.webContents.send('files', files);
-});
-
-
-
-ipcMain.on('open-file-dialog', (event) => {
-  dialog.showOpenDialog({
-    properties: ['openDirectory']
-  }).then(result => {
-    if (!result.canceled) {
-      const selectedDirectory = result.filePaths[0];
-
-      exec(`ls ${selectedDirectory}`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error executing command: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.error(`Command stderr: ${stderr}`);
-          return;
-        }
-
-        const files = stdout.trim().split('\n');
-        event.sender.send('files', files);
-      });
+  exec('ls', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing command: ${error.message}`);
+      return;
     }
-  }).catch(err => {
-    console.log(err);
+    if (stderr) {
+      console.error(`Command stderr: ${stderr}`);
+      return;
+    }
+
+    const files = stdout.trim().split('\n');
+    mainWindow.webContents.send('files', files);
   });
+
+  ipcMain.on('open-file-dialog', (event) => {
+    dialog.showOpenDialog({
+      properties: ['openDirectory']
+    }).then(result => {
+      if (!result.canceled) {
+        const selectedDirectory = result.filePaths[0];
+
+        exec(`ls ${selectedDirectory}`, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Error executing command: ${error.message}`);
+            return;
+          }
+          if (stderr) {
+            console.error(`Command stderr: ${stderr}`);
+            return;
+          }
+
+          const files = stdout.trim().split('\n');
+          event.sender.send('files', files);
+        });
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+  });
+
+  mainWindow.on("closed", function () {
+    mainWindow = null;
+    if (ptyProcess) {
+      ptyProcess.kill();
+      ptyProcess = null;
+    }
+  });
+}
+
+app.on("ready", () => {
+  createWindow();
 });
 
-}
-app.whenReady().then(createWindow);
+app.on("window-all-closed", function () {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
 
+app.on("activate", function () {
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
