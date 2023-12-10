@@ -1,126 +1,32 @@
-// filesystem.js
+//renderer.js
+const { ipcRenderer } = require("electron");
 
-function getFileContent(fileName) {
-  ipcRenderer.send('get-file-content', fileName);
-}
+const fsSpan = document.getElementById('fs');
+const chDir = document.createElement('button');
 
-ipcRenderer.on('file-content', (event, fileContent) => {
-  const textArea = document.getElementById('textArea');
-  textArea.value = fileContent;
+chDir.textContent = 'Open Folder'; 
+
+chDir.addEventListener('click', () => {
+  ipcRenderer.send('open-folder-dialog');
 });
 
+fsSpan.appendChild(chDir);
 
-let currentFilePath = ''; 
+ipcRenderer.on('files-in-directory', (event, files) => {
+  fsSpan.innerHTML = ''; // Clear previous content
 
-
-
-ipcRenderer.on('files', (event, fileArray) => {
-  const fss = document.getElementById('fs');
-  fss.innerHTML = ''; // Clear the content to avoid duplication
-
-  const addFileBtn = document.createElement('button');
-  addFileBtn.textContent = "+";
-  addFileBtn.addEventListener('click', addFile);
-  fss.appendChild(addFileBtn);
-
-
-  const changeDir = document.createElement('button');
-  changeDir.textContent = "change dir"
-  changeDir.addEventListener('click', changeDirFn);
-  fss.appendChild(changeDir);
-
-
-  fileArray.sort();
-
-  fileArray.forEach(filePath => {
-    const button = document.createElement('button');
-    button.textContent = filePath;
-    button.addEventListener('click', () => openFile(filePath));
-
-    const buttonWrapper = document.createElement('div');
-    buttonWrapper.appendChild(button);
-    fss.appendChild(buttonWrapper);
+  files.forEach(fileName => {
+    const fileButton = document.createElement('button');
+    fileButton.textContent = fileName;
+    fileButton.style.display = 'block'; // Set the display to block
+    fileButton.addEventListener('click', () => {
+      // You can perform an action when a file button is clicked
+      // For example, open the file or perform some operation
+      console.log(`Clicked file: ${fileName}`);
+    });
+    fsSpan.appendChild(fileButton);
   });
+
+  // After receiving files, ensure the button is still visible at the top
+  fsSpan.insertBefore(chDir, fsSpan.firstChild);
 });
-
-
-
-
-function changeDirFn() {
-  ipcRenderer.send('open-file-dialog');
-}
-
-// Listen for the selected directory from the main process
-ipcRenderer.on('selected-directory', (event, path) => {
-  console.log('Selected Directory:', path);
-});
-
-
-function addFile() {
-  const fss = document.getElementById('fs');
-  const newButton = document.createElement('button');
-  const textArea = document.createElement('input');
-  textArea.type = "text";
-  textArea.style.width = "80px"; 
-  textArea.style.height = "20px"
-  textArea.placeholder = "fileName";
-  textArea.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && textArea.value.trim() !== '') {
-      newButton.textContent = textArea.value;
-      newButton.addEventListener('click', () => openFile(textArea.value));
-      const buttonWrapper = document.createElement('div');
-      buttonWrapper.appendChild(newButton);
-      fss.appendChild(buttonWrapper);
-      textArea.remove();
-
-      ipcRenderer.send('file-creation-request', textArea.value);
-    }
-  });
-  fss.appendChild(textArea);
-}
-
-
-function openFile(filePath) {
-  currentFilePath = filePath; 
-  ipcRenderer.send('get-file-content', filePath);
-}
-
-function saveChangesToFile() {
-  const textArea = document.getElementById('textArea');
-  const fileContent = textArea.value;
-
-  ipcRenderer.send('save-file', { filePath: currentFilePath, content: fileContent });
-}
-
-ipcRenderer.on('file-content', (event, fileContent) => {
-  const textArea = document.getElementById('textArea');
-  textArea.value = fileContent;
-});
-
-const fileContentTextArea = document.getElementById('textArea');
-
-function saveChanges() {
-  const updatedContent = fileContentTextArea.value;
-
-  ipcRenderer.send('save-file', { filePath: currentFilePath, content: updatedContent });
-}
-
-
-document.addEventListener('keydown', (event) => {
-  if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-    event.preventDefault(); 
-    saveChanges(); 
-  }
-});
-
-ipcRenderer.on('file-saved', (event, message) => {
-  console.log(message);
-});
-
-function openFile(filePath) {
-  currentFilePath = filePath; 
-  console.log('File Path:', filePath); 
-  ipcRenderer.send('get-file-content', filePath);
-}
-
-
