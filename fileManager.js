@@ -12,9 +12,7 @@ chDir.addEventListener('click', () => {
 
 fsSpan.appendChild(chDir);
 
-//renderer.js
-// ... existing code ...
-
+//Send file name clicked from fileManager.js
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
 
