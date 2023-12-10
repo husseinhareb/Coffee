@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "rebuild": "electron-rebuild"
   },
   "keywords": [],
   "author": "shtam",
@@ -14,7 +15,9 @@
   },
   "dependencies": {
     "child_process": "^1.0.2",
+    "electron-rebuild": "^3.2.9",
     "electron-reload": "^2.0.0-alpha.1",
-    "node-pty": "^1.0.0"
+    "node-pty": "^1.0.0",
+    "xterm": "^5.3.0"
   }
 }
