@@ -6,9 +6,10 @@ const path = require('path');
 const fs = require('fs');
 const os = require("os");
 
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 
-let mainWindow; // Define the mainWindow variable
-
+let mainWindow;
+let selectedDirectory;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -23,6 +24,9 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
+
+
+  //terminal
   const shell = os.platform() === "win32" ? "powershell.exe" : "bash";
   let ptyProcess;
 
@@ -44,138 +48,54 @@ function createWindow() {
   });
 
 
-
-  fs.readFile('index.js', 'utf8', (err, data) => {
-    if (err) {
-      console.error(`Error reading file: ${err}`);
-      return;
-    }
+  //file manager
   
-    mainWindow.webContents.send('more', data);
-  });
-  
-
-
-
-ipcMain.on('get-file-content', (event, fileName) => {
-  fs.readFile(fileName, 'utf8', (err, data) => {
-    if (err) {
-      console.error(`Error reading file: ${err}`);
-      event.reply('file-content', ''); 
-      return;
-    }
-    event.reply('file-content', data);
-  });
-});
-
-
-ipcMain.on('file-creation-request', (event, fileName) => {
-  const currentDir = app.getAppPath(); // Get the app directory
-  const fileContent = ''; // Specify the content you want in the new file
-  const filePath = path.join(currentDir, fileName); // Create the full path to the new file
-
-  // Handle the file creation here and send back the result to the renderer
-  fs.writeFile(filePath, fileContent, (err) => {
-    if (err) {
-      console.error('Error creating file:', err);
-      // Sending an error back to the renderer if file creation fails
-      event.sender.send('file-creation-error', err.message);
-      return;
-    }
-    console.log(`File "${fileName}" created successfully at ${currentDir}`);
-    // Sending a success message back to the renderer
-    event.sender.send('file-creation-success', fileName);
-  });
-});
-
-ipcMain.on('get-file-content', (event, filePath) => {
-  // Here you can use the 'filePath' received from the renderer process
-  // For instance, you can read the content of the file using 'fs' module
-  fs.readFile(filePath, 'utf8', (err, fileContent) => {
-    if (err) {
-      // Handle errors when reading the file
-      console.error(err);
-      // Send an error message back to the renderer process if needed
-      event.reply('file-content-error', err.message);
-      return;
-    }
-    // Send the file content back to the renderer process
-    event.reply('file-content', fileContent);
-  });
-});
-
-// Handle saving file content from the renderer process
-ipcMain.on('save-file', (event, { filePath, content }) => {
-  // Check if 'content' is a string
-  if (typeof content !== 'string') {
-    // Handle the case where content is not a string
-    console.error('Invalid content type. Expected string.');
-    event.reply('file-save-error', 'Invalid content type. Expected string.');
-    return;
-  }
-
-  // Continue with the file writing process
-  fs.writeFile(filePath, content, 'utf8', (err) => {
-    if (err) {
-      // Handle errors when saving the file
-      console.error(err);
-      event.reply('file-save-error', err.message);
-      return;
-    }
-    // Send a confirmation message back to the renderer process
-    event.reply('file-saved', 'File saved successfully!');
-  });
-});
-
-
-  exec('ls', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing command: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`Command stderr: ${stderr}`);
-      return;
-    }
-
-    const files = stdout.trim().split('\n');
-    mainWindow.webContents.send('files', files);
-  });
-
-  ipcMain.on('open-file-dialog', (event) => {
+  //Open Folder Button + Listing Files inside the folder.
+  ipcMain.on('open-folder-dialog', (event, arg) => {
     dialog.showOpenDialog({
       properties: ['openDirectory']
     }).then(result => {
       if (!result.canceled) {
         const selectedDirectory = result.filePaths[0];
+        // Read files in the selected directory
+        fs.readdir(selectedDirectory, (err, files) => {
+          if (err) {
+            console.error(err);
+            event.sender.send('files-in-directory', []);
+          } else {
+            event.sender.send('files-in-directory', files);
+            console.log(files);
 
-        exec(`ls ${selectedDirectory}`, (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error executing command: ${error.message}`);
-            return;
           }
-          if (stderr) {
-            console.error(`Command stderr: ${stderr}`);
-            return;
-          }
-
-          const files = stdout.trim().split('\n');
-          event.sender.send('files', files);
         });
       }
     }).catch(err => {
-      console.log(err);
+      console.error(err);
     });
   });
+  
+  
 
-  mainWindow.on("closed", function () {
-    mainWindow = null;
-    if (ptyProcess) {
-      ptyProcess.kill();
-      ptyProcess = null;
-    }
-  });
+
+  
+
+
+
+
+  
+  
 }
+
+
+
+
+
+
+
+
+
+
+
 
 app.on("ready", () => {
   createWindow();

@@ -11,6 +11,7 @@ body, html {
 #fs {
     width: 20%;
     border-right: 3px solid black;
+    overflow-y: auto;
 }
   
 #editor {
@@ -27,4 +28,6 @@ textarea{
 #terminal {
     height: 30%;
     border-top: 3px solid black;
+    overflow-y: auto;
 }
+
