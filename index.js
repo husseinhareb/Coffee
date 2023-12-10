@@ -79,6 +79,15 @@ function createWindow() {
 
   
 
+  //index.js (main.js)
+// ... existing code ...
+
+// Handle the file button click in the main process
+ipcMain.on('file-button-clicked', (event, fileName) => {
+  console.log('File button clicked:', fileName);
+  // You can perform further actions here with the filename received from the renderer process
+  // For example, you could open the file or perform other operations
+});
 
 
 

@@ -12,6 +12,9 @@ chDir.addEventListener('click', () => {
 
 fsSpan.appendChild(chDir);
 
+//renderer.js
+// ... existing code ...
+
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
 
@@ -20,9 +23,8 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     fileButton.textContent = fileName;
     fileButton.style.display = 'block'; // Set the display to block
     fileButton.addEventListener('click', () => {
-      // You can perform an action when a file button is clicked
-      // For example, open the file or perform some operation
-      console.log(`Clicked file: ${fileName}`);
+      // Send the filename to the main process
+      ipcRenderer.send('file-button-clicked', fileName);
     });
     fsSpan.appendChild(fileButton);
   });
