@@ -9,7 +9,6 @@ const os = require("os");
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 
 let mainWindow;
-let selectedDirectory;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -49,15 +48,16 @@ function createWindow() {
 
 
   //file manager
-  
+  let selectedDirectory;
+  let filePath;
   //Open Folder Button + Listing Files inside the folder.
   ipcMain.on('open-folder-dialog', (event, arg) => {
     dialog.showOpenDialog({
       properties: ['openDirectory']
     }).then(result => {
       if (!result.canceled) {
-        const selectedDirectory = result.filePaths[0];
-        // Read files in the selected directory
+        selectedDirectory = result.filePaths[0];
+        console.log(selectedDirectory);
         fs.readdir(selectedDirectory, (err, files) => {
           if (err) {
             console.error(err);
@@ -74,15 +74,19 @@ function createWindow() {
     });
   });
   
-  
-
-
-//Fetch file name clicked from fileManager.js
+//Sending File Data into the renderer
 ipcMain.on('file-button-clicked', (event, fileName) => {
-  console.log('File button clicked:', fileName);
-
+  const filePath = path.join(selectedDirectory, fileName); // Assuming selectedDirectory holds the selected folder path
+  fs.readFile(filePath, 'utf-8', (err, data) => {
+    if (err) {
+      console.error(err);
+      event.sender.send('file-content', ''); // Sending empty content in case of error
+    } else {
+      console.log(data);
+      event.sender.send('file-content', data); // Sending file content to renderer process
+    }
+  });
 });
-
 
 
   
