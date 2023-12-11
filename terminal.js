@@ -9,3 +9,4 @@ ipc.on("terminal.incomingData", (event, data) => {
 term.onData(e => {
     ipc.send("terminal.keystroke", e);
 });
+

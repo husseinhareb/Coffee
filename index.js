@@ -49,7 +49,6 @@ function createWindow() {
 
   //file manager
   let selectedDirectory;
-  let filePath;
   //Open Folder Button + Listing Files inside the folder.
   ipcMain.on('open-folder-dialog', (event, arg) => {
     dialog.showOpenDialog({
@@ -77,6 +76,8 @@ function createWindow() {
 //Sending File Data into the renderer
 ipcMain.on('file-button-clicked', (event, fileName) => {
   const filePath = path.join(selectedDirectory, fileName); // Assuming selectedDirectory holds the selected folder path
+  //Sending file path to the renderer
+  event.sender.send('file-path', filePath); 
   fs.readFile(filePath, 'utf-8', (err, data) => {
     if (err) {
       console.error(err);
@@ -89,7 +90,27 @@ ipcMain.on('file-button-clicked', (event, fileName) => {
 });
 
 
-  
+ipcMain.on('save-file', (event, { filePath, content }) => {
+  // Check if 'content' is a string
+  if (typeof content !== 'string') {
+    // Handle the case where content is not a string
+    console.error('Invalid content type. Expected string.');
+    event.reply('file-save-error', 'Invalid content type. Expected string.');
+    return;
+  }
+
+  // Continue with the file writing process
+  fs.writeFile(filePath, content, 'utf8', (err) => {
+    if (err) {
+      // Handle errors when saving the file
+      console.error(err);
+      event.reply('file-save-error', err.message);
+      return;
+    }
+    // Send a confirmation message back to the renderer process
+    event.reply('file-saved', 'File saved successfully!');
+  });
+});
   
 }
 
