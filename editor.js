@@ -1,57 +1,42 @@
-const autoCompletion = document.getElementById('textArea');
-const textArea = document.getElementById('textArea');
+var keywords = ["INT", "FLOAT", "DOUBLE", "LONG", "BOOL", "VOID", "STRUCTURE"];
+var controlKeywords = ["IF", "ELSE", "WHILE","FOR","DO","ELIF"]; // New set of keywords
+var stdio = ["PRINTF","SCANF","INPUT","PRINT","ECHO"]
+document.querySelector('#editor').addEventListener('keyup', e => {
+    if (e.keyCode == 32) {
+        var newHTML = "";
+        var str = e.target.innerText;
+        var allKeywords = [...keywords, ...controlKeywords]; // Combine all keywords
 
-const pairs = [
-  { open: '{', close: '}' },
-  { open: '"', close: '"' },
-  { open: '<', close: '>' },
-  { open: "'", close: "'" },
-  { open: '[', close: ']' },
-  { open: '(', close: ')' },
-];
+        var chunks = str.split(new RegExp(
+            allKeywords
+                .map(w => `(${w})`)
+                .join('|'), 'i'))
+            .filter(Boolean);
 
-autoCompletion.addEventListener('input', function(event) {
-  const cursorPosition = this.selectionStart;
-  const inputValue = this.value;
-  const insertedChar = event.data;
 
-  pairs.forEach(pair => {
-    if (insertedChar === pair.open) {
-      const newText =
-        inputValue.substring(0, cursorPosition) +
-        pair.close +
-        inputValue.substring(cursorPosition);
-      this.value = newText;
-      this.selectionStart = cursorPosition + 1;
-      this.selectionEnd = cursorPosition + 1;
+            var markup = chunks.reduce((acc, chunk) => {
+              var chunkLower = chunk.toUpperCase(); // Convert chunk to uppercase for comparison
+              if (keywords.includes(chunkLower)) {
+                  acc += `<span class="datatypes">${chunk}</span>`;
+              } else if (controlKeywords.includes(chunkLower)) {
+                  acc += `<span class="control">${chunk}</span>`;
+              } else if (stdio.includes(chunkLower)) {
+                  acc += `<span class="stdio">${chunk}</span>`;
+              } else {
+                  acc += `<span class="others">${chunk}</span>`;
+              }
+              return acc;
+          }, '');
+
+        e.target.innerHTML = markup;
+
+        var child = e.target.children;
+        var range = document.createRange();
+        var sel = window.getSelection();
+        range.setStart(child[child.length - 1], 1);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        e.target.focus();
     }
-  });
 });
-
-textArea.addEventListener('input', function() {
-  const keywords = ['int', 'float', 'double', 'bool', 'long']; // Keywords to highlight
-  const cursorPosition = this.selectionStart;
-
-  let start = cursorPosition - 1;
-  while (start >= 0 && /\w/.test(this.value[start])) {
-    start--;
-  }
-  start++;
-
-  let end = cursorPosition;
-  while (end < this.value.length && /\w/.test(this.value[end])) {
-    end++;
-  }
-
-  const word = this.value.substring(start, end);
-
-  keywords.forEach(keyword => {
-    const regExp = new RegExp('\\b' + keyword + '\\b', 'g');
-    const matches = this.value.match(regExp);
-    if (matches && matches.includes(word)) {
-      const newHTML = this.value.replace(regExp, '<span class="highlight">$&</span>');
-      this.value = newHTML;
-    }
-  });
-});
-

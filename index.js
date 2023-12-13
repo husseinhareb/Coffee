@@ -112,6 +112,26 @@ ipcMain.on('save-file', (event, { filePath, content }) => {
   });
 });
   
+ipcMain.on('file-creation-request', (event, fileName) => {
+  const currentDir = app.getAppPath(); // Get the app directory
+  const fileContent = ''; // Specify the content you want in the new file
+  const filePath = path.join(selectedDirectory, fileName); // Assuming selectedDirectory holds the selected folder path
+  console.log('from file creation print' + filePath);
+  // Handle the file creation here and send back the result to the renderer
+  fs.writeFile(filePath, fileContent, (err) => {
+    if (err) {
+      console.error('Error creating file:', err);
+      // Sending an error back to the renderer if file creation fails
+      event.sender.send('file-creation-error', err.message);
+      return;
+    }
+    console.log(`File "${fileName}" created successfully at ${currentDir}`);
+    // Sending a success message back to the renderer
+    event.sender.send('file-creation-success', fileName);
+  });
+});
+
+
 }
 
 
@@ -139,4 +159,4 @@ app.on("activate", function () {
   if (mainWindow === null) {
     createWindow();
   }
-});
+}); 

@@ -14,16 +14,6 @@ body, html {
     overflow-y: auto;
 }
   
-#editor {
-    width: 80%;
-}
-  
-textarea{
-    width: 100%;
-    height: 99%;
-    resize: none;
-    border: none;
-}
 
 #terminal {
     height: 30%;
@@ -31,3 +21,26 @@ textarea{
     overflow-y: auto;
 }
 
+#editor {
+    width: 100%;
+    background-color: #1f1f1f;
+    color: white;
+    font-size: 14px;
+    font-family: "JetBrainsMono Nerd Font";
+}
+
+
+.datatypes {
+    color: #2f70cb;
+    font-weight: bold;
+}
+
+.control{
+    color: #b282b9; 
+    font-weight: bold;
+}
+
+.stdio{
+    color: #c18618;
+    font-weight: bold;
+}
