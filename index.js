@@ -77,7 +77,6 @@ function createWindow() {
     });
   });
   
-
   ipcMain.on('file-button-clicked', (event, fileName) => {
     const clickedPath = path.join(currentDirectory, fileName);
   
@@ -90,6 +89,7 @@ function createWindow() {
       }
   
       if (stats.isFile()) {
+        // It's a file
         console.log("It's a file:", fileName);
   
         // Send the file path to the renderer process
@@ -99,14 +99,15 @@ function createWindow() {
         fs.readFile(clickedPath, 'utf-8', (readErr, data) => {
           if (readErr) {
             console.error(readErr);
-            event.sender.send('file-content', ''); 
+            event.sender.send('file-content', ''); // Sending empty content in case of error
+          } else {
             console.log('File content:', data);
-            event.sender.send('file-content', data); 
-            // Update the current directory to the file's directory
-            currentDirectory = path.dirname(clickedPath); 
+            event.sender.send('file-content', data); // Sending file content to renderer process
+            currentDirectory = path.dirname(clickedPath); // Update the current directory to the file's directory
           }
         });
       } else if (stats.isDirectory()) {
+        // It's a directory
         console.log("It's a directory:", fileName);
   
         // Read the contents of the clicked directory
@@ -128,6 +129,7 @@ function createWindow() {
     });
   });
   
+
 
 
 ipcMain.on('save-file', (event, { filePath, content }) => {
@@ -153,9 +155,9 @@ ipcMain.on('save-file', (event, { filePath, content }) => {
 });
   
 ipcMain.on('file-creation-request', (event, fileName) => {
-  const currentDir = app.getAppPath(); 
+  const currentDir = app.getAppPath();
   const fileContent = ''; 
-  const filePath = path.join(selectedDirectory, fileName); 
+  const filePath = path.join(currentDirectory, fileName); 
   console.log('from file creation print' + filePath);
   // Handle the file creation here and send back the result to the renderer
   fs.writeFile(filePath, fileContent, (err) => {
@@ -165,7 +167,6 @@ ipcMain.on('file-creation-request', (event, fileName) => {
       return;
     }
     console.log(`File "${fileName}" created successfully at ${currentDir}`);
-    // Sending a success message back to the renderer
     event.sender.send('file-creation-success', fileName);
   });
 });
@@ -194,7 +195,6 @@ ipcMain.on('return-to-parent-directory', (event) => {
 
 
 }
-
 
 
 
