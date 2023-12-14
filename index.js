@@ -49,6 +49,8 @@ function createWindow() {
 
   //file manager
   let selectedDirectory;
+  let currentDirectory;
+
   //Open Folder Button + Listing Files inside the folder.
   ipcMain.on('open-folder-dialog', (event, arg) => {
     dialog.showOpenDialog({
@@ -63,7 +65,9 @@ function createWindow() {
             event.sender.send('files-in-directory', []);
           } else {
             event.sender.send('files-in-directory', files);
+            currentDirectory = selectedDirectory;
             console.log(files);
+            console.log("Current Directory",currentDirectory);
 
           }
         });
@@ -73,21 +77,57 @@ function createWindow() {
     });
   });
   
-//Sending File Data into the renderer
-ipcMain.on('file-button-clicked', (event, fileName) => {
-  const filePath = path.join(selectedDirectory, fileName); // Assuming selectedDirectory holds the selected folder path
-  //Sending file path to the renderer
-  event.sender.send('file-path', filePath); 
-  fs.readFile(filePath, 'utf-8', (err, data) => {
-    if (err) {
-      console.error(err);
-      event.sender.send('file-content', ''); // Sending empty content in case of error
-    } else {
-      console.log(data);
-      event.sender.send('file-content', data); // Sending file content to renderer process
-    }
+
+  ipcMain.on('file-button-clicked', (event, fileName) => {
+    const clickedPath = path.join(currentDirectory, fileName);
+  
+    // Check if the clicked item is a file or directory
+    fs.stat(clickedPath, (err, stats) => {
+      if (err) {
+        console.error(err);
+        event.sender.send('file-system-error', err.message);
+        return;
+      }
+  
+      if (stats.isFile()) {
+        console.log("It's a file:", fileName);
+  
+        // Send the file path to the renderer process
+        event.sender.send('file-path', clickedPath);
+  
+        // Read file content and send it to the renderer process
+        fs.readFile(clickedPath, 'utf-8', (readErr, data) => {
+          if (readErr) {
+            console.error(readErr);
+            event.sender.send('file-content', ''); 
+            console.log('File content:', data);
+            event.sender.send('file-content', data); 
+            // Update the current directory to the file's directory
+            currentDirectory = path.dirname(clickedPath); 
+          }
+        });
+      } else if (stats.isDirectory()) {
+        console.log("It's a directory:", fileName);
+  
+        // Read the contents of the clicked directory
+        fs.readdir(clickedPath, (readDirErr, files) => {
+          if (readDirErr) {
+            console.error(readDirErr);
+            event.sender.send('files-in-directory', []); // Sending empty array in case of error
+          } else {
+            event.sender.send('files-in-directory', files); // Sending directory contents to renderer process
+            console.log('Files in directory:', files);
+            currentDirectory = clickedPath; // Update the current directory
+          }
+        });
+      } else {
+        // It's neither a file nor a directory
+        console.log("It's neither a file nor a directory:", fileName);
+        event.sender.send('file-unknown', fileName);
+      }
+    });
   });
-});
+  
 
 
 ipcMain.on('save-file', (event, { filePath, content }) => {
@@ -113,15 +153,14 @@ ipcMain.on('save-file', (event, { filePath, content }) => {
 });
   
 ipcMain.on('file-creation-request', (event, fileName) => {
-  const currentDir = app.getAppPath(); // Get the app directory
-  const fileContent = ''; // Specify the content you want in the new file
-  const filePath = path.join(selectedDirectory, fileName); // Assuming selectedDirectory holds the selected folder path
+  const currentDir = app.getAppPath(); 
+  const fileContent = ''; 
+  const filePath = path.join(selectedDirectory, fileName); 
   console.log('from file creation print' + filePath);
   // Handle the file creation here and send back the result to the renderer
   fs.writeFile(filePath, fileContent, (err) => {
     if (err) {
       console.error('Error creating file:', err);
-      // Sending an error back to the renderer if file creation fails
       event.sender.send('file-creation-error', err.message);
       return;
     }
@@ -132,7 +171,30 @@ ipcMain.on('file-creation-request', (event, fileName) => {
 });
 
 
+ipcMain.on('return-to-parent-directory', (event) => {
+  if (!currentDirectory) {
+    // If the current directory is not set, do nothing or handle accordingly
+    return;
+  }
+
+  const parentDirectory = path.dirname(currentDirectory);
+
+  fs.readdir(parentDirectory, (err, files) => {
+    if (err) {
+      console.error(err);
+      event.sender.send('files-in-directory', []);
+    } else {
+      event.sender.send('files-in-directory', files);
+      console.log(files);
+      currentDirectory = parentDirectory; 
+    }
+  });
+});
+
+
+
 }
+
 
 
 
