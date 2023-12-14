@@ -30,16 +30,16 @@ fsSpan.appendChild(chDir);
 fsSpan.appendChild(addFile);
 
 
-function addfile(){
+function addfile() {
   const fss = document.getElementById('fs');
-  const newButton = document.createElement('button');
   const textArea = document.createElement('input');
   textArea.type = "text";
   textArea.style.width = "80px"; 
-  textArea.style.height = "20px"
+  textArea.style.height = "20px";
   textArea.placeholder = "fileName";
   textArea.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && textArea.value.trim() !== '') {
+      const newButton = document.createElement('button');
       newButton.textContent = textArea.value;
       newButton.addEventListener('click', () => openFile(textArea.value));
       const buttonWrapper = document.createElement('div');
@@ -48,10 +48,16 @@ function addfile(){
       textArea.remove();
 
       ipcRenderer.send('file-creation-request', textArea.value);
+
+      // Attach click event listener for the newly created file button
+      newButton.addEventListener('click', () => {
+        ipcRenderer.send('file-button-clicked', textArea.value);
+      });
     }
   });
   fss.appendChild(textArea);
 }
+
 
 //Send file name clicked from fileManager.js
 ipcRenderer.on('files-in-directory', (event, files) => {
