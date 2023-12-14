@@ -4,32 +4,30 @@ const { ipcRenderer } = require("electron");
 
 const fsSpan = document.getElementById('fs');
 const chDir = document.createElement('button');
-chDir.textContent = 'Open Folder'; 
+chDir.textContent = 'Open Folder';
+
 chDir.style.backgroundColor = '#0078d4';
 chDir.style.borderColor = '#0078d4';
-
-chDir.style.display = 'block';
-chDir.style.marginLeft = 'auto';
-chDir.style.marginRight = 'auto';
 chDir.style.color = 'white'
+
 chDir.addEventListener('click', () => {
   ipcRenderer.send('open-folder-dialog');
 });
 
 const addFile = document.createElement('button');
-addFile.textContent = 'Add File';
+addFile.textContent = 'Add';
 addFile.addEventListener('click', addfile);
+
 addFile.style.backgroundColor = '#0078d4';
 addFile.style.borderColor = '#0078d4';
-
-addFile.style.display = 'block';
-addFile.style.marginLeft = 'auto';
-addFile.style.marginRight = 'auto';
 addFile.style.color = 'white'
+
+
 fsSpan.appendChild(chDir);
 fsSpan.appendChild(addFile);
 
 
+//Function to add a file into the current directory 
 function addfile() {
   const fss = document.getElementById('fs');
   const textArea = document.createElement('input');
@@ -81,8 +79,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
 
 
-
-let filePath
+let filePath;
 // Listen for the file-path event from the main process
 ipcRenderer.on('file-path', (event, filepath) => {
   filePath = filepath;
@@ -112,11 +109,6 @@ function saveChanges() {
   
   ipcRenderer.send('save-file', { filePath, content: decodedContent });
 }
-
-
-
-
-
 
 
 
