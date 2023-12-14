@@ -22,9 +22,24 @@ addFile.style.backgroundColor = '#0078d4';
 addFile.style.borderColor = '#0078d4';
 addFile.style.color = 'white'
 
+const returnBtn = document.createElement('button');
+returnBtn.textContent = 'return';
 
+returnBtn.addEventListener('click', () => {
+  ipcRenderer.send('return-to-parent-directory');
+});
+
+fsSpan.append(returnBtn);
 fsSpan.appendChild(chDir);
 fsSpan.appendChild(addFile);
+
+
+
+
+
+
+
+
 
 
 //Function to add a file into the current directory 
@@ -61,6 +76,7 @@ function addfile() {
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
   fsSpan.appendChild(addFile); // Re-append 'Add File' button
+  fsSpan.appendChild(returnBtn);
   files.forEach(fileName => {
     const fileButton = document.createElement('button');
     fileButton.textContent = fileName;
