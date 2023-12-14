@@ -23,11 +23,14 @@ addFile.style.borderColor = '#0078d4';
 addFile.style.color = 'white'
 
 const returnBtn = document.createElement('button');
-returnBtn.textContent = 'return';
-
+returnBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
 });
+
+returnBtn.style.backgroundColor = '#0078d4';
+returnBtn.style.borderColor = '#0078d4';
+returnBtn.style.color = 'white'
 
 fsSpan.append(returnBtn);
 fsSpan.appendChild(chDir);
