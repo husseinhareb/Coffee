@@ -93,7 +93,18 @@ ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.appendChild(addFile); // Re-append 'Add File' button
   files.forEach(fileName => {
     const fileButton = document.createElement('button');
-    fileButton.textContent = fileName;
+    const fileType = getFileType(fileName);
+      console.log(fileType);
+      fetch('./symbols.json')
+        .then(response => response.json())
+        .then(data => {
+          let symbol = data[fileType];
+          console.log(symbol);
+          fileButton.innerHTML = symbol + " "+ fileName;
+
+      })
+      .catch(error => console.error('Error fetching data:', error));
+
     fileButton.className = "filesButtons"
     fileButton.style.display = 'block'; // Set the display to block
     fileButton.addEventListener('click', () => {
