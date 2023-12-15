@@ -3,43 +3,79 @@ const { ipcRenderer } = require("electron");
 
 const fsSpan = document.getElementById('fs');
 
-
-
-
-
-const chDir = document.createElement('button');
-chDir.innerHTML = '<i class="fa-solid fa-folder-open"> Open Folder</i>'
-
-
-chDir.addEventListener('click', () => {
-  ipcRenderer.send('open-folder-dialog');
-});
-
-const addFile = document.createElement('button');
-addFile.innerHTML = '<i class="fa-solid fa-file"></i>';
-addFile.className = "addFile";
-addFile.addEventListener('click', addfile);
-
-
+const returnDiv = document.createElement('div');
 const returnBtn = document.createElement('button');
 returnBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
-returnBtn.className = "returnBtn"
+returnBtn.className = "returnBtn";
 
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
 });
+returnDiv.appendChild(returnBtn);
+fsSpan.appendChild(returnDiv);
+
+
+const buttonsDiv = document.createElement('div');
+buttonsDiv.className = "buttonsDiv";
+const chDir = document.createElement('button');
+chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i> Open Folder';
+chDir.addEventListener('click', () => {
+  ipcRenderer.send('open-folder-dialog');
+});
+buttonsDiv.appendChild(chDir);
+
+const addFile = document.createElement('button');
+addFile.innerHTML = '<i class="nf-cod-new_file"></i>';
+addFile.className = "addFile";
+addFile.addEventListener('click', addfile);
+buttonsDiv.appendChild(addFile);
+
+
+const addFolder = document.createElement('button');
+addFolder.innerHTML = '<i class="nf-cod-new_folder"></i>';
+addFolder.className = "addFile";
+addFolder.addEventListener('click', addfolder);
+buttonsDiv.appendChild(addFolder);
+
+fsSpan.appendChild(buttonsDiv);
 
 
 
-fsSpan.append(returnBtn);
-fsSpan.appendChild(chDir);
-fsSpan.appendChild(addFile);
 
+function addfolder() {
+  const fss = document.getElementById('fs');
+  const textArea = document.createElement('input');
+  textArea.type = "text";
+  textArea.style.width = "80px"; 
+  textArea.style.height = "20px";
+  textArea.placeholder = "foldername";
+  textArea.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && textArea.value.trim() !== '') {
+      const folderName = textArea.value.trim(); // Get the folder name
 
+      // Remove the text area before sending the request
+      textArea.remove();
 
+      // Create a button for the folder (if needed)
+      const newButton = document.createElement('button');
+      newButton.className = "filesButtons"; // Add class for styling if required
+      newButton.textContent = folderName;
+      newButton.addEventListener('click', () => {
+        // Handle folder button click here if needed
+        ipcRenderer.send('file-button-clicked', folderName);
+      });
 
+      // Create a wrapper for the button and append it
+      const buttonWrapper = document.createElement('div');
+      buttonWrapper.appendChild(newButton);
+      fss.appendChild(buttonWrapper);
 
-
+      // Send the folder creation request after UI updates
+      ipcRenderer.send('folder-creation-request', folderName);
+    }
+  });
+  fss.appendChild(textArea);
+}
 
 
 
@@ -68,7 +104,6 @@ function addfile() {
       .catch(error => console.error('Error fetching data:', error));
 
       newButton.className="filesButtons"
-      newButton.addEventListener('click', () => openFile(textArea.value));
       const buttonWrapper = document.createElement('div');
       buttonWrapper.appendChild(newButton);
       fss.appendChild(buttonWrapper);
@@ -76,7 +111,6 @@ function addfile() {
 
       ipcRenderer.send('file-creation-request', textArea.value);
 
-      // Attach click event listener for the newly created file button
       newButton.addEventListener('click', () => {
         ipcRenderer.send('file-button-clicked', textArea.value);
       });
@@ -89,8 +123,15 @@ function addfile() {
 //Send file name clicked from fileManager.js
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
-  fsSpan.appendChild(returnBtn);
-  fsSpan.appendChild(addFile); // Re-append 'Add File' button
+  // Append returnBtn
+  returnDiv.appendChild(returnBtn);
+  fsSpan.appendChild(returnDiv);
+
+    // Append chDir and addFile to buttonsDiv
+    buttonsDiv.appendChild(chDir);
+    buttonsDiv.appendChild(addFile);
+    buttonsDiv.appendChild(addFolder);
+    fsSpan.appendChild(buttonsDiv);
   files.forEach(fileName => {
     const fileButton = document.createElement('button');
     const fileType = getFileType(fileName);
@@ -114,9 +155,8 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     fsSpan.appendChild(fileButton);
   });
 
-  // After receiving files, ensure the button is still visible at the top
-  fsSpan.insertBefore(chDir ,fsSpan.firstChild);
 });
+
 
 
 
@@ -164,6 +204,7 @@ document.addEventListener('keydown', (event) => {
 ipcRenderer.on('file-saved', (event, message) => {
   console.log(message);
 });
+
 
 
 function getFileType(name) {
