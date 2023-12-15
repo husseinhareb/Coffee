@@ -1,7 +1,7 @@
 const ipc = require("electron").ipcRenderer;
 const term = new Terminal({
     theme: {
-        background: '#1E1E1E',
+        background: '#181818',
         fontFamily: "JetBrainsMono Nerd Font",
     },
 

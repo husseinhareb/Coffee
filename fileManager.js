@@ -60,9 +60,9 @@ function addfile() {
       fetch('./symbols.json')
         .then(response => response.json())
         .then(data => {
-          let symbol = data[fileType];
+          let symbol = data[fileType] || " ";
           console.log(symbol);
-          newButton.innerHTML = symbol + textArea.value;
+          newButton.innerHTML = symbol + " " + textArea.value;
 
       })
       .catch(error => console.error('Error fetching data:', error));
@@ -98,7 +98,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
       fetch('./symbols.json')
         .then(response => response.json())
         .then(data => {
-          let symbol = data[fileType];
+          let symbol = data[fileType] || " ";
           console.log(symbol);
           fileButton.innerHTML = symbol + " "+ fileName;
 
@@ -171,5 +171,5 @@ function getFileType(name) {
   if (dotIndex !== -1) {
       return name.substring(dotIndex + 1);
   }
-  return ''; 
+  return ' '; 
 }

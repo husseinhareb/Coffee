@@ -6,6 +6,7 @@
     "git": "<i class=\"nf-dev-git\" style=\"color: #F05033;\"></i>",
     "gitignore": "<i class=\"nf-dev-git\" style=\"color: #F05033;\"></i>",
     "c": "<i class=\"nf-custom-c\" style=\"color: #004283;\"></i>",
+    "h": "<i class=\"nf-custom-c\" style=\"color: #787CB5;\"></i>",
     "cpp": "<i class=\"nf-custom-cpp\" style=\"color: #004283;\"></i>",
     "cs": "<i class=\"nf-seti-c_sharp\" style=\"color: #004283;\"></i>",
     "py": "<i class=\"nf-dev-python\" style=\"color: #008297;\"></i>",
@@ -16,9 +17,13 @@
     "ts": "<i class=\"nf-md-language_typescript\" style=\"color: #017ACB;\"></i>",
     "rb": "<i class=\"nf-seti-ruby\" style=\"color: #EC1622;\"></i>",
     "swift": "<i class=\"nf-dev-swift\" style=\"color: #FF5722;\"></i>",
-    "kotlin": "<i class=\"nf-custom-kotlin\" style=\"color: #787CB5;\"></i>",
-    "go": "<i class=\"nf-seti-go\" style=\"color: #787CB5;\"></i>",
-    "r": "<i class=\"nf-seti-r\" style=\"color: #787CB5;\"></i>",
-    "matlab": "<i class=\"nf-seti-php\" style=\"color: #787CB5;\"></i>",
-    "sh": "<i class=\"nf-seti-shell\" style=\"color: #787CB5;\"></i>"
+    "kt": "<i class=\"nf-custom-kotlin\" style=\"color: #F88909;\"></i>",
+    "go": "<i class=\"nf-seti-go\" style=\"color: #74CEDD;\"></i>",
+    "r": "<i class=\"nf-seti-r\" style=\"color: #74CEDD;\"></i>",
+    "m": "<i class=\"nf-custom-c\" style=\"color: #e1e502;\"></i>",
+    "sh": "<i class=\"nf-seti-shell\" style=\"color: #4DA924;\"></i>",
+    "md": "<i class=\"nf-seti-text\" style=\"color: #4a5445;\"></i>",
+    "pl": "<i class=\"nf-seti-perl\" style=\"color: #004065;\"></i>",
+    "dart": "<i class=\"nf-seti-text\" style=\"color: #29B6F6;\"></i>"
+
 }

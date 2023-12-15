@@ -1,3 +1,4 @@
+@import "https://www.nerdfonts.com/assets/css/webfont.css";
 *{
     font-family: "JetBrainsMono Nerd Font";
 
@@ -14,14 +15,16 @@ body, html {
   
 #fs {
     width: 20%;
-    border-right: 3px solid black;
+    border-right: 3px solid #2b2b2b;
     overflow-y: auto;
+    font-family: "JetBrainsMono Nerd Font";
+    background-color: #181818;
 }
   
 
 #terminal {
     height: 30%;
-    border-top: 3px solid rgb(202, 27, 27);
+    border-top: 3px solid #2b2b2b;
     overflow-y: auto;
 
 }
@@ -34,20 +37,28 @@ body, html {
     color: white;
     font-size: 14px;
     overflow-y: auto;
+    margin: 0 0 0 0;
 }
 
-
-.datatypes {
-    color: #2f70cb;
-    font-weight: bold;
+.returnBtn{
+    width: 40px;
+    height: 40px;
+    color: white;
+    background-color: #181818;
+    border: 0px;
+}
+.returnBtn:hover{
+    background-color: #2a2d2e;
 }
 
-.control{
-    color: #b282b9; 
-    font-weight: bold;
+.filesButtons{
+    width: 100%;
+    font-size: 14px;
+    color: white;
+    background-color: #181818;
+    text-align: left;
+    border: 0px;
 }
-
-.stdio{
-    color: #c18618;
-    font-weight: bold;
+.filesButtons:hover{
+    background-color: #2a2d2e;
 }
