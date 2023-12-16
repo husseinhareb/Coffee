@@ -25,27 +25,41 @@ function createWindow() {
   mainWindow.loadFile('index.html');
 
 
+  let ptyProcess; // Define this variable outside the function to keep track of the current terminal instance
 
-  //terminal
-  const shell = os.platform() === "win32" ? "powershell.exe" : "bash";
-  let ptyProcess;
-
-  ptyProcess = pty.spawn(shell, [], {
-    name: "xterm-color",
-    cols: 80,
-    rows: 30,
-    cwd: process.env.HOME,
-    env: process.env,
-  });
-
-  ptyProcess.on('data', function(data) {
-    mainWindow.webContents.send("terminal.incomingData", data);
-    console.log("Data sent");
-  });
-
+  // Define the terminal creation function
+  function chTerminalPath(termPath) {
+    // Kill the existing terminal process if it exists
+    if (ptyProcess) {
+      ptyProcess.kill();
+    }
+  
+    //terminal
+    const shell = os.platform() === "win32" ? "powershell.exe" : "bash";
+    ptyProcess = pty.spawn(shell, [], {
+      name: "xterm-color",
+      cols: 80,
+      rows: 30,
+      cwd: termPath,
+      env: process.env,
+    });
+  
+    ptyProcess.on('data', function(data) {
+      mainWindow.webContents.send("terminal.incomingData", data);
+      console.log("Data sent");
+    });
+  }
+  
+  // Attach the terminal keystroke listener outside the function
   ipcMain.on("terminal.keystroke", (event, key) => {
-    ptyProcess.write(key);
+    if (ptyProcess) {
+      ptyProcess.write(key);
+    }
   });
+  
+  
+
+
 
 
   //file manager
@@ -121,6 +135,7 @@ function createWindow() {
             event.sender.send('files-in-directory', files); // Sending directory contents to renderer process
             console.log('Files in directory:', files);
             currentDirectory = clickedPath; // Update the current directory
+            ptyProcess.kill();
             chTerminalPath(currentDirectory);
           }
         });
@@ -209,32 +224,13 @@ ipcMain.on('return-to-parent-directory', (event) => {
       event.sender.send('files-in-directory', files);
       console.log(files);
       currentDirectory = parentDirectory; 
+      ptyProcess.kill();
+
       chTerminalPath(currentDirectory);
 
     }
   });
 });
-
-
-function chTerminalPath(termPath)
-{
-ptyProcess.kill(); 
-ptyProcess = pty.spawn(shell, [], {
-  name: "xterm-color",
-  cols: 80,
-  rows: 30,
-  cwd: termPath,
-  env: process.env,
-});
-ptyProcess.on('data', function(data) {
-  mainWindow.webContents.send("terminal.incomingData", data);
-  console.log("Data sent");
-});
-
-ipcMain.on("terminal.keystroke", (event, key) => {
-  ptyProcess.write(key);
-});
-}
 
 
 }
