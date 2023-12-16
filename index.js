@@ -5,6 +5,7 @@ const pty = require("node-pty");
 const path = require('path');
 const fs = require('fs');
 const os = require("os");
+const { connected } = require('process');
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 
@@ -50,7 +51,6 @@ function createWindow() {
   //file manager
   let selectedDirectory;
   let currentDirectory;
-
   //Open Folder Button + Listing Files inside the folder.
   ipcMain.on('open-folder-dialog', (event, arg) => {
     dialog.showOpenDialog({
@@ -68,13 +68,15 @@ function createWindow() {
             currentDirectory = selectedDirectory;
             console.log(files);
             console.log("Current Directory",currentDirectory);
-
+            chTerminalPath(currentDirectory);
           }
         });
       }
     }).catch(err => {
       console.error(err);
     });
+
+
   });
   
   ipcMain.on('file-button-clicked', (event, fileName) => {
@@ -119,6 +121,7 @@ function createWindow() {
             event.sender.send('files-in-directory', files); // Sending directory contents to renderer process
             console.log('Files in directory:', files);
             currentDirectory = clickedPath; // Update the current directory
+            chTerminalPath(currentDirectory);
           }
         });
       } else {
@@ -155,7 +158,6 @@ ipcMain.on('save-file', (event, { filePath, content }) => {
 });
   
 ipcMain.on('file-creation-request', (event, fileName) => {
-  const currentDir = app.getAppPath();
   const fileContent = ''; 
   const filePath = path.join(currentDirectory, fileName); 
   console.log('from file creation print' + filePath);
@@ -166,8 +168,28 @@ ipcMain.on('file-creation-request', (event, fileName) => {
       event.sender.send('file-creation-error', err.message);
       return;
     }
-    console.log(`File "${fileName}" created successfully at ${currentDir}`);
+    console.log(`File "${fileName}" created successfully at ${currentDirectory}`);
     event.sender.send('file-creation-success', fileName);
+  });
+});
+
+
+ipcMain.on('folder-creation-request', (event, folderName) => {
+  
+  // Sanitize folder name if necessary (for example, replacing invalid characters)
+  const sanitizedFolderName = folderName.replace(/[^\w\s]/gi, ''); // Replace non-word characters
+
+  const folderPath = path.join(currentDirectory, sanitizedFolderName);
+
+  // Create the folder
+  fs.mkdir(folderPath, { recursive: true }, (err) => {
+    if (err) {
+      console.error(err);
+      event.sender.send('folder-creation-error', err.message);
+    } else {
+      console.log(`Folder "${folderPath}" created successfully`);
+      event.sender.send('folder-creation-success', folderPath);
+    }
   });
 });
 
@@ -177,7 +199,6 @@ ipcMain.on('return-to-parent-directory', (event) => {
     // If the current directory is not set, do nothing or handle accordingly
     return;
   }
-
   const parentDirectory = path.dirname(currentDirectory);
 
   fs.readdir(parentDirectory, (err, files) => {
@@ -188,24 +209,35 @@ ipcMain.on('return-to-parent-directory', (event) => {
       event.sender.send('files-in-directory', files);
       console.log(files);
       currentDirectory = parentDirectory; 
+      chTerminalPath(currentDirectory);
+
     }
   });
 });
 
 
+function chTerminalPath(termPath)
+{
+ptyProcess.kill(); 
+ptyProcess = pty.spawn(shell, [], {
+  name: "xterm-color",
+  cols: 80,
+  rows: 30,
+  cwd: termPath,
+  env: process.env,
+});
+ptyProcess.on('data', function(data) {
+  mainWindow.webContents.send("terminal.incomingData", data);
+  console.log("Data sent");
+});
 
+ipcMain.on("terminal.keystroke", (event, key) => {
+  ptyProcess.write(key);
+});
 }
 
 
-
-
-
-
-
-
-
-
-
+}
 
 app.on("ready", () => {
   createWindow();
@@ -222,3 +254,4 @@ app.on("activate", function () {
     createWindow();
   }
 });  
+
