@@ -176,8 +176,21 @@ const fileContentPre = document.getElementById('editor');
 
 
 ipcRenderer.on('file-content', (event, content) => {
-  fileContentPre.textContent = content; // Set preformatted content with file content
+  // Set preformatted content with file content
+  fileContentPre.innerHTML = highlightKeywords(content);
 });
+
+function highlightKeywords(content) {
+  // List of programming keywords you want to highlight
+  const keywords = ['function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return', 'class']; // Add more keywords as needed
+  
+  // Regular expression pattern to match the keywords
+  const pattern = new RegExp(`\\b(${keywords.join('|')})\\b`, 'g');
+  
+  // Replace keywords with span elements having a specific class for highlighting
+  return content.replace(pattern, '<span class="highlight">$1</span>');
+}
+
 
 function saveChanges() {
   let updatedContent = fileContentPre.innerHTML; // Get updated content from the pre element
