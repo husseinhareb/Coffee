@@ -48,6 +48,7 @@ body, html {
     background-color: #181818;
     border: 0px;
 }
+
 .returnBtn:hover{
     background-color: #2a2d2e;
 }
@@ -80,3 +81,25 @@ body, html {
 .addFile:hover{
     background-color: #2a2d2e;
 }
+
+
+  .keywords {
+    color: blue;
+  }
+  
+  .controlStatements {
+    color: green;
+  }
+  
+  .modifiers {
+    color: purple;
+  }
+  
+  .operators {
+    color: orange;
+  }
+  
+  .dataTypes {
+    color: red;
+  }
+  

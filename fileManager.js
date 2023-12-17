@@ -214,4 +214,3 @@ function getFileType(name) {
   }
   return ' '; 
 }
-f
