@@ -2,7 +2,6 @@
     "keywords": ["int", "float", "double", "char", "void"],
     "controlStatements": ["if", "else", "for", "while", "switch", "case","do"],
     "modifiers": ["public", "private", "protected"],
-    "operators": ["+", "-", "*", "/", "=", "==", "&&", "||"],
     "dataTypes": ["int", "float", "double", "char", "void"]
-  }
+}
   

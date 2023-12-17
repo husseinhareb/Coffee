@@ -172,25 +172,53 @@ ipcRenderer.on('file-path', (event, filepath) => {
 
 
 
-const fileContentPre = document.getElementById('editor');
 
 
-ipcRenderer.on('file-content', (event, content) => {
-  // Set preformatted content with file content
-  fileContentPre.innerHTML = highlightKeywords(content);
+ipcRenderer.on('file-content', (event, fileData) => {
+  const { fileName, content } = fileData;
+
+  // Displaying the file name and content in fileContentPre element
+  //fileContentPre.textContent = content;
+  getLangName(fileName)
+    .then(lang => {
+      const language = lang;
+
+      fetch(`./languages/${language}/keywords.json`)
+        .then(response => response.json())
+        .then(keywordsData => {
+          // Split the text into lines and preserve line breaks
+          const lines = content.split('\n');
+          const highlightedLines = lines.map(line => {
+            // Split each line into words
+            const words = line.split(/\s+/);
+
+            // Function to wrap the words with spans and apply classes for each category
+            function highlightKeywordsByCategory(text, category, cssClass) {
+              keywordsData[category].forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+                text = text.replace(regex, `<span class="${cssClass}">${keyword}</span>`);
+              });
+              return text;
+            }
+
+            // Apply highlighting for each category to the text content
+            Object.keys(keywordsData).forEach(category => {
+              line = highlightKeywordsByCategory(line, category, `highlight-${category.toLowerCase()}`);
+            });
+
+            return line;
+          });
+
+          // Get the div element to display the content
+          const fileContentPre = document.getElementById('editor');
+
+          // Display the highlighted content in the div with line breaks
+          fileContentPre.innerHTML = highlightedLines.join('<br>');
+        })
+        .catch(error => console.error('Error loading keywords:', error));
+    })
+    .catch(error => console.error('Error getting language:', error));
 });
-
-function highlightKeywords(content) {
-  // List of programming keywords you want to highlight
-  const keywords = ['function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return', 'class']; // Add more keywords as needed
-  
-  // Regular expression pattern to match the keywords
-  const pattern = new RegExp(`\\b(${keywords.join('|')})\\b`, 'g');
-  
-  // Replace keywords with span elements having a specific class for highlighting
-  return content.replace(pattern, '<span class="highlight">$1</span>');
-}
-
 
 function saveChanges() {
   let updatedContent = fileContentPre.innerHTML; // Get updated content from the pre element
@@ -223,7 +251,22 @@ ipcRenderer.on('file-saved', (event, message) => {
 function getFileType(name) {
   const dotIndex = name.lastIndexOf('.');
   if (dotIndex !== -1) {
-      return name.substring(dotIndex + 1);
+    return name.substring(dotIndex + 1);
   }
-  return ' '; 
+  return '';
 }
+
+function getLangName(name) {
+  const fileExtension = getFileType(name);
+  return fetch('./languages/languages.json')
+    .then(response => response.json())
+    .then(data => {
+      let lang = data[fileExtension] || '';
+      return lang;
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      return ''; // Return an empty string or handle the error as needed
+    });
+}
+

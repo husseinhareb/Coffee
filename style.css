@@ -83,28 +83,39 @@ body, html {
 }
 
 
-.keywordStyle {
-    color: blue; /* Or any color you prefer for keywords */
-    /* Additional styles for keywords */
+/* CSS classes for keyword highlighting */
+.highlight-controlflow {
+    color: blue;
+    /* Add any other desired styles */
   }
   
-  .controlStyle {
-    color: green; /* Or any color you prefer for control statements */
-    /* Additional styles for control statements */
+  .highlight-datatypes {
+    color: green;
+    /* Add any other desired styles */
   }
   
-  .modifierStyle {
-    color: orange; /* Or any color you prefer for modifiers */
-    /* Additional styles for modifiers */
+  .highlight-loops {
+    color: orange;
+    /* Add any other desired styles */
   }
   
-  .operatorStyle {
-    color: purple; /* Or any color you prefer for operators */
-    /* Additional styles for operators */
+  .highlight-functions {
+    color: red;
+    /* Add any other desired styles */
   }
   
-  .dataTypeStyle {
-    color: red; /* Or any color you prefer for data types */
-    /* Additional styles for data types */
+  .highlight-variables {
+    color: purple;
+    /* Add any other desired styles */
+  }
+  
+  .highlight-errorhandling {
+    color: brown;
+    /* Add any other desired styles */
+  }
+  
+  .highlight-modules {
+    color: teal;
+    /* Add any other desired styles */
   }
   
