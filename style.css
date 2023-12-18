@@ -83,39 +83,3 @@ body, html {
 }
 
 
-/* CSS classes for keyword highlighting */
-.highlight-controlflow {
-    color: blue;
-    /* Add any other desired styles */
-  }
-  
-  .highlight-datatypes {
-    color: green;
-    /* Add any other desired styles */
-  }
-  
-  .highlight-loops {
-    color: orange;
-    /* Add any other desired styles */
-  }
-  
-  .highlight-functions {
-    color: red;
-    /* Add any other desired styles */
-  }
-  
-  .highlight-variables {
-    color: purple;
-    /* Add any other desired styles */
-  }
-  
-  .highlight-errorhandling {
-    color: brown;
-    /* Add any other desired styles */
-  }
-  
-  .highlight-modules {
-    color: teal;
-    /* Add any other desired styles */
-  }
-  
