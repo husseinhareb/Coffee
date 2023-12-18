@@ -1,6 +1,5 @@
 //renderer.js
 const { ipcRenderer } = require("electron");
-
 const fsSpan = document.getElementById('fs');
 
 const returnDiv = document.createElement('div');
@@ -168,57 +167,26 @@ ipcRenderer.on('file-path', (event, filepath) => {
   console.log('Received filePath in renderer:', filepath);
 
 });
+const monaco = require('monaco-editor');
 
+// Get the container element for the editor
+const editorContainer = document.getElementById('editor');
 
+// Listen for 'file-content' event from main process
+ipcRenderer.on('file-content', (event, content) => {
+  // Create or dispose the existing editor instance
+  if (editorContainer && editorContainer.firstChild) {
+    editorContainer.removeChild(editorContainer.firstChild);
+  }
 
-
-
-
-ipcRenderer.on('file-content', (event, fileData) => {
-  const { fileName, content } = fileData;
-
-  // Displaying the file name and content in fileContentPre element
-  //fileContentPre.textContent = content;
-  getLangName(fileName)
-    .then(lang => {
-      const language = lang;
-
-      fetch(`./languages/${language}/keywords.json`)
-        .then(response => response.json())
-        .then(keywordsData => {
-          // Split the text into lines and preserve line breaks
-          const lines = content.split('\n');
-          const highlightedLines = lines.map(line => {
-            // Split each line into words
-            const words = line.split(/\s+/);
-
-            // Function to wrap the words with spans and apply classes for each category
-            function highlightKeywordsByCategory(text, category, cssClass) {
-              keywordsData[category].forEach(keyword => {
-                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-                text = text.replace(regex, `<span class="${cssClass}">${keyword}</span>`);
-              });
-              return text;
-            }
-
-            // Apply highlighting for each category to the text content
-            Object.keys(keywordsData).forEach(category => {
-              line = highlightKeywordsByCategory(line, category, `highlight-${category.toLowerCase()}`);
-            });
-
-            return line;
-          });
-
-          // Get the div element to display the content
-          const fileContentPre = document.getElementById('editor');
-
-          // Display the highlighted content in the div with line breaks
-          fileContentPre.innerHTML = highlightedLines.join('<br>');
-        })
-        .catch(error => console.error('Error loading keywords:', error));
-    })
-    .catch(error => console.error('Error getting language:', error));
+  // Create a new Monaco Editor instance
+  const editor = monaco.editor.create(editorContainer, {
+    value: content,
+    language: 'javascript',
+    theme: 'vs-dark'
+  });
 });
+
 
 function saveChanges() {
   let updatedContent = fileContentPre.innerHTML; // Get updated content from the pre element
