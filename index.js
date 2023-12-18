@@ -5,7 +5,6 @@ const pty = require("node-pty");
 const path = require('path');
 const fs = require('fs');
 const os = require("os");
-const { connected } = require('process');
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 
@@ -15,6 +14,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -115,10 +115,10 @@ function createWindow() {
         console.error(readErr);
         event.sender.send('file-content', { fileName, content: '' }); // Sending empty content in case of error along with the file name
         } else {
-        console.log('File content:', data);
-        event.sender.send('file-content', { fileName, content: data }); // Sending file name and content to renderer process
-        currentDirectory = path.dirname(clickedPath); // Update the current directory to the file's directory
-      }
+          console.log('File content:', data);
+          event.sender.send('file-content', data); // Sending file content to renderer process
+          currentDirectory = path.dirname(clickedPath); // Update the current directory to the file's directory
+        }
 });
 
       } else if (stats.isDirectory()) {
