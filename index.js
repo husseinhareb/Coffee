@@ -111,14 +111,14 @@ function createWindow() {
         event.sender.send('file-path', clickedPath);
 
         fs.readFile(clickedPath, 'utf-8', (readErr, data) => {
-        if (readErr) {
-        console.error(readErr);
-        event.sender.send('file-content', { fileName, content: '' }); // Sending empty content in case of error along with the file name
-        } else {
-          console.log('File content:', data);
-          event.sender.send('file-content', data); // Sending file content to renderer process
-          currentDirectory = path.dirname(clickedPath); // Update the current directory to the file's directory
-        }
+          if (readErr) {
+            console.error(readErr);
+            event.sender.send('file-content', { fileName, content: '' }); // Sending empty content in case of error along with the file name
+            } else {
+            console.log('File content:', data);
+            event.sender.send('file-content', { fileName, content: data }); // Sending file name and content to renderer process
+            currentDirectory = path.dirname(clickedPath); // Update the current directory to the file's directory
+          }
 });
 
       } else if (stats.isDirectory()) {

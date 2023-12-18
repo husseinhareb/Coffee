@@ -167,38 +167,35 @@ ipcRenderer.on('file-path', (event, filepath) => {
   console.log('Received filePath in renderer:', filepath);
 
 });
-const monaco = require('monaco-editor');
 
-// Get the container element for the editor
-const editorContainer = document.getElementById('editor');
 
 // Listen for 'file-content' event from main process
-ipcRenderer.on('file-content', (event, content) => {
-  // Create or dispose the existing editor instance
-  if (editorContainer && editorContainer.firstChild) {
-    editorContainer.removeChild(editorContainer.firstChild);
-  }
-
-  // Create a new Monaco Editor instance
-  const editor = monaco.editor.create(editorContainer, {
-    value: content,
-    language: 'javascript',
-    theme: 'vs-dark'
+ipcRenderer.on('file-content', (event, fileData) => {
+  const { fileName, content } = fileData;
+  getLangName(fileName)
+  .then(lang => {
+    const language = lang;
+              // Wait for Ace to be loaded dynamically
+    ace.config.set("basePath", "./node_modules/ace-builds/src/ace.js");
+      const editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai"); // Set editor theme
+    editor.session.setMode(`ace/mode/${language}`); // Set language mode          
+            // Set some initial content
+    editor.setValue(content);
+            
   });
+
+
 });
 
 
 function saveChanges() {
-  let updatedContent = fileContentPre.innerHTML; // Get updated content from the pre element
-  updatedContent = updatedContent.replace(/<div>/g, '\n'); // Replace <div> with newline
-  updatedContent = updatedContent.replace(/<\/div>/g, ''); // Remove </div>
-  updatedContent = updatedContent.replace(/<br>/g, '\n'); // Replace <br> with newline
+  const editor = ace.edit("editor"); // Get Ace editor instance
+  const updatedContent = editor.getValue(); // Get content from the Ace editor
 
-  // Decode HTML entities back to their original characters
-  const parser = new DOMParser();
-  const decodedContent = parser.parseFromString(`<!doctype html><body>${updatedContent}`, 'text/html').body.textContent;
+  // Decode HTML entities if needed - not necessary for Ace editor content
   
-  ipcRenderer.send('save-file', { filePath, content: decodedContent });
+  ipcRenderer.send('save-file', { filePath, content: updatedContent });
 }
 
 
@@ -226,7 +223,7 @@ function getFileType(name) {
 
 function getLangName(name) {
   const fileExtension = getFileType(name);
-  return fetch('./languages/languages.json')
+  return fetch('./languages.json')
     .then(response => response.json())
     .then(data => {
       let lang = data[fileExtension] || '';

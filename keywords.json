@@ -1,7 +1,0 @@
-{
-    "keywords": ["int", "float", "double", "char", "void"],
-    "controlStatements": ["if", "else", "for", "while", "switch", "case","do"],
-    "modifiers": ["public", "private", "protected"],
-    "dataTypes": ["int", "float", "double", "char", "void"]
-}
-  
