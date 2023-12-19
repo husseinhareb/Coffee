@@ -4,6 +4,16 @@
     "json":"json",
     "css":"css",
     "ts":"typescript",
-    "c":"C",
-    "py":"python"
+    "py":"python",
+    "c":"c_cpp",
+    "cpp": "c_pp",
+    "dart": "dart",
+    "java": "java",
+    "rb": "ruby",
+    "swift": "swift",
+    "go": "golang",
+    "r": "r",
+    "pl": "perl",
+    "rs": "rust",
+    "xml": "xml"    
 }
