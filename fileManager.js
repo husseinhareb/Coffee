@@ -1,5 +1,6 @@
 //renderer.js
-const { ipcRenderer } = require("electron");
+const { ipcRenderer } = require('electron');
+
 const fsSpan = document.getElementById('fs');
 
 const returnDiv = document.createElement('div');
@@ -36,6 +37,13 @@ addFolder.className = "addFile";
 addFolder.addEventListener('click', addfolder);
 buttonsDiv.appendChild(addFolder);
 
+const reloadFolder = document.createElement('button');
+reloadFolder.innerHTML = '<i class="nf-md-reload"></i>';
+reloadFolder.className = "addFile";
+reloadFolder.addEventListener('click', () => {
+  ipcRenderer.send('reload-folder');
+});
+buttonsDiv.appendChild(reloadFolder);
 fsSpan.appendChild(buttonsDiv);
 
 
@@ -118,7 +126,6 @@ function addfile() {
   fss.appendChild(textArea);
 }
 
-
 //Send file name clicked from fileManager.js
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
@@ -130,6 +137,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     buttonsDiv.appendChild(chDir);
     buttonsDiv.appendChild(addFile);
     buttonsDiv.appendChild(addFolder);
+    buttonsDiv.appendChild(reloadFolder);
     fsSpan.appendChild(buttonsDiv);
   files.forEach(fileName => {
     const fileButton = document.createElement('button');
@@ -151,7 +159,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
       // Send the filename to the main process
       ipcRenderer.send('file-button-clicked', fileName);
     });
-    fsSpan.appendChild(fileButton);
+      fsSpan.appendChild(fileButton);
   });
 
 });
@@ -234,4 +242,3 @@ function getLangName(name) {
       return ''; // Return an empty string or handle the error as needed
     });
 }
-
