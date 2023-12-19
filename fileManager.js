@@ -55,9 +55,8 @@ function addfolder() {
   const fss = document.getElementById('fs');
   const textArea = document.createElement('input');
   textArea.type = "text";
-  textArea.style.width = "80px"; 
-  textArea.style.height = "20px";
   textArea.placeholder = "foldername";
+  textArea.className="folderArea";
   textArea.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && textArea.value.trim() !== '') {
       const folderName = textArea.value.trim(); // Get the folder name
@@ -83,7 +82,9 @@ function addfolder() {
       ipcRenderer.send('folder-creation-request', folderName);
     }
   });
+
   fss.appendChild(textArea);
+  textArea.focus();
 }
 
 
@@ -94,9 +95,8 @@ function addfile() {
   const fss = document.getElementById('fs');
   const textArea = document.createElement('input');
   textArea.type = "text";
-  textArea.style.width = "80px"; 
-  textArea.style.height = "20px";
   textArea.placeholder = "fileName";
+  textArea.className = "fileArea";
   textArea.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && textArea.value.trim() !== '') {
       const newButton = document.createElement('button');
@@ -125,10 +125,13 @@ function addfile() {
       });
     }
   });
+
+
   fss.appendChild(textArea);
+  textArea.focus();
 }
 
-
+let previousButton = null;
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
   // Append returnBtn
@@ -158,10 +161,19 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     fileButton.className = "filesButtons"
     fileButton.style.display = 'block'; // Set the display to block
     fileButton.addEventListener('click', () => {
+      if (previousButton !== null) {
+        previousButton.style.backgroundColor = ''; // Set to original background color
+      }
+
+      fileButton.style.backgroundColor = '#292e42'; 
+
+      previousButton = fileButton;
+
       // Send the filename to the main process
       ipcRenderer.send('file-button-clicked', fileName);
     });
-      fsSpan.appendChild(fileButton);
+
+    fsSpan.appendChild(fileButton);
   });
 
 });
@@ -203,7 +215,6 @@ function saveChanges() {
   const editor = ace.edit("editor"); // Get Ace editor instance
   const updatedContent = editor.getValue(); // Get content from the Ace editor
 
-  // Decode HTML entities if needed - not necessary for Ace editor content
   
   ipcRenderer.send('save-file', { filePath, content: updatedContent });
 }
