@@ -6,6 +6,7 @@
 body, html {
     height: 100%;
     margin: 0;
+    
 }
   
 #top {
@@ -19,6 +20,8 @@ body, html {
     overflow-y: auto;
     font-family: "JetBrainsMono Nerd Font";
     background-color: #181818;
+    overflow: hidden;
+    white-space: nowrap;
 }
   
 
@@ -81,5 +84,3 @@ body, html {
 .addFile:hover{
     background-color: #2a2d2e;
 }
-
-
