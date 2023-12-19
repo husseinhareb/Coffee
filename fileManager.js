@@ -4,14 +4,16 @@ const { ipcRenderer } = require('electron');
 const fsSpan = document.getElementById('fs');
 
 const returnDiv = document.createElement('div');
+
 const returnBtn = document.createElement('button');
 returnBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 returnBtn.className = "returnBtn";
-
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
 });
+
 returnDiv.appendChild(returnBtn);
+
 fsSpan.appendChild(returnDiv);
 
 
@@ -43,9 +45,9 @@ reloadFolder.className = "addFile";
 reloadFolder.addEventListener('click', () => {
   ipcRenderer.send('reload-folder');
 });
+
 buttonsDiv.appendChild(reloadFolder);
 fsSpan.appendChild(buttonsDiv);
-
 
 
 
@@ -126,7 +128,7 @@ function addfile() {
   fss.appendChild(textArea);
 }
 
-//Send file name clicked from fileManager.js
+
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
   // Append returnBtn
@@ -169,7 +171,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
 
 let filePath;
-// Listen for the file-path event from the main process
+
 ipcRenderer.on('file-path', (event, filepath) => {
   filePath = filepath;
   console.log('Received filePath in renderer:', filepath);

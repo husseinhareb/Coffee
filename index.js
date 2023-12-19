@@ -18,6 +18,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+          enableRemoteModule: true,
     },
   });
 
@@ -230,6 +231,29 @@ ipcMain.on('return-to-parent-directory', (event) => {
     }
   });
 });
+
+
+// In index.js
+ipcMain.on('reload-folder', (event) => {
+  if (!currentDirectory) {
+    // Handle if the current directory is not set
+    return;
+  }
+
+  fs.readdir(currentDirectory, (err, files) => {
+    if (err) {
+      console.error(err);
+      event.sender.send('files-in-directory', []);
+    } else {
+      event.sender.send('files-in-directory', files);
+      console.log(files);
+      ptyProcess.kill(); // Kill the existing terminal process if needed
+
+      chTerminalPath(currentDirectory); // Reinitialize terminal with current directory
+    }
+  });
+});
+
 
 
 }
