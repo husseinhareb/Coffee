@@ -192,18 +192,15 @@ ipcRenderer.on('file-path', (event, filepath) => {
 });
 
 
-// Listen for 'file-content' event from main process
 ipcRenderer.on('file-content', (event, fileData) => {
   const { fileName, content } = fileData;
   getLangName(fileName)
   .then(lang => {
     const language = lang;
-              // Wait for Ace to be loaded dynamically
     ace.config.set("basePath", "./node_modules/ace-builds/src/ace.js");
       const editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai"); // Set editor theme
-    editor.session.setMode(`ace/mode/${language}`); // Set language mode          
-            // Set some initial content
+    editor.setTheme("ace/theme/monokai"); 
+    editor.session.setMode(`ace/mode/${language}`);
     editor.setValue(content);
             
   });
@@ -213,8 +210,8 @@ ipcRenderer.on('file-content', (event, fileData) => {
 
 
 function saveChanges() {
-  const editor = ace.edit("editor"); // Get Ace editor instance
-  const updatedContent = editor.getValue(); // Get content from the Ace editor
+  const editor = ace.edit("editor"); 
+  const updatedContent = editor.getValue();
 
   
   ipcRenderer.send('save-file', { filePath, content: updatedContent });
