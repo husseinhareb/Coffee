@@ -20,7 +20,8 @@ fsSpan.appendChild(returnDiv);
 const buttonsDiv = document.createElement('div');
 buttonsDiv.className = "buttonsDiv";
 const chDir = document.createElement('button');
-chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i> Open Folder';
+chDir.className="changeDir"
+chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i>Open Folder';
 chDir.addEventListener('click', () => {
   ipcRenderer.send('open-folder-dialog');
 });

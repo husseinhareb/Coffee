@@ -1,7 +1,7 @@
 const ipc = require("electron").ipcRenderer;
 const term = new Terminal({
     theme: {
-        background: '#181818',
+        background: '#1f2335',
         fontFamily: "JetBrainsMono Nerd Font",
     },
 
@@ -9,6 +9,11 @@ const term = new Terminal({
 
 term.open(document.getElementById('terminal'));
 
+const terminalContainer = document.getElementById('terminal');
+
+function scrollToBottom(){
+    terminalContainer.scrollTop = terminalContainer.scrollHeight;
+}
 
 ipc.on("terminal.incomingData", (event, data) => {
     term.write(data);
