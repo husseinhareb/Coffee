@@ -27,7 +27,7 @@ body, html {
   
 
 #terminal {
-    height: 28%;
+    height: 27%;
     border-top: 3px solid #1b1e2e;
     overflow-y: scroll;
     white-space: nowrap; /* Prevent text wrapping */
@@ -35,7 +35,7 @@ body, html {
 }
 
 #buttomBar{
-    height: 2%;
+    height: 3%;
     border-top: 3px solid #1b1e2e;
     background-color: #1f2335;
 }

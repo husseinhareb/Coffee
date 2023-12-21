@@ -195,18 +195,34 @@ ipcRenderer.on('file-path', (event, filepath) => {
 ipcRenderer.on('file-content', (event, fileData) => {
   const { fileName, content } = fileData;
   getLangName(fileName)
-  .then(lang => {
-    const language = lang;
-    ace.config.set("basePath", "./node_modules/ace-builds/src/ace.js");
+    .then(lang => {
+      const language = lang;
+      ace.config.set("basePath", "./node_modules/ace-builds/src/ace.js");
       const editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai"); 
-    editor.session.setMode(`ace/mode/${language}`);
-    editor.setValue(content);
-            
-  });
+      editor.setTheme("ace/theme/monokai"); 
+      editor.session.setMode(`ace/mode/${language}`);
+      editor.setValue(content);
 
+      // Check if the button already exists; if so, update its text content
+      const bottom = document.getElementById('bottomBar');
+      let languageName = document.getElementById('languageButton');
 
+      if (!languageName) {
+        // If the button doesn't exist, create and append it to the bottom element
+        languageName = document.createElement('button');
+        languageName.id = 'languageButton';
+        bottom.appendChild(languageName);
+      }
+
+      // Update the text content of the button
+      languageName.textContent = language;
+    })
+    .catch(err => {
+      console.error("Error:", err);
+      // Handle errors occurring during language retrieval
+    });
 });
+
 
 
 function saveChanges() {
