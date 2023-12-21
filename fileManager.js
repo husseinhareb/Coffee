@@ -203,19 +203,17 @@ ipcRenderer.on('file-content', (event, fileData) => {
       editor.session.setMode(`ace/mode/${language}`);
       editor.setValue(content);
 
-      // Check if the button already exists; if so, update its text content
-      const bottom = document.getElementById('bottomBar');
-      let languageName = document.getElementById('languageButton');
-
+      // Get the existing button or create a new one
+      const bottom = document.getElementById('buttomBar');
+      let languageName = bottom.querySelector('button');
       if (!languageName) {
-        // If the button doesn't exist, create and append it to the bottom element
         languageName = document.createElement('button');
-        languageName.id = 'languageButton';
         bottom.appendChild(languageName);
       }
-
-      // Update the text content of the button
+      languageName.className = "languageName";
+      // Update the button's content
       languageName.textContent = language;
+      
     })
     .catch(err => {
       console.error("Error:", err);

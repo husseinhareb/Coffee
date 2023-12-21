@@ -38,6 +38,8 @@ body, html {
     height: 3%;
     border-top: 3px solid #1b1e2e;
     background-color: #1f2335;
+    display: flex;
+    align-items: center; /* Vertical centering */
 }
 #editor {
     width: 100%;
@@ -133,5 +135,17 @@ body, html {
 
 
 .changeDir:hover{
+    background-color: #2c324a;
+}
+
+.languageName{
+    background-color: #1f2335;
+    border: 0px;
+    color: #959cbd;
+    font-size: 10px;
+    height: 100%;
+    margin: 0;
+}
+.languageName:hover{
     background-color: #2c324a;
 }
