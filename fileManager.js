@@ -1,5 +1,6 @@
 //renderer.js
 const { ipcRenderer } = require('electron');
+const { createWriteStream } = require('original-fs');
 
 const fsSpan = document.getElementById('fs');
 
@@ -191,7 +192,6 @@ ipcRenderer.on('file-path', (event, filepath) => {
 
 });
 
-
 ipcRenderer.on('file-content', (event, fileData) => {
   const { fileName, content } = fileData;
   getLangName(fileName)
@@ -203,17 +203,29 @@ ipcRenderer.on('file-content', (event, fileData) => {
       editor.session.setMode(`ace/mode/${language}`);
       editor.setValue(content);
 
-      // Get the existing button or create a new one
+      // Get the existing language button or create a new one
       const bottom = document.getElementById('buttomBar');
-      let languageName = bottom.querySelector('button');
-      if (!languageName) {
-        languageName = document.createElement('button');
-        bottom.appendChild(languageName);
+      let languageButton = bottom.querySelector('.languageName');
+      if (!languageButton) {
+        languageButton = document.createElement('button');
+        languageButton.className = "languageName";
+        bottom.appendChild(languageButton);
       }
-      languageName.className = "languageName";
-      // Update the button's content
-      languageName.textContent = language;
-      
+      languageButton.textContent = language;
+
+      // Get the existing line and column button or create a new one
+      let lns = bottom.querySelector('.lineColumn');
+      if (!lns) {
+        lns = document.createElement('button');
+        lns.className = "lineColumn";
+        bottom.appendChild(lns);
+      }
+
+      // Listen to changes in the editor content
+      editor.getSession().on('change', () => {
+        const cursorPos = editor.getCursorPosition();
+        lns.textContent = `Line: ${cursorPos.row + 1}, Column: ${cursorPos.column}`;
+      });
     })
     .catch(err => {
       console.error("Error:", err);

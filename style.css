@@ -134,7 +134,7 @@ body, html {
     background-color: #2c324a;
 }
 
-.languageName{
+.languageName, .lineColumn{
     background-color: #1f2335;
     border: 0px;
     color: #959cbd;
@@ -142,6 +142,6 @@ body, html {
     height: 100%;
     margin: 0;
 }
-.languageName:hover{
+.languageName:hover, .lineColumn:hover{
     background-color: #2c324a;
 }
