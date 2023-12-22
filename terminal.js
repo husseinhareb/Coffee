@@ -10,9 +10,6 @@ const term = new Terminal({
 term.open(document.getElementById('terminal'));
 const terminalContainer = document.getElementById('terminal');
 
-function scrollToBottom(){
-    terminalContainer.scrollTop = terminalContainer.scrollHeight;
-}
 
 ipc.on("terminal.incomingData", (event, data) => {
     term.write(data);
