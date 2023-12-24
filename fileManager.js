@@ -136,48 +136,62 @@ function addfile() {
 let previousButton = null;
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
+
   // Append returnBtn
   returnDiv.appendChild(returnBtn);
   fsSpan.appendChild(returnDiv);
 
-    // Append chDir and addFile to buttonsDiv
-    buttonsDiv.appendChild(chDir);
-    buttonsDiv.appendChild(addFile);
-    buttonsDiv.appendChild(addFolder);
-    buttonsDiv.appendChild(reloadFolder);
-    fsSpan.appendChild(buttonsDiv);
+  // Append chDir and addFile to buttonsDiv
+  buttonsDiv.appendChild(chDir);
+  buttonsDiv.appendChild(addFile);
+  buttonsDiv.appendChild(addFolder);
+  buttonsDiv.appendChild(reloadFolder);
+  fsSpan.appendChild(buttonsDiv);
+  
   files.forEach(fileName => {
-    const fileButton = document.createElement('button');
-    const fileType = getFileType(fileName);
-      console.log(fileType);
-      fetch('./symbols.json')
-        .then(response => response.json())
-        .then(data => {
-          let symbol = data[fileType] || " ";
-          console.log(symbol);
-          fileButton.innerHTML = symbol + " "+ fileName;
+    const fileDiv = document.createElement('div');
+    const fileNameText = document.createElement('span');
+    const ellipsisButton = document.createElement('button');
 
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    fileDiv.className = "fileDiv";
+    fileDiv.style.display = 'flex'; 
+    fileDiv.style.position = 'relative'; 
 
-    fileButton.className = "filesButtons"
-    fileButton.style.display = 'block'; // Set the display to block
-    fileButton.addEventListener('click', () => {
+    fileNameText.textContent = fileName;
+    fileNameText.style.overflow = 'hidden';
+    fileNameText.style.textOverflow = 'ellipsis'; 
+    fileNameText.style.whiteSpace = 'nowrap'; 
+
+    fileDiv.appendChild(fileNameText); 
+
+    ellipsisButton.textContent = '...';
+    ellipsisButton.className = 'ellipsisButton'; 
+    ellipsisButton.style.position = 'absolute';
+    ellipsisButton.style.right = '0'; 
+
+    fileDiv.appendChild(ellipsisButton); 
+
+    fileDiv.addEventListener('click', () => {
       if (previousButton !== null) {
-        previousButton.style.backgroundColor = ''; // Set to original background color
+        previousButton.style.backgroundColor = ''; 
       }
 
-      fileButton.style.backgroundColor = '#292e42'; 
+      fileDiv.style.backgroundColor = '#292e42'; 
 
-      previousButton = fileButton;
+      previousButton = fileDiv;
 
       // Send the filename to the main process
       ipcRenderer.send('file-button-clicked', fileName);
     });
 
-    fsSpan.appendChild(fileButton);
-  });
+    // Add click event to the ellipsis button
+    ellipsisButton.addEventListener('click', (event) => {
+      event.stopPropagation(); // Stop event bubbling to the parent div
+      console.log("hello"); 
+    });
 
+    fsSpan.appendChild(fileDiv); // Append the fileDiv to fsSpan
+  });
 });
 
 
