@@ -157,42 +157,56 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     fileDiv.style.display = 'flex'; 
     fileDiv.style.position = 'relative'; 
 
-    fileNameText.textContent = fileName;
+    fileNameText.textContent = fileName; 
     fileNameText.style.overflow = 'hidden';
     fileNameText.style.textOverflow = 'ellipsis'; 
     fileNameText.style.whiteSpace = 'nowrap'; 
 
-    fileDiv.appendChild(fileNameText); 
+    fileDiv.appendChild(fileNameText);
 
-    ellipsisButton.textContent = '...';
-    ellipsisButton.className = 'ellipsisButton'; 
-    ellipsisButton.style.position = 'absolute';
+    ellipsisButton.textContent = '...'; 
+    ellipsisButton.className = 'ellipsisButton';
+    ellipsisButton.style.position = 'absolute'; 
     ellipsisButton.style.right = '0'; 
+    ellipsisButton.style.display = 'none';
 
     fileDiv.appendChild(ellipsisButton); 
+
+
+    const fileType = getFileType(fileName);
+    console.log(fileType);
+    fetch('./symbols.json')
+      .then(response => response.json())
+      .then(data => {
+        let symbol = data[fileType] || " ";
+        console.log(symbol);
+        fileNameText.innerHTML = symbol + " " + fileName;
+      })
+      .catch(error => console.error('Error fetching data:', error));
 
     fileDiv.addEventListener('click', () => {
       if (previousButton !== null) {
         previousButton.style.backgroundColor = ''; 
+        previousButton.getElementsByClassName('ellipsisButton')[0].style.display = 'none'; 
       }
 
-      fileDiv.style.backgroundColor = '#292e42'; 
+      fileDiv.style.backgroundColor = '#292e42';
+      ellipsisButton.style.display = 'block';
 
       previousButton = fileDiv;
 
-      // Send the filename to the main process
       ipcRenderer.send('file-button-clicked', fileName);
     });
 
-    // Add click event to the ellipsis button
     ellipsisButton.addEventListener('click', (event) => {
-      event.stopPropagation(); // Stop event bubbling to the parent div
-      console.log("hello"); 
+      event.stopPropagation();
+      console.log("hello");
     });
 
-    fsSpan.appendChild(fileDiv); // Append the fileDiv to fsSpan
+    fsSpan.appendChild(fileDiv); 
   });
 });
+
 
 
 
