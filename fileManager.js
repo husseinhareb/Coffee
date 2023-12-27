@@ -164,7 +164,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
     fileDiv.appendChild(fileNameText);
 
-    settButton.textContent = '...'; 
+    settButton.innerHTML = '<i class="nf-oct-three_bars"></i>'; 
     settButton.className = 'settButton';
     settButton.style.position = 'absolute'; 
     settButton.style.right = '0'; 
