@@ -151,7 +151,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
   files.forEach(fileName => {
     const fileDiv = document.createElement('div');
     const fileNameText = document.createElement('span');
-    const ellipsisButton = document.createElement('button');
+    const settButton = document.createElement('button');
 
     fileDiv.className = "fileDiv";
     fileDiv.style.display = 'flex'; 
@@ -164,13 +164,13 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
     fileDiv.appendChild(fileNameText);
 
-    ellipsisButton.textContent = '...'; 
-    ellipsisButton.className = 'ellipsisButton';
-    ellipsisButton.style.position = 'absolute'; 
-    ellipsisButton.style.right = '0'; 
-    ellipsisButton.style.display = 'none';
+    settButton.textContent = '...'; 
+    settButton.className = 'settButton';
+    settButton.style.position = 'absolute'; 
+    settButton.style.right = '0'; 
+    settButton.style.display = 'none';
 
-    fileDiv.appendChild(ellipsisButton); 
+    fileDiv.appendChild(settButton); 
 
 
     const fileType = getFileType(fileName);
@@ -187,18 +187,18 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     fileDiv.addEventListener('click', () => {
       if (previousButton !== null) {
         previousButton.style.backgroundColor = ''; 
-        previousButton.getElementsByClassName('ellipsisButton')[0].style.display = 'none'; 
+        previousButton.getElementsByClassName('settButton')[0].style.display = 'none'; 
       }
 
       fileDiv.style.backgroundColor = '#292e42';
-      ellipsisButton.style.display = 'block';
+      settButton.style.display = 'block';
 
       previousButton = fileDiv;
 
       ipcRenderer.send('file-button-clicked', fileName);
     });
 
-    ellipsisButton.addEventListener('click', (event) => {
+    settButton.addEventListener('click', (event) => {
       event.stopPropagation();
       console.log("hello");
     });
