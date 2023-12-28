@@ -91,8 +91,6 @@ function addfolder() {
 
 
 
-
-//Function to add a file into the current directory 
 function addfile() {
   const fss = document.getElementById('fs');
   const textArea = document.createElement('input');
@@ -101,7 +99,7 @@ function addfile() {
   textArea.className = "fileArea";
   textArea.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && textArea.value.trim() !== '') {
-      const newButton = document.createElement('button');
+      const newDiv = document.createElement('div'); // Create a div element
       const fileType = getFileType(textArea.value);
       console.log(fileType);
       fetch('./symbols.json')
@@ -109,29 +107,32 @@ function addfile() {
         .then(data => {
           let symbol = data[fileType] || " ";
           console.log(symbol);
-          newButton.innerHTML = symbol + " " + textArea.value;
+          newDiv.innerHTML = symbol + " " + textArea.value; // Set innerHTML of the div
 
-      })
-      .catch(error => console.error('Error fetching data:', error));
+        })
+        .catch(error => console.error('Error fetching data:', error));
 
-      newButton.className="filesButtons"
+      newDiv.className = "fileDiv"; // Set class for styling if required
       const buttonWrapper = document.createElement('div');
-      buttonWrapper.appendChild(newButton);
+      buttonWrapper.appendChild(newDiv); // Append the new div to the wrapper
       fss.appendChild(buttonWrapper);
       textArea.remove();
 
       ipcRenderer.send('file-creation-request', textArea.value);
 
-      newButton.addEventListener('click', () => {
+      newDiv.addEventListener('click', () => {
         ipcRenderer.send('file-button-clicked', textArea.value);
+
       });
     }
+
   });
 
 
   fss.appendChild(textArea);
   textArea.focus();
 }
+
 
 let previousButton = null;
 ipcRenderer.on('files-in-directory', (event, files) => {
