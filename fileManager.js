@@ -230,15 +230,17 @@ function settingsPanel(fileDiv, fileName) {
   settingsDiv.style.zIndex = '999'; 
 
 
-  const button1 = document.createElement('button');
-  button1.textContent = '<i class="nf-md-rename_box"></i>';
+  const renameButton = document.createElement('button');
+  renameButton.innerHTML = '<i class="nf-md-rename_box"></i> Rename';
+  renameButton.className = 'renameButton'
 
-  const button2 = document.createElement('button');
-  button2.textContent = 'Button 2';
+  const deleteButton = document.createElement('button');
+  deleteButton.innerHTML = '<i class="nf-md-delete"></i> Delete';
+  deleteButton.className = 'deleteButton'
 
   // Append buttons to settingsDiv
-  settingsDiv.appendChild(button1);
-  settingsDiv.appendChild(button2);
+  settingsDiv.appendChild(renameButton);
+  settingsDiv.appendChild(deleteButton);
 
 
   document.body.appendChild(settingsDiv);
