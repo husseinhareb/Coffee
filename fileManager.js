@@ -199,16 +199,52 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     });
 
     settButton.addEventListener('click', (event) => {
+      // Prevent the click event from propagating to the fileDiv
       event.stopPropagation();
-      console.log("hello");
+    
+      // Get the parent fileDiv of the clicked settButton
+      const fileDiv = event.currentTarget.parentNode;
+    
+      // Call settingsPanel with the fileDiv and fileName
+      settingsPanel(fileDiv, fileName);
     });
+    
 
     fsSpan.appendChild(fileDiv); 
   });
 });
 
+function settingsPanel(fileDiv, fileName) {
+  // Get the position of the fileDiv relative to the viewport
+  const fileRect = fileDiv.getBoundingClientRect();
+  console.log("filo namo",fileName);
+  // Create a settings div
+  const settingsDiv = document.createElement('div');
+  settingsDiv.className = 'settingsDiv';
+  settingsDiv.style.position = 'absolute';
+
+  settingsDiv.style.top = `${fileRect.top}px`; // Adjust as needed
+  settingsDiv.style.left = `${fileRect.right}px`; // Adjust as needed
+  settingsDiv.style.backgroundColor = 'white';
+  settingsDiv.style.padding = '10px';
+  settingsDiv.style.zIndex = '999'; 
 
 
+  const button1 = document.createElement('button');
+  button1.textContent = '<i class="nf-md-rename_box"></i>';
+
+  const button2 = document.createElement('button');
+  button2.textContent = 'Button 2';
+
+  // Append buttons to settingsDiv
+  settingsDiv.appendChild(button1);
+  settingsDiv.appendChild(button2);
+
+
+  document.body.appendChild(settingsDiv);
+
+
+}
 
 
 
