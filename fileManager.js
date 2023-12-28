@@ -233,11 +233,14 @@ function settingsPanel(fileDiv, fileName) {
   const renameButton = document.createElement('button');
   renameButton.innerHTML = '<i class="nf-md-rename_box"></i> Rename';
   renameButton.className = 'renameButton'
-
+  
   const deleteButton = document.createElement('button');
   deleteButton.innerHTML = '<i class="nf-md-delete"></i> Delete';
   deleteButton.className = 'deleteButton'
-
+  
+  deleteButton.addEventListener('click', () => {
+    ipcRenderer.send('delete-file', fileName); // Sending a request to delete the file
+  });
   // Append buttons to settingsDiv
   settingsDiv.appendChild(renameButton);
   settingsDiv.appendChild(deleteButton);
@@ -248,6 +251,15 @@ function settingsPanel(fileDiv, fileName) {
 
 }
 
+ipcRenderer.on('file-deletion-success', (event, fileName) => {
+  // Handle deletion success in the renderer process, like removing UI elements, etc.
+  console.log(`File "${fileName}" deleted successfully`);
+});
+
+ipcRenderer.on('file-deletion-error', (event, errorMessage) => {
+  // Handle deletion error in the renderer process, like showing an alert, etc.
+  console.error('Error deleting file:', errorMessage);
+});
 
 
 let filePath;
