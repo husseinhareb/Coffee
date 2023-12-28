@@ -232,7 +232,6 @@ ipcMain.on('return-to-parent-directory', (event) => {
 });
 
 
-// In index.js
 ipcMain.on('reload-folder', (event) => {
   if (!currentDirectory) {
     // Handle if the current directory is not set
