@@ -167,5 +167,19 @@ body, html {
 .settingsDiv .renameButton,
 .settingsDiv .deleteButton {
     display: block;
-    background-color: red;
+}
+
+.settingsDiv{
+    background-color: #2c324a;
+}
+.renameButton, .deleteButton{
+    margin: 4px 4px 4px 4px;
+    font-size: 14px;
+    color: #959cbd;
+    background-color: #292e42;
+    border: 0px;
+}
+
+.renameButton:hover, .deleteButton:hover{
+    background-color: #1f2335;
 }
