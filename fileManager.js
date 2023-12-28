@@ -251,7 +251,22 @@ function settingsPanel(fileDiv, fileName) {
 
   document.body.appendChild(settingsDiv);
 
+  const closeSettingsDiv = () => {
+    document.body.removeChild(settingsDiv);
+    // Optionally, you can remove the event listener after closing
+    document.removeEventListener('click', clickOutsideHandler);
+  };
 
+  // Event listener function to handle clicks outside settingsDiv
+  const clickOutsideHandler = (event) => {
+    if (!settingsDiv.contains(event.target) && event.target !== fileDiv) {
+      // Click occurred outside settingsDiv and fileDiv
+      closeSettingsDiv();
+    }
+  };
+
+  // Add click event listener to the document
+  document.addEventListener('click', clickOutsideHandler);
 }
 
 ipcRenderer.on('file-deletion-success', (event, fileName) => {
