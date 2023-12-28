@@ -225,7 +225,6 @@ function settingsPanel(fileDiv, fileName) {
 
   settingsDiv.style.top = `${fileRect.top}px`; // Adjust as needed
   settingsDiv.style.left = `${fileRect.right}px`; // Adjust as needed
-  settingsDiv.style.backgroundColor = 'white';
   settingsDiv.style.padding = '10px';
   settingsDiv.style.zIndex = '999'; 
 
@@ -239,7 +238,10 @@ function settingsPanel(fileDiv, fileName) {
   deleteButton.className = 'deleteButton'
   
   deleteButton.addEventListener('click', () => {
-    ipcRenderer.send('delete-file', fileName); // Sending a request to delete the file
+    ipcRenderer.send('delete-file', fileName);
+    ipcRenderer.send('reload-folder');
+
+     // Sending a request to delete the file
   });
   // Append buttons to settingsDiv
   settingsDiv.appendChild(renameButton);

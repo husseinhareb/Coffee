@@ -252,6 +252,21 @@ ipcMain.on('reload-folder', (event) => {
   });
 });
 
+ipcMain.on('delete-file', (event, fileName) => {
+  const filePath = path.join(currentDirectory, fileName);
+
+  // Delete the file
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error(err);
+      event.sender.send('file-deletion-error', err.message);
+      return;
+    }
+
+    console.log(`File "${fileName}" deleted successfully`);
+    event.sender.send('file-deletion-success', fileName);
+  });
+});
 
 
 }
