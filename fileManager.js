@@ -124,6 +124,8 @@ function addfile() {
         ipcRenderer.send('file-button-clicked', textArea.value);
 
       });
+
+      ipcRenderer.send('reload-folder'); // Trigger folder reload after adding the file
     }
 
   });
@@ -374,4 +376,4 @@ function getLangName(name) {
       console.error('Error fetching data:', error);
       return ''; // Return an empty string or handle the error as needed
     });
-}
+} 
