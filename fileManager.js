@@ -99,7 +99,7 @@ function addfile() {
   textArea.className = "fileArea";
   textArea.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && textArea.value.trim() !== '') {
-      const newDiv = document.createElement('div'); // Create a div element
+      const newDiv = document.createElement('div');
       const fileType = getFileType(textArea.value);
       console.log(fileType);
       fetch('./symbols.json')
@@ -107,14 +107,14 @@ function addfile() {
         .then(data => {
           let symbol = data[fileType] || " ";
           console.log(symbol);
-          newDiv.innerHTML = symbol + " " + textArea.value; // Set innerHTML of the div
+          newDiv.innerHTML = symbol + " " + textArea.value; 
 
         })
         .catch(error => console.error('Error fetching data:', error));
 
-      newDiv.className = "fileDiv"; // Set class for styling if required
+      newDiv.className = "fileDiv";
       const buttonWrapper = document.createElement('div');
-      buttonWrapper.appendChild(newDiv); // Append the new div to the wrapper
+      buttonWrapper.appendChild(newDiv);
       fss.appendChild(buttonWrapper);
       textArea.remove();
 
