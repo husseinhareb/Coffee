@@ -269,6 +269,27 @@ ipcMain.on('delete-file', (event, fileName) => {
 });
 
 
+
+
+ipcMain.on('rename-file', (event, { oldFileName, newFileName }) => {
+  // Construct the file paths for the old and new filenames
+  const oldFilePath = path.join(currentDirectory, oldFileName);
+  const newFilePath = path.join(currentDirectory, newFileName);
+
+  // Rename the file
+  fs.rename(oldFilePath, newFilePath, (err) => {
+    if (err) {
+      console.error(`Error renaming file ${oldFileName} to ${newFileName}:`, err);
+      event.reply('rename-file-error', err.message);
+    } else {
+      console.log(`File ${oldFileName} renamed to ${newFileName} successfully`);
+      event.reply('rename-file-success', { oldFileName, newFileName });
+    }
+  });
+});
+
+
+
 }
 
 app.on("ready", () => {
