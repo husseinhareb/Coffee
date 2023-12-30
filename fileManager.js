@@ -1,6 +1,5 @@
 //renderer.js
 const { ipcRenderer } = require('electron');
-const { createWriteStream } = require('original-fs');
 
 const fsSpan = document.getElementById('fs');
 
@@ -125,7 +124,7 @@ function addfile() {
 
       });
 
-      ipcRenderer.send('reload-folder'); // Trigger folder reload after adding the file
+      ipcRenderer.send('reload-folder');
     }
 
   });
@@ -226,8 +225,8 @@ function settingsPanel(fileDiv, fileName) {
   settingsDiv.className = 'settingsDiv';
   settingsDiv.style.position = 'absolute';
 
-  settingsDiv.style.top = `${fileRect.top}px`; // Adjust as needed
-  settingsDiv.style.left = `${fileRect.right}px`; // Adjust as needed
+  settingsDiv.style.top = `${fileRect.top}px`;
+  settingsDiv.style.left = `${fileRect.right}px`; 
   settingsDiv.style.padding = '10px';
   settingsDiv.style.zIndex = '999'; 
 
@@ -243,10 +242,8 @@ function settingsPanel(fileDiv, fileName) {
   deleteButton.addEventListener('click', () => {
     ipcRenderer.send('delete-file', fileName);
     ipcRenderer.send('reload-folder');
-
-     // Sending a request to delete the file
   });
-  // Append buttons to settingsDiv
+
   settingsDiv.appendChild(renameButton);
   settingsDiv.appendChild(deleteButton);
 
@@ -255,21 +252,30 @@ function settingsPanel(fileDiv, fileName) {
 
   const closeSettingsDiv = () => {
     document.body.removeChild(settingsDiv);
-    // Optionally, you can remove the event listener after closing
     document.removeEventListener('click', clickOutsideHandler);
   };
 
-  // Event listener function to handle clicks outside settingsDiv
   const clickOutsideHandler = (event) => {
     if (!settingsDiv.contains(event.target) && event.target !== fileDiv) {
-      // Click occurred outside settingsDiv and fileDiv
       closeSettingsDiv();
     }
   };
 
-  // Add click event listener to the document
+  deleteButton.addEventListener('click', () => {
+    ipcRenderer.send('delete-file', fileName);
+    ipcRenderer.send('reload-folder');
+    closeSettingsDiv(); 
+  });
+
+  renameButton.addEventListener('click', () => {
+
+    closeSettingsDiv(); 
+  });
+
   document.addEventListener('click', clickOutsideHandler);
 }
+
+
 
 ipcRenderer.on('file-deletion-success', (event, fileName) => {
   // Handle deletion success in the renderer process, like removing UI elements, etc.
@@ -327,7 +333,6 @@ ipcRenderer.on('file-content', (event, fileData) => {
     })
     .catch(err => {
       console.error("Error:", err);
-      // Handle errors occurring during language retrieval
     });
 });
 
@@ -374,6 +379,6 @@ function getLangName(name) {
     })
     .catch(error => {
       console.error('Error fetching data:', error);
-      return ''; // Return an empty string or handle the error as needed
+      return '';
     });
 } 
