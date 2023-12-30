@@ -268,9 +268,36 @@ function settingsPanel(fileDiv, fileName) {
   });
 
   renameButton.addEventListener('click', () => {
-
-    closeSettingsDiv(); 
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.value = fileName; // Set the initial value as the current filename
+    inputElement.className = 'renameInput';
+  
+    // Replace the fileDiv content with the input element
+    fileDiv.innerHTML = '';
+    fileDiv.appendChild(inputElement);
+    
+    inputElement.focus();
+  
+    const saveNewName = () => {
+      const newFileName = inputElement.value.trim();
+      ipcRenderer.send('rename-file', { oldFileName: fileName, newFileName });
+      fileDiv.innerHTML = newFileName; // Replace the input element with the new filename
+      inputElement.removeEventListener('blur', saveNewName); // Remove event listener after saving
+    };
+  
+    // Save the new filename on blur (when the input loses focus)
+    inputElement.addEventListener('blur', saveNewName);
+  
+    // Save the new filename on Enter key press
+    inputElement.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        saveNewName();
+        ipcRenderer.send('reload-folder');
+      }
+    });
   });
+  
 
   document.addEventListener('click', clickOutsideHandler);
 }
