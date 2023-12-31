@@ -290,6 +290,8 @@ ipcMain.on('rename-file', (event, { oldFileName, newFileName }) => {
 
 
 
+
+
 }
 
 app.on("ready", () => {

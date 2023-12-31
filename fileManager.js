@@ -163,6 +163,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     fileNameText.style.overflow = 'hidden';
     fileNameText.style.textOverflow = 'ellipsis'; 
     fileNameText.style.whiteSpace = 'nowrap'; 
+    fileNameText.className = "fileNameText";
 
     fileDiv.appendChild(fileNameText);
 
@@ -284,6 +285,8 @@ function settingsPanel(fileDiv, fileName) {
       ipcRenderer.send('rename-file', { oldFileName: fileName, newFileName });
       fileDiv.innerHTML = newFileName; // Replace the input element with the new filename
       inputElement.removeEventListener('blur', saveNewName); // Remove event listener after saving
+      ipcRenderer.send('reload-folder');
+
     };
   
     // Save the new filename on blur (when the input loses focus)
@@ -293,14 +296,14 @@ function settingsPanel(fileDiv, fileName) {
     inputElement.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         saveNewName();
-        ipcRenderer.send('reload-folder');
       }
     });
   });
-  
 
   document.addEventListener('click', clickOutsideHandler);
 }
+
+
 
 
 

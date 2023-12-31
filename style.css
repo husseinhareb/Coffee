@@ -68,10 +68,20 @@ body, html {
     background-color: #1f2335;
     text-align: left;
     border: 0px;
+    display: flex;
+    align-items: center; 
 }
 .fileDiv:hover{
     background-color: #2c324a;
 }
+
+.fileNameText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0; 
+    padding: 0; 
+  }
 
 .buttonsDiv{
     display: flex;
