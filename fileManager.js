@@ -81,7 +81,10 @@ function addfolder() {
 
       // Send the folder creation request after UI updates
       ipcRenderer.send('folder-creation-request', folderName);
+      ipcRenderer.send('reload-folder');
+
     }
+
   });
 
   fss.appendChild(textArea);
@@ -269,36 +272,27 @@ function settingsPanel(fileDiv, fileName) {
   });
 
   renameButton.addEventListener('click', () => {
+    const fileNameText = fileDiv.querySelector('.fileNameText'); // Get the existing span containing the file name
+  
     const inputElement = document.createElement('input');
     inputElement.type = 'text';
     inputElement.value = fileName; // Set the initial value as the current filename
     inputElement.className = 'renameInput';
   
-    // Replace the fileDiv content with the input element
-    fileDiv.innerHTML = '';
-    fileDiv.appendChild(inputElement);
-    
-    inputElement.focus();
-  
-    const saveNewName = () => {
-      const newFileName = inputElement.value.trim();
-      ipcRenderer.send('rename-file', { oldFileName: fileName, newFileName });
-      fileDiv.innerHTML = newFileName; // Replace the input element with the new filename
-      inputElement.removeEventListener('blur', saveNewName); // Remove event listener after saving
-      ipcRenderer.send('reload-folder');
-
-    };
-  
-    // Save the new filename on blur (when the input loses focus)
-    inputElement.addEventListener('blur', saveNewName);
-  
-    // Save the new filename on Enter key press
     inputElement.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
-        saveNewName();
+        const newFileName = inputElement.value.trim();
+        fileNameText.textContent = newFileName; // Update the span with the new file name
+        ipcRenderer.send('rename-file', { oldFileName: fileName, newFileName });
+        ipcRenderer.send('reload-folder');
+        closeSettingsDiv();
       }
     });
+  
+    fileDiv.replaceChild(inputElement, fileNameText); // Replace the span with the input element
+    inputElement.focus();
   });
+  
 
   document.addEventListener('click', clickOutsideHandler);
 }
