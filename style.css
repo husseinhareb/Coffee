@@ -17,12 +17,16 @@ body, html {
 #fs {
     width: 20%;
     border-right: 3px solid #1b1e2e;
-    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-y: auto;
     font-family: "JetBrainsMono Nerd Font";
     background-color: #1f2335;
-    white-space: nowrap; /* Prevent text wrapping */
-}
-
+    white-space: nowrap;
+    resize: horizontal;
+    overflow: auto; 
+    display: inline-block; 
+    min-width: 100px;
+  }
+  
   
 
 #terminal {
