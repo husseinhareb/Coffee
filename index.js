@@ -158,10 +158,8 @@ ipcMain.on('save-file', (event, { filePath, content }) => {
     return;
   }
 
-  // Continue with the file writing process
   fs.writeFile(filePath, content, 'utf8', (err) => {
     if (err) {
-      // Handle errors when saving the file
       console.error(err);
       event.reply('file-save-error', err.message);
       return;
