@@ -405,4 +405,41 @@ function getLangName(name) {
       console.error('Error fetching data:', error);
       return '';
     });
-} 
+}
+
+function handleMouseMove(e) {
+  if (resizing) {
+    const newWidth = originalWidth + (e.clientX - resizeStartX);
+    fs.style.width = `${newWidth}px`;
+  }
+}
+let resizing = false;
+let resizeStartX;
+let originalWidth;
+
+
+
+
+
+const fs = document.getElementById('fs');
+
+fs.addEventListener('mouseover', (e) => {
+  if (e.offsetX > fs.offsetWidth - 20) { // 20 is the width where you want to start resizing
+    fs.style.cursor = "e-resize";
+  }
+});
+
+fs.addEventListener('mousedown', (e) => {
+  if (e.offsetX > fs.offsetWidth - 20) { // 20 is the width where you want to start resizing
+    fs.style.cursor = "e-resize";
+    resizing = true;
+    resizeStartX = e.clientX;
+    originalWidth = fs.offsetWidth;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', () => {
+      resizing = false;
+      document.removeEventListener('mousemove', handleMouseMove);
+    });
+  }
+});
+

@@ -21,14 +21,11 @@ body, html {
     font-family: "JetBrainsMono Nerd Font";
     background-color: #1f2335;
     white-space: nowrap;
-    resize: horizontal;
-    overflow: auto; 
-    display: inline-block; 
-    min-width: 100px;
-  }
-  
-  
+    min-width: 80px; 
+}
 
+
+  
 #terminal {
     height: 27%;
     border-top: 3px solid #1b1e2e;
