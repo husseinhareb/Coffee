@@ -214,7 +214,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
     fileDiv.addEventListener('contextmenu', function(event) {
       event.preventDefault();
-
+      
       console.log('Right-clicked!');
     });
 
@@ -241,7 +241,11 @@ function createEditorContent(fileName) {
   fileContentDiv = document.createElement('div');
   top.appendChild(fileContentDiv); // Append the created div to the element retrieved by getElementById
   
-  fileContentDiv.className="topF"
+  // Apply styles to the fileContentDiv
+  fileContentDiv.style.position = 'absolute'; // Position it absolutely
+  fileContentDiv.style.top = '0'; // Place it at the top of the editor div
+  fileContentDiv.className="topEditorDiv"
+
   // Customize the content for the file here, for example:
   fileContentDiv.textContent = `Content of ${fileName}`;
   document.getElementById('editor').appendChild(fileContentDiv);
