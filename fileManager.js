@@ -239,20 +239,17 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 function createEditorContent(fileName) {
   const top = document.getElementById('top');
   fileContentDiv = document.createElement('div');
-  top.appendChild(fileContentDiv); // Append the created div to the element retrieved by getElementById
+  top.appendChild(fileContentDiv); 
   
-  // Apply styles to the fileContentDiv
-  fileContentDiv.style.position = 'absolute'; // Position it absolutely
-  fileContentDiv.style.top = '0'; // Place it at the top of the editor div
+  fileContentDiv.style.position = 'absolute';
+  fileContentDiv.style.top = '0';
   fileContentDiv.className="topEditorDiv"
 
-  // Customize the content for the file here, for example:
   fileContentDiv.textContent = `Content of ${fileName}`;
   document.getElementById('editor').appendChild(fileContentDiv);
 }
 
 function updateEditorContent(fileName) {
-  // Update the content for the existing fileContentDiv, for example:
   fileContentDiv.textContent = `Updated content of ${fileName}`;
 }
 
