@@ -139,6 +139,7 @@ function addfile() {
 
 
 let previousButton = null;
+let fileContentDiv = null;
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
 
@@ -190,20 +191,28 @@ ipcRenderer.on('files-in-directory', (event, files) => {
       })
       .catch(error => console.error('Error fetching data:', error));
 
-    fileDiv.addEventListener('click', () => {
-      if (previousButton !== null) {
-        previousButton.style.backgroundColor = ''; 
-        previousButton.getElementsByClassName('settButton')[0].style.display = 'none'; 
-      }
-
-      fileDiv.style.backgroundColor = '#292e42';
-      settButton.style.display = 'block';
-
-      previousButton = fileDiv;
-
-      ipcRenderer.send('file-button-clicked', fileName);
-    });
-    
+      fileDiv.addEventListener('click', () => {
+        if (previousButton !== null) {
+          previousButton.style.backgroundColor = '';
+          previousButton.getElementsByClassName('settButton')[0].style.display = 'none';
+          if (fileContentDiv) {
+            // Update the content of the existing fileContentDiv instead of creating a new one
+            updateEditorContent(fileName);
+          } else {
+            // Create a new div inside the editor for the clicked file
+            createEditorContent(fileName);
+          }
+        }
+  
+        fileDiv.style.backgroundColor = '#292e42';
+        settButton.style.display = 'block';
+  
+        previousButton = fileDiv;
+  
+        ipcRenderer.send('file-button-clicked', fileName);
+  
+        console.log("testing testing");
+      });
 
     fileDiv.addEventListener('contextmenu', function(event) {
       // Prevent the default behavior of the context menu (optional)
@@ -230,6 +239,30 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     fsSpan.appendChild(fileDiv); 
   });
 });
+
+
+function createEditorContent(fileName) {
+  const top = document.getElementById('top');
+  const fileContentDiv = document.createElement('div');
+  top.appendChild(fileContentDiv); // Append the created div to the element retrieved by getElementById
+  
+  // Apply styles to the fileContentDiv
+  fileContentDiv.style.width = '100px'; // Adjust width as needed
+  fileContentDiv.style.backgroundColor = 'red';
+  fileContentDiv.style.position = 'absolute'; // Position it absolutely
+  fileContentDiv.style.top = '0'; // Place it at the top of the editor div
+
+  // Customize the content for the file here, for example:
+  fileContentDiv.textContent = `Content of ${fileName}`;
+  document.getElementById('editor').appendChild(fileContentDiv);
+}
+
+function updateEditorContent(fileName) {
+  // Update the content for the existing fileContentDiv, for example:
+  fileContentDiv.textContent = `Updated content of ${fileName}`;
+}
+
+
 
 function settingsPanel(fileDiv, fileName) {
   // Get the position of the fileDiv relative to the viewport
