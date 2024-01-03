@@ -194,3 +194,10 @@ body, html {
 .renameButton:hover, .deleteButton:hover{
     background-color: #1f2335;
 }
+
+
+.topEditorDiv{
+    background-color: red;
+    width: 100%;
+    height: 3%;
+}

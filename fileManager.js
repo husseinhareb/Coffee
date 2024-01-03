@@ -213,11 +213,8 @@ ipcRenderer.on('files-in-directory', (event, files) => {
       });
 
     fileDiv.addEventListener('contextmenu', function(event) {
-      // Prevent the default behavior of the context menu (optional)
       event.preventDefault();
-    
-      // Your custom logic for the right-click action
-      // For example, displaying a message
+
       console.log('Right-clicked!');
     });
 
@@ -244,12 +241,7 @@ function createEditorContent(fileName) {
   fileContentDiv = document.createElement('div');
   top.appendChild(fileContentDiv); // Append the created div to the element retrieved by getElementById
   
-  // Apply styles to the fileContentDiv
-  fileContentDiv.style.width = '100px'; // Adjust width as needed
-  fileContentDiv.style.backgroundColor = 'red';
-  fileContentDiv.style.position = 'absolute'; // Position it absolutely
-  fileContentDiv.style.top = '0'; // Place it at the top of the editor div
-
+  fileContentDiv.className="topF"
   // Customize the content for the file here, for example:
   fileContentDiv.textContent = `Content of ${fileName}`;
   document.getElementById('editor').appendChild(fileContentDiv);
