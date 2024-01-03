@@ -21,7 +21,7 @@ const buttonsDiv = document.createElement('div');
 buttonsDiv.className = "buttonsDiv";
 const chDir = document.createElement('button');
 chDir.className="changeDir"
-chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i>Open Folder';
+chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i>';
 chDir.addEventListener('click', () => {
   ipcRenderer.send('open-folder-dialog');
 });
@@ -203,7 +203,18 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
       ipcRenderer.send('file-button-clicked', fileName);
     });
+    
 
+    fileDiv.addEventListener('contextmenu', function(event) {
+      // Prevent the default behavior of the context menu (optional)
+      event.preventDefault();
+    
+      // Your custom logic for the right-click action
+      // For example, displaying a message
+      console.log('Right-clicked!');
+    });
+
+    
     settButton.addEventListener('click', (event) => {
       // Prevent the click event from propagating to the fileDiv
       event.stopPropagation();
