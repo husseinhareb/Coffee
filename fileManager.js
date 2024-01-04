@@ -196,10 +196,8 @@ ipcRenderer.on('files-in-directory', (event, files) => {
           previousButton.style.backgroundColor = '';
           previousButton.getElementsByClassName('settButton')[0].style.display = 'none';
           if (fileContentDiv) {
-            // Update the content of the existing fileContentDiv instead of creating a new one
             updateEditorContent(fileName);
           } else {
-            // Create a new div inside the editor for the clicked file
             createEditorContent(fileName);
           }
         }
@@ -243,7 +241,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
 function createEditorContent(fileName) {
   const top = document.getElementById('top');
-  const fileContentDiv = document.createElement('div');
+  fileContentDiv = document.createElement('div');
   top.appendChild(fileContentDiv); // Append the created div to the element retrieved by getElementById
   
   // Apply styles to the fileContentDiv
