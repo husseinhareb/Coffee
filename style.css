@@ -202,5 +202,5 @@ body, html {
     border-bottom: 3px solid #2f354d ;
     width: 100%;
     height: 4%;
-    
+    position: fixed;
 }

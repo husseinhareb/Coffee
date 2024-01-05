@@ -237,20 +237,36 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
 
 function createEditorContent(fileName) {
-  const top = document.getElementById('top');
-  fileContentDiv = document.createElement('div');
-  top.appendChild(fileContentDiv); 
-  
+  const fileContentDiv = document.createElement('div');
   fileContentDiv.style.position = 'absolute';
   fileContentDiv.style.top = '0';
-  fileContentDiv.className="topEditorDiv"
+  fileContentDiv.className = "topEditorDiv";
+  fileContentDiv.style.width = '100%'; // Set width to 100% or a specific value
 
-  fileContentDiv.textContent = `Content of ${fileName}`;
+  const fileNameDisplay = document.createElement('span');
+  fileNameDisplay.textContent = `${fileName}`;
+  fileNameDisplay.className = 'fileNameDisplay';
+
+  fileContentDiv.appendChild(fileNameDisplay);
+
+  // Check if there's already a fileContentDiv
+  if (fileContentDiv.textContent !== '') {
+    fileContentDiv.textContent += `, ${fileName}`;
+  } else {
+    fileContentDiv.textContent = fileName;
+  }
+
+  // Insert fileContentDiv above the top div
+  const topDiv = document.getElementById('top');
+  document.body.insertBefore(fileContentDiv, topDiv);
+
   document.getElementById('editor').appendChild(fileContentDiv);
 }
 
+
+
 function updateEditorContent(fileName) {
-  fileContentDiv.textContent = `Updated content of ${fileName}`;
+  fileContentDiv.textContent = `${fileName}`;
 }
 
 
