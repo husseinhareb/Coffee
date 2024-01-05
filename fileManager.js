@@ -442,30 +442,23 @@ function getLangName(name) {
     });
 }
 
-function handleMouseMove(e) {
-  if (resizing) {
-    const newWidth = originalWidth + (e.clientX - resizeStartX);
-    fs.style.width = `${newWidth}px`;
-  }
-}
-let resizing = false;
-let resizeStartX;
-let originalWidth;
-
-
 
 
 
 const fs = document.getElementById('fs');
+let resizing = false;
+let resizeStartX, originalWidth;
 
-fs.addEventListener('mouseover', (e) => {
-  if (e.offsetX > fs.offsetWidth - 20) { // 20 is the width where you want to start resizing
+fs.addEventListener('mousemove', (e) => {
+  if (e.offsetX > fs.offsetWidth - 20) {
     fs.style.cursor = "e-resize";
+  } else {
+    fs.style.cursor = "default";
   }
 });
 
 fs.addEventListener('mousedown', (e) => {
-  if (e.offsetX > fs.offsetWidth - 20) { // 20 is the width where you want to start resizing
+  if (e.offsetX > fs.offsetWidth - 20) {
     fs.style.cursor = "e-resize";
     resizing = true;
     resizeStartX = e.clientX;
@@ -478,3 +471,13 @@ fs.addEventListener('mousedown', (e) => {
   }
 });
 
+function handleMouseMove(e) {
+  if (resizing) {
+    const newWidth = originalWidth + e.clientX - resizeStartX;
+    fs.style.width = newWidth + 'px';
+  }
+}
+
+fs.addEventListener('mouseout', (e) => {
+  fs.style.cursor = "default";
+});
