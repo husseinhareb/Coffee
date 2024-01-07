@@ -460,42 +460,38 @@ function getLangName(name) {
 
 
 
-
 const fs = document.getElementById('fs');
-let resizing = false;
-let resizeStartX, originalWidth;
+let isResizing = false;
+let startX, startWidth;
+
+function handleMouseMove(e) {
+  if (!isResizing) return;
+
+  const newWidth = startWidth + e.clientX - startX;
+  fs.style.width = newWidth + 'px';
+  fs.style.borderRight = "5px solid #29355a";
+}
 
 fs.addEventListener('mousemove', (e) => {
-  if (e.offsetX > fs.offsetWidth - 6) {
-    fs.style.cursor = "col-resize";
-  } else {
-    fs.style.cursor = "default";
-  }
+  const isNearRightEdge = e.offsetX > fs.offsetWidth - 6;
+  fs.style.cursor = isNearRightEdge ? "col-resize" : "default";
 });
 
 fs.addEventListener('mousedown', (e) => {
-  if (e.offsetX > fs.offsetWidth - 6) {
-    fs.style.cursor = "col-resize";
-    resizing = true;
-    resizeStartX = e.clientX;
-    originalWidth = fs.offsetWidth;
+  const isNearRightEdge = e.offsetX > fs.offsetWidth - 6;
+  if (isNearRightEdge) {
+    isResizing = true;
+    startX = e.clientX;
+    startWidth = fs.offsetWidth; // Capture the current width when resizing starts
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', () => {
-      resizing = false;
-      document.removeEventListener('mousemove', handleMouseMove);
-    });
   }
 });
 
-function handleMouseMove(e) {
-  if (resizing) {
-    const newWidth = originalWidth + e.clientX - resizeStartX;
-    fs.style.width = newWidth + 'px';
-    fs.style.borderRightColor = "#29355a";
-    fs.style.borderRightWidth="5px";
-  }
-}
+document.addEventListener('mouseup', () => {
+  isResizing = false;
+  document.removeEventListener('mousemove', handleMouseMove);
+});
 
-fs.addEventListener('mouseout', (e) => {
+fs.addEventListener('mouseout', () => {
   fs.style.cursor = "default";
 });
