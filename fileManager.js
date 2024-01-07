@@ -466,16 +466,16 @@ let resizing = false;
 let resizeStartX, originalWidth;
 
 fs.addEventListener('mousemove', (e) => {
-  if (e.offsetX > fs.offsetWidth - 20) {
-    fs.style.cursor = "e-resize";
+  if (e.offsetX > fs.offsetWidth - 6) {
+    fs.style.cursor = "col-resize";
   } else {
     fs.style.cursor = "default";
   }
 });
 
 fs.addEventListener('mousedown', (e) => {
-  if (e.offsetX > fs.offsetWidth - 20) {
-    fs.style.cursor = "e-resize";
+  if (e.offsetX > fs.offsetWidth - 6) {
+    fs.style.cursor = "col-resize";
     resizing = true;
     resizeStartX = e.clientX;
     originalWidth = fs.offsetWidth;
@@ -491,6 +491,8 @@ function handleMouseMove(e) {
   if (resizing) {
     const newWidth = originalWidth + e.clientX - resizeStartX;
     fs.style.width = newWidth + 'px';
+    fs.style.borderRightColor = "#29355a";
+    fs.style.borderRightWidth="5px";
   }
 }
 
