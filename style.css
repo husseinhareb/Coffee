@@ -10,10 +10,18 @@ body, html {
 }
   
 #top {
-    height: 70%;
+    height: 67%;
     display: flex;
 }
   
+
+#topBar{
+    height: 3%;
+    border-top: 3px solid #1b1e2e;
+    background-color: #1f2335;
+    display: flex;
+    align-items: center; /* Vertical centering */
+}
 #fs {
     width: 20%;
     border-right: 3px solid #1b1e2e;
@@ -38,6 +46,8 @@ body, html {
     display: flex;
     align-items: center; /* Vertical centering */
 }
+
+
 #editor {
     width: 100%;
     height: 100%;
@@ -47,6 +57,7 @@ body, html {
     overflow-y: auto;
     margin: 0 0 0 0;
 }
+
 
 .returnBtn{
     width: 30px;
@@ -197,10 +208,3 @@ body, html {
 }
 
 
-.topEditorDiv{
-    background-color: #1f2335;
-    border-bottom: 3px solid #2f354d ;
-    width: 100%;
-    height: 4%;
-    position: fixed;
-}
