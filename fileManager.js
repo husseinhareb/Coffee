@@ -137,9 +137,25 @@ function addfile() {
   textArea.focus();
 }
 
+function displayFileContent(fileName, fileDiv, settButton) {
+  if (previousButton !== null) {
+    previousButton.style.backgroundColor = '';
+  }
+  fileDiv.style.backgroundColor = '#292e42';
+  settButton.style.display = 'block';
+
+  previousButton = fileDiv;
+
+  ipcRenderer.send('file-button-clicked', fileName);
+
+  console.log("testing testing");
+}
+
+
 
 let previousButton = null;
-let fileContentDiv = null;
+let clickedFiles = [];
+
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
 
@@ -192,24 +208,11 @@ ipcRenderer.on('files-in-directory', (event, files) => {
       .catch(error => console.error('Error fetching data:', error));
 
       fileDiv.addEventListener('click', () => {
-        if (previousButton !== null) {
-          previousButton.style.backgroundColor = '';
-          previousButton.getElementsByClassName('settButton')[0].style.display = 'none';
-          if (fileContentDiv) {
-            updateEditorContent(fileName);
-          } else {
-            createEditorContent(fileName);
-          }
+        displayFileContent(fileName, fileDiv, settButton);
+        if (!clickedFiles.includes(fileName)) {
+          clickedFiles.push(fileName);
+          updateTopBar(fileName, fileDiv, settButton); // Pass fileName, fileDiv, and settButton to updateTopBar
         }
-  
-        fileDiv.style.backgroundColor = '#292e42';
-        settButton.style.display = 'block';
-  
-        previousButton = fileDiv;
-  
-        ipcRenderer.send('file-button-clicked', fileName);
-  
-        console.log("testing testing");
       });
 
     fileDiv.addEventListener('contextmenu', function(event) {
@@ -236,38 +239,24 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 });
 
 
-function createEditorContent(fileName) {
-  const fileContentDiv = document.createElement('div');
-  fileContentDiv.style.position = 'absolute';
-  fileContentDiv.style.top = '0';
-  fileContentDiv.className = "topEditorDiv";
-  fileContentDiv.style.width = '100%'; // Set width to 100% or a specific value
 
-  const fileNameDisplay = document.createElement('span');
-  fileNameDisplay.textContent = `${fileName}`;
-  fileNameDisplay.className = 'fileNameDisplay';
+function updateTopBar(clickedFile, fileDiv, settButton) {
+  // Clear previous content
+  topBar.innerHTML = '';
 
-  fileContentDiv.appendChild(fileNameDisplay);
+  // Create a button for each clicked file and append it to the topBar
+  clickedFiles.forEach(file => {
+    const fileButton = document.createElement('button');
+    fileButton.textContent = file;
+    fileButton.addEventListener('click', () => {
+      displayFileContent(file, fileDiv, settButton);
 
-  // Check if there's already a fileContentDiv
-  if (fileContentDiv.textContent !== '') {
-    fileContentDiv.textContent += `, ${fileName}`;
-  } else {
-    fileContentDiv.textContent = fileName;
-  }
-
-  // Insert fileContentDiv above the top div
-  const topDiv = document.getElementById('top');
-  document.body.insertBefore(fileContentDiv, topDiv);
-
-  document.getElementById('editor').appendChild(fileContentDiv);
+      console.log(`Button clicked: ${file}`);
+    });
+    topBar.appendChild(fileButton);
+  });
 }
 
-
-
-function updateEditorContent(fileName) {
-  fileContentDiv.textContent = `${fileName}`;
-}
 
 
 
