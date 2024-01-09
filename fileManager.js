@@ -211,7 +211,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
         displayFileContent(fileName, fileDiv, settButton);
         if (!clickedFiles.includes(fileName)) {
           clickedFiles.push(fileName);
-          updateTopBar(fileName, fileDiv, settButton); // Pass fileName, fileDiv, and settButton to updateTopBar
+          updateTopBar(fileName, fileDiv, settButton); 
         }
       });
 
@@ -244,18 +244,36 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
   // Clear previous content
   topBar.innerHTML = '';
 
-  // Create a button for each clicked file and append it to the topBar
-  clickedFiles.forEach(file => {
-    const fileButton = document.createElement('button');
-    fileButton.textContent = file;
-    fileButton.addEventListener('click', () => {
-      displayFileContent(file, fileDiv, settButton);
-
-      console.log(`Button clicked: ${file}`);
-    });
-    topBar.appendChild(fileButton);
+  const fetchSymbolPromises = clickedFiles.map(file => {
+    const fileType = getFileType(file);
+    return fetch('./symbols.json')
+      .then(response => response.json())
+      .then(data => {
+        let symbol = data[fileType] || " ";
+        return symbol + " " + file;
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        return ""; 
+      });
   });
+
+  Promise.all(fetchSymbolPromises)
+    .then(fileButtonsContent => {
+      fileButtonsContent.forEach(content => {
+        const fileButton = document.createElement('button');
+        fileButton.innerHTML = content;
+
+        fileButton.addEventListener('click', () => {
+          displayFileContent(content, fileDiv, settButton);
+          console.log(`Button clicked: ${content}`);
+        });
+
+        topBar.appendChild(fileButton);
+      });
+    });
 }
+
 
 
 
@@ -481,6 +499,3 @@ document.addEventListener('mouseup', () => {
   document.removeEventListener('mousemove', handleMouseMove);
 });
 
-fs.addEventListener('mouseout', () => {
-  fs.style.cursor = "default";
-});
