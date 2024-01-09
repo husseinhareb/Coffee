@@ -259,7 +259,7 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
       .then(response => response.json())
       .then(data => {
         let symbol = data[fileType] || " ";
-        return symbol + " " + file;
+        return symbol + "  " + file;
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -272,7 +272,7 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
       fileButtonsContent.forEach(content => {
         const fileButton = document.createElement('button');
         fileButton.innerHTML = content;
-
+        fileButton.className = "topFiles";
         fileButton.addEventListener('click', () => {
           displayFileContent(content, fileDiv, settButton);
           console.log(`Button clicked: ${content}`);
