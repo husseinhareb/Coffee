@@ -1,63 +1,45 @@
 @import "https://www.nerdfonts.com/assets/css/webfont.css";
 *{
     font-family: "JetBrainsMono Nerd Font";
+    box-sizing: border-box;
 }
 
-body, html {
-    height: 100%;
-    margin: 0;
-
-}
-  
-#top {
-    height: 67%;
+.container {
     display: flex;
+    height: 300px; 
 }
   
 
-#topBar{
-    height: 3%;
-    border-top: 3px solid #1b1e2e;
-    background-color: #1f2335;
-    display: flex;
-    align-items: center; /* Vertical centering */
-}
 #fs {
-    width: 20%;
-    border-right: 3px solid #1b1e2e;
-    overflow-y: auto;
-    font-family: "JetBrainsMono Nerd Font";
-    background-color: #1f2335;
-    white-space: nowrap;
-    min-width: 80px; 
+    width: 200px;
 }
-
-
+  
+.right-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+  
+#topBar {
+    flex: 1;
+}
+  
+#editor {
+    flex: 1;
+}
   
 #terminal {
-    height: 27%;
-    border-top: 3px solid #1b1e2e;
+    height: 100px; 
+}
+  
+#fs, #topBar, #editor, #terminal {
+    border: 1px solid #000;
+    padding: 10px;
 }
 
 #buttomBar{
-    height: 3%;
-    border-top: 3px solid #1b1e2e;
-    background-color: #1f2335;
-    display: flex;
-    align-items: center; /* Vertical centering */
+    border: 1px solid #000; 
 }
-
-
-#editor {
-    width: 100%;
-    height: 100%;
-    background-color: #24283b;
-    color: white;
-    font-size: 14px;
-    overflow-y: auto;
-    margin: 0 0 0 0;
-}
-
 
 .returnBtn{
     width: 30px;
@@ -208,3 +190,11 @@ body, html {
 }
 
 
+.topFiles{
+    height: 100%;
+    font-size: 14px;
+    color: #959cbd;
+    background-color: #1f2335;
+    border: 0px;
+    white-space: nowrap;
+}
