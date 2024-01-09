@@ -26,5 +26,8 @@
     "pl": "<i class=\"nf-seti-perl\" style=\"color: #004065;\"></i>",
     "dart": "<i class=\"nf-seti-text\" style=\"color: #29B6F6;\"></i>",
     "rs": "<i class=\"nf-md-language_rust\" style=\"color: #29B6F6;\"></i>",
-    "xml":  "<i class=\"nf-md-xml\" style=\"color: #29B6F6;\"></i>"
+    "xml":  "<i class=\"nf-md-xml\" style=\"color: #29B6F6;\"></i>",
+    "jsx":  "<i class=\"nf-md-react\" style=\"color: #29B6F6;\"></i>"
+
+    
 }

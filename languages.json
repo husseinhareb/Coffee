@@ -15,5 +15,6 @@
     "r": "r",
     "pl": "perl",
     "rs": "rust",
-    "xml": "xml"    
+    "xml": "xml",
+    "jsx": "react"
 }

@@ -10,6 +10,8 @@ returnBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 returnBtn.className = "returnBtn";
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
+  topBar.innerHTML = '';
+  clickedFiles = [];
 });
 
 returnDiv.appendChild(returnBtn);
@@ -20,10 +22,12 @@ fsSpan.appendChild(returnDiv);
 const buttonsDiv = document.createElement('div');
 buttonsDiv.className = "buttonsDiv";
 const chDir = document.createElement('button');
-chDir.className="changeDir"
+chDir.className = "changeDir";
 chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i>';
 chDir.addEventListener('click', () => {
   ipcRenderer.send('open-folder-dialog');
+    topBar.innerHTML = '';
+  clickedFiles = [];
 });
 buttonsDiv.appendChild(chDir);
 
@@ -49,7 +53,7 @@ reloadFolder.addEventListener('click', () => {
 
 buttonsDiv.appendChild(reloadFolder);
 fsSpan.appendChild(buttonsDiv);
-
+    
 
 
 function addfolder() {
@@ -139,6 +143,7 @@ function addfile() {
 
 function displayFileContent(fileName, fileDiv, settButton) {
   if (previousButton !== null) {
+    settButton.style.display = 'none'
     previousButton.style.backgroundColor = '';
   }
   fileDiv.style.backgroundColor = '#292e42';
@@ -155,7 +160,7 @@ function displayFileContent(fileName, fileDiv, settButton) {
 
 let previousButton = null;
 let clickedFiles = [];
-
+let currentSettButton = null;
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
 
@@ -211,8 +216,12 @@ ipcRenderer.on('files-in-directory', (event, files) => {
         displayFileContent(fileName, fileDiv, settButton);
         if (!clickedFiles.includes(fileName)) {
           clickedFiles.push(fileName);
-          updateTopBar(fileName, fileDiv, settButton); 
+          updateTopBar(fileName, fileDiv, settButton); // Pass fileName, fileDiv, and settButton to updateTopBar
         }
+        if (currentSettButton && currentSettButton !== settButton) {
+          currentSettButton.style.display = 'none'; // Hide the previous settButton if it's not the same as the current one
+        }
+        currentSettButton = settButton;
       });
 
     fileDiv.addEventListener('contextmenu', function(event) {
