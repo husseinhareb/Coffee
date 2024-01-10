@@ -10,8 +10,7 @@ returnBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 returnBtn.className = "returnBtn";
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
-  topBar.innerHTML = '';
-  clickedFiles = [];
+
 });
 
 returnDiv.appendChild(returnBtn);
@@ -25,9 +24,10 @@ const chDir = document.createElement('button');
 chDir.className = "changeDir";
 chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i>';
 chDir.addEventListener('click', () => {
-  ipcRenderer.send('open-folder-dialog');
-    topBar.innerHTML = '';
   clickedFiles = [];
+  const topBar = document.getElementById('topBar');
+  topBar.innerHTML = '';
+  ipcRenderer.send('open-folder-dialog');
 });
 buttonsDiv.appendChild(chDir);
 
