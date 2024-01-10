@@ -17,8 +17,7 @@
   }
   
   #fs {
-    width: 20%;
-    border-right: 3px solid #1b1e2e;
+    width: 20%;    border-right: 3px solid #1b1e2e;
     overflow-y: auto;
     font-family: "JetBrainsMono Nerd Font";
     background-color: #1f2335;
@@ -35,13 +34,18 @@
   #topBar,
   #bottomBar {
     height: 35px;
-    border-top: 3px solid #1b1e2e;
     background-color: #1f2335;
     display: flex;
     color: white;
     align-items: center;
   }
   
+  #topBar{
+    border-bottom: 3px solid #1b1e2e;
+  }
+  #bottomBar{
+    border-top: 3px solid #1b1e2e;
+  }
   #editor {
     flex: 1;
     width: 100%;
