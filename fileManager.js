@@ -24,10 +24,9 @@ const chDir = document.createElement('button');
 chDir.className = "changeDir";
 chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i>';
 chDir.addEventListener('click', () => {
-  clickedFiles = [];
-  const topBar = document.getElementById('topBar');
-  topBar.innerHTML = '';
   ipcRenderer.send('open-folder-dialog');
+  clickedFiles = [];
+  topBar.innerHTML = '';
 });
 buttonsDiv.appendChild(chDir);
 
@@ -162,8 +161,11 @@ let previousButton = null;
 let clickedFiles = [];
 let currentSettButton = null;
 ipcRenderer.on('files-in-directory', (event, files) => {
-  fsSpan.innerHTML = ''; // Clear previous content
 
+  fsSpan.innerHTML = ''; 
+
+  clickedFiles = [];
+  topBar.innerHTML = '';
   // Append returnBtn
   returnDiv.appendChild(returnBtn);
   fsSpan.appendChild(returnDiv);
@@ -491,7 +493,7 @@ function handleMouseMove(e) {
 fs.addEventListener('mousemove', (e) => {
   const isNearRightEdge = e.offsetX > fs.offsetWidth - 6;
   fs.style.cursor = isNearRightEdge ? "col-resize" : "default";
-});
+})
 
 fs.addEventListener('mousedown', (e) => {
   const isNearRightEdge = e.offsetX > fs.offsetWidth - 6;
@@ -506,5 +508,7 @@ fs.addEventListener('mousedown', (e) => {
 document.addEventListener('mouseup', () => {
   isResizing = false;
   document.removeEventListener('mousemove', handleMouseMove);
+  fs.style.borderRight = "3px solid #1b1e2e";
+
 });
 

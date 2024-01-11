@@ -1,75 +1,74 @@
 @import "https://www.nerdfonts.com/assets/css/webfont.css";
-*{
+
+* {
     font-family: "JetBrainsMono Nerd Font";
     box-sizing: border-box;
+    margin: 0;
 }
 
+body, html {
+    height: 100%;
+}
 
 .container {
     display: flex;
     min-height: 100vh;
-  }
-  
-  body,
-  html {
-    height: 100%;
-    margin: 0;
-  }
-  
-  #fs {
-    width: 20%;    border-right: 3px solid #1b1e2e;
+    overflow: hidden; 
+}
+
+#fs {
+    flex: 0 0 auto;
+    width: 20%;
+    max-width: 300px;
+    border-right: 3px solid #1b1e2e;
     overflow-y: auto;
-    font-family: "JetBrainsMono Nerd Font";
     background-color: #1f2335;
-    white-space: nowrap;
-    min-width: 80px;
-  }
-  
-  .right-container {
+}
+
+.right-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-  }
-  
-  #topBar,
-  #bottomBar {
-    height: 35px;
+}
+
+#topBar, #bottomBar {
     background-color: #1f2335;
-    display: flex;
     color: white;
+    display: flex;
     align-items: center;
-  }
-  
-  #topBar{
+}
+
+#topBar {
+    height: 35px;
     border-bottom: 3px solid #1b1e2e;
-  }
-  #bottomBar{
+}
+
+#bottomBar{
+    height: 23px;
     border-top: 3px solid #1b1e2e;
-  }
-  #editor {
-    flex: 1;
+    position: fixed;
+    bottom: 0;
     width: 100%;
+    z-index: 1; 
+}
+
+#terminal {
+    border-top: 3px solid #1b1e2e;
+    background-color: #1f2335;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 23px;
+  }
+
+#editor {
+    flex: 1;
     background-color: #24283b;
     color: white;
     font-size: 14px;
     overflow-y: auto;
-    margin: 0;
-  }
-  
-  #terminal {
-    height: 27%; /* You can adjust this if needed */
-    border-top: 3px solid #1b1e2e;
-    background-color: #1f2335;
-    color: white;
-    font-size: 14px;
-  }
-  
-  #bottomBar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-  }
-  
+    padding: 10px;
+}
+ 
 
 .returnBtn{
     width: 30px;
