@@ -8,18 +8,18 @@
 
 body, html {
     height: 100%;
+    margin: 0; 
 }
 
 .container {
     display: flex;
-    min-height: 100vh;
+    height: 100%;
     overflow: hidden; 
 }
 
 #fs {
     flex: 0 0 auto;
     width: 20%;
-    max-width: 300px;
     border-right: 3px solid #1b1e2e;
     overflow-y: auto;
     background-color: #1f2335;
