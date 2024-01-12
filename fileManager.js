@@ -115,7 +115,7 @@ function addfile() {
           newDiv.innerHTML = symbol + " " + textArea.value; 
 
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => console.log('Error fetching data:', error));
 
       newDiv.className = "fileDiv";
       const buttonWrapper = document.createElement('div');
@@ -212,7 +212,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
         console.log(symbol);
         fileNameText.innerHTML = symbol + " " + fileName;
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch(error => console.log('Error fetching data:', error));
 
       fileDiv.addEventListener('click', () => {
         displayFileContent(fileName, fileDiv, settButton);
@@ -264,7 +264,7 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
         return symbol + "  " + file;
       })
       .catch(error => {
-        console.error('Error fetching data:', error);
+        console.log('Error fetching data:', error);
         return ""; 
       });
   });
@@ -377,7 +377,7 @@ ipcRenderer.on('file-deletion-success', (event, fileName) => {
 
 ipcRenderer.on('file-deletion-error', (event, errorMessage) => {
   // Handle deletion error in the renderer process, like showing an alert, etc.
-  console.error('Error deleting file:', errorMessage);
+  console.log('Error deleting file:', errorMessage);
 });
 
 
@@ -401,7 +401,7 @@ ipcRenderer.on('file-content', (event, fileData) => {
       editor.setValue(content);
 
       // Get the existing language button or create a new one
-      const bottom = document.getElementById('buttomBar');
+      const bottom = document.getElementById('bottomBar');
       let languageButton = bottom.querySelector('.languageName');
       if (!languageButton) {
         languageButton = document.createElement('button');
@@ -425,7 +425,7 @@ ipcRenderer.on('file-content', (event, fileData) => {
       });
     })
     .catch(err => {
-      console.error("Error:", err);
+      console.log("Error:", err);
     });
 });
 
@@ -471,7 +471,7 @@ function getLangName(name) {
       return lang;
     })
     .catch(error => {
-      console.error('Error fetching data:', error);
+      console.log('Error fetching data:', error);
       return '';
     });
 }
