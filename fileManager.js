@@ -160,10 +160,11 @@ function displayFileContent(fileName, fileDiv, settButton) {
 let previousButton = null;
 let clickedFiles = [];
 let currentSettButton = null;
-ipcRenderer.on('files-in-directory', (event, files) => {
 
-  fsSpan.innerHTML = ''; 
+ipcRenderer.on('files-in-directory', (event, data) => {
+  const files = data.files;
 
+  fsSpan.innerHTML = '';
   clickedFiles = [];
   topBar.innerHTML = '';
   // Append returnBtn
@@ -176,78 +177,78 @@ ipcRenderer.on('files-in-directory', (event, files) => {
   buttonsDiv.appendChild(addFolder);
   buttonsDiv.appendChild(reloadFolder);
   fsSpan.appendChild(buttonsDiv);
-  
-  files.forEach(fileName => {
-    const fileDiv = document.createElement('div');
-    const fileNameText = document.createElement('span');
-    const settButton = document.createElement('button');
 
-    fileDiv.className = "fileDiv";
-    fileDiv.style.display = 'flex'; 
-    fileDiv.style.position = 'relative'; 
+  ipcRenderer.on('folders-in-directory-result', (event, folderList) => {
+      files.forEach((fileName) => {
+          const fileDiv = document.createElement('div');
+          const fileNameText = document.createElement('span');
+          const settButton = document.createElement('button');
 
-    fileNameText.textContent = fileName; 
-    fileNameText.style.overflow = 'hidden';
-    fileNameText.style.textOverflow = 'ellipsis'; 
-    fileNameText.style.whiteSpace = 'nowrap'; 
-    fileNameText.className = "fileNameText";
+          fileDiv.className = "fileDiv";
+          fileDiv.style.display = 'flex';
+          fileDiv.style.position = 'relative';
 
-    fileDiv.appendChild(fileNameText);
+          fileNameText.textContent = fileName;
+          fileNameText.style.overflow = 'hidden';
+          fileNameText.style.textOverflow = 'ellipsis';
+          fileNameText.style.whiteSpace = 'nowrap';
+          fileNameText.className = "fileNameText";
 
-    settButton.innerHTML = '<i class="nf-oct-three_bars"></i>'; 
-    settButton.className = 'settButton';
-    settButton.style.position = 'absolute'; 
-    settButton.style.right = '0'; 
-    settButton.style.display = 'none';
+          fileDiv.appendChild(fileNameText);
 
-    fileDiv.appendChild(settButton); 
+          settButton.innerHTML = '<i class="nf-oct-three_bars"></i>';
+          settButton.className = 'settButton';
+          settButton.style.position = 'absolute';
+          settButton.style.right = '0';
+          settButton.style.display = 'none';
 
+          fileDiv.appendChild(settButton);
 
-    const fileType = getFileType(fileName);
-    console.log(fileType);
-    fetch('./symbols.json')
-      .then(response => response.json())
-      .then(data => {
-        let symbol = data[fileType] || " ";
-        console.log(symbol);
-        fileNameText.innerHTML = symbol + " " + fileName;
-      })
-      .catch(error => console.log('Error fetching data:', error));
+          const fileType = getFileType(fileName);
+          console.log(fileType);
+          fetch('./symbols.json')
+              .then((response) => response.json())
+              .then((symbolData) => {
+                  let symbol = symbolData[fileType] || " ";
+                  console.log(symbol);
+                  fileNameText.innerHTML = symbol + " " + fileName;
+              })
+              .catch((error) => console.log('Error fetching data:', error));
 
-      fileDiv.addEventListener('click', () => {
-        displayFileContent(fileName, fileDiv, settButton);
-        if (!clickedFiles.includes(fileName)) {
-          clickedFiles.push(fileName);
-          updateTopBar(fileName, fileDiv, settButton); // Pass fileName, fileDiv, and settButton to updateTopBar
-        }
-        if (currentSettButton && currentSettButton !== settButton) {
-          currentSettButton.style.display = 'none'; // Hide the previous settButton if it's not the same as the current one
-        }
-        currentSettButton = settButton;
+          fileDiv.addEventListener('click', () => {
+              displayFileContent(fileName, fileDiv, settButton);
+              if (!clickedFiles.includes(fileName)) {
+                  clickedFiles.push(fileName);
+                  updateTopBar(fileName, fileDiv, settButton);
+              }
+              if (currentSettButton && currentSettButton !== settButton) {
+                  currentSettButton.style.display = 'none';
+              }
+              currentSettButton = settButton;
+          });
+
+          fileDiv.addEventListener('contextmenu', (event) => {
+              event.preventDefault();
+              console.log('Right-clicked!');
+          });
+
+          settButton.addEventListener('click', (event) => {
+              event.stopPropagation();
+              const fileDiv = event.currentTarget.parentNode;
+              settingsPanel(fileDiv, fileName);
+          });
+
+          fsSpan.appendChild(fileDiv);
       });
 
-    fileDiv.addEventListener('contextmenu', function(event) {
-      event.preventDefault();
-      
-      console.log('Right-clicked!');
-    });
-
-    
-    settButton.addEventListener('click', (event) => {
-      // Prevent the click event from propagating to the fileDiv
-      event.stopPropagation();
-    
-      // Get the parent fileDiv of the clicked settButton
-      const fileDiv = event.currentTarget.parentNode;
-    
-      // Call settingsPanel with the fileDiv and fileName
-      settingsPanel(fileDiv, fileName);
-    });
-    
-
-    fsSpan.appendChild(fileDiv); 
+      if (folderList.length > 0) {
+          console.log('Folders in the directory:', folderList);
+      } else {
+          console.log('No folders found in the directory.');
+      }
   });
 });
+
 
 
 
@@ -527,3 +528,6 @@ document.addEventListener('mouseup', () => {
   fs.style.borderRight = "3px solid #1b1e2e";
 
 });
+
+
+
