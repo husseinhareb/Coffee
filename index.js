@@ -20,7 +20,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    resizable: false,
+    //resizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -121,7 +121,7 @@ function createWindow() {
             console.error(readErr);
             event.sender.send('file-content', { fileName, content: '' }); // Sending empty content in case of error along with the file name
             } else {
-            console.log('File content:', data);
+            //console.log('File content:', data);
             event.sender.send('file-content', { fileName, content: data }); // Sending file name and content to renderer process
             currentDirectory = path.dirname(clickedPath); // Update the current directory to the file's directory
           }
@@ -129,21 +129,35 @@ function createWindow() {
 
       } else if (stats.isDirectory()) {
         // It's a directory
-        console.log("It's a directory:", fileName);
-  
-        // Read the contents of the clicked directory
-        fs.readdir(clickedPath, (readDirErr, files) => {
-          if (readDirErr) {
-            console.error(readDirErr);
+        const folderPath = path.join(currentDirectory, fileName); 
+        console.log("It's a folder:", folderPath);
+        fs.readdir(folderPath, (err, files) => {  
+          if (err) {
+            console.error(err);
             event.sender.send('files-in-directory', []); // Sending empty array in case of error
           } else {
             event.sender.send('files-in-directory', files); // Sending directory contents to renderer process
             console.log('Files in directory:', files);
-            currentDirectory = clickedPath; // Update the current directory
+            currentDirectory = folderPath; // Update the current directory
             ptyProcess.kill();
             chTerminalPath(currentDirectory);
-          }
+           
+            const folderList = [];
+    
+            files.forEach(fileName => {
+                try {
+                   const stats = fs.statSync(path.join(folderPath, fileName)); 
+                      if (stats.isDirectory()) {
+                          folderList.push(fileName);
+                      }
+                    }catch (statErr) {
+                      console.error(`Error getting stats for ${fileName}:`, statErr);  
+                    }
+              });
+              event.sender.send('folders-in-directory-result', folderList);
+            }
         });
+
       } else {
         // It's neither a file nor a directory
         console.log("It's neither a file nor a directory:", fileName);
@@ -291,7 +305,6 @@ ipcMain.on('rename-file', (event, { oldFileName, newFileName }) => {
     }
   });
 });
-
 
 
 
