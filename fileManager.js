@@ -156,10 +156,24 @@ function displayFileContent(fileName, fileDiv, settButton) {
 }
 
 
+let folder_list = [];
+
+ipcRenderer.on('folders-in-directory-result', (event, folderList) => {
+  if (folderList.length > 0) {
+    console.log('Folders in the directory:', folderList);
+    folder_list = folderList;
+  } else {
+    console.log('No folders found in the directory.');
+  }
+});
+
+console.log("global", folder_list);
+
 
 let previousButton = null;
 let clickedFiles = [];
 let currentSettButton = null;
+
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
 
@@ -173,8 +187,8 @@ ipcRenderer.on('files-in-directory', (event, files) => {
   buttonsDiv.appendChild(addFolder);
   buttonsDiv.appendChild(reloadFolder);
   fsSpan.appendChild(buttonsDiv);
-  
   files.forEach(fileName => {
+
     const fileDiv = document.createElement('div');
     const fileNameText = document.createElement('span');
     const settButton = document.createElement('button');
@@ -198,16 +212,22 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     settButton.style.display = 'none';
 
     fileDiv.appendChild(settButton); 
-
-
     const fileType = getFileType(fileName);
-    console.log(fileType);
+
+    
     fetch('./symbols.json')
       .then(response => response.json())
       .then(data => {
         let symbol = data[fileType] || " ";
         console.log(symbol);
         fileNameText.innerHTML = symbol + " " + fileName;
+        //Folder icon handling
+        if (folder_list.includes(fileName)) {
+          console.log("Folder found in folder_list:", fileName);
+          fileNameText.innerHTML = "<i class=\"nf-custom-folder\" style=\"color: #29B6F6;\"></i>" + " " + fileName;
+        } else {
+          console.log("Folder not found in folder_list:", fileName);
+        }
       })
       .catch(error => console.error('Error fetching data:', error));
 
