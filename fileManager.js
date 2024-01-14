@@ -160,13 +160,9 @@ function displayFileContent(fileName, fileDiv, settButton) {
 let previousButton = null;
 let clickedFiles = [];
 let currentSettButton = null;
+ipcRenderer.on('files-in-directory', (event, files) => {
+  fsSpan.innerHTML = ''; // Clear previous content
 
-ipcRenderer.on('files-in-directory', (event, data) => {
-  const files = data.files;
-
-  fsSpan.innerHTML = '';
-  clickedFiles = [];
-  topBar.innerHTML = '';
   // Append returnBtn
   returnDiv.appendChild(returnBtn);
   fsSpan.appendChild(returnDiv);
@@ -177,75 +173,76 @@ ipcRenderer.on('files-in-directory', (event, data) => {
   buttonsDiv.appendChild(addFolder);
   buttonsDiv.appendChild(reloadFolder);
   fsSpan.appendChild(buttonsDiv);
+  
+  files.forEach(fileName => {
+    const fileDiv = document.createElement('div');
+    const fileNameText = document.createElement('span');
+    const settButton = document.createElement('button');
 
-  ipcRenderer.on('folders-in-directory-result', (event, folderList) => {
-      files.forEach((fileName) => {
-          const fileDiv = document.createElement('div');
-          const fileNameText = document.createElement('span');
-          const settButton = document.createElement('button');
+    fileDiv.className = "fileDiv";
+    fileDiv.style.display = 'flex'; 
+    fileDiv.style.position = 'relative'; 
 
-          fileDiv.className = "fileDiv";
-          fileDiv.style.display = 'flex';
-          fileDiv.style.position = 'relative';
+    fileNameText.textContent = fileName; 
+    fileNameText.style.overflow = 'hidden';
+    fileNameText.style.textOverflow = 'ellipsis'; 
+    fileNameText.style.whiteSpace = 'nowrap'; 
+    fileNameText.className = "fileNameText";
 
-          fileNameText.textContent = fileName;
-          fileNameText.style.overflow = 'hidden';
-          fileNameText.style.textOverflow = 'ellipsis';
-          fileNameText.style.whiteSpace = 'nowrap';
-          fileNameText.className = "fileNameText";
+    fileDiv.appendChild(fileNameText);
 
-          fileDiv.appendChild(fileNameText);
+    settButton.innerHTML = '<i class="nf-oct-three_bars"></i>'; 
+    settButton.className = 'settButton';
+    settButton.style.position = 'absolute'; 
+    settButton.style.right = '0'; 
+    settButton.style.display = 'none';
 
-          settButton.innerHTML = '<i class="nf-oct-three_bars"></i>';
-          settButton.className = 'settButton';
-          settButton.style.position = 'absolute';
-          settButton.style.right = '0';
-          settButton.style.display = 'none';
+    fileDiv.appendChild(settButton); 
 
-          fileDiv.appendChild(settButton);
 
-          const fileType = getFileType(fileName);
-          console.log(fileType);
-          fetch('./symbols.json')
-              .then((response) => response.json())
-              .then((symbolData) => {
-                  let symbol = symbolData[fileType] || " ";
-                  console.log(symbol);
-                  fileNameText.innerHTML = symbol + " " + fileName;
-              })
-              .catch((error) => console.log('Error fetching data:', error));
+    const fileType = getFileType(fileName);
+    console.log(fileType);
+    fetch('./symbols.json')
+      .then(response => response.json())
+      .then(data => {
+        let symbol = data[fileType] || " ";
+        console.log(symbol);
+        fileNameText.innerHTML = symbol + " " + fileName;
+      })
+      .catch(error => console.error('Error fetching data:', error));
 
-          fileDiv.addEventListener('click', () => {
-              displayFileContent(fileName, fileDiv, settButton);
-              if (!clickedFiles.includes(fileName)) {
-                  clickedFiles.push(fileName);
-                  updateTopBar(fileName, fileDiv, settButton);
-              }
-              if (currentSettButton && currentSettButton !== settButton) {
-                  currentSettButton.style.display = 'none';
-              }
-              currentSettButton = settButton;
-          });
-
-          fileDiv.addEventListener('contextmenu', (event) => {
-              event.preventDefault();
-              console.log('Right-clicked!');
-          });
-
-          settButton.addEventListener('click', (event) => {
-              event.stopPropagation();
-              const fileDiv = event.currentTarget.parentNode;
-              settingsPanel(fileDiv, fileName);
-          });
-
-          fsSpan.appendChild(fileDiv);
+      fileDiv.addEventListener('click', () => {
+        displayFileContent(fileName, fileDiv, settButton);
+        if (!clickedFiles.includes(fileName)) {
+          clickedFiles.push(fileName);
+          updateTopBar(fileName, fileDiv, settButton); // Pass fileName, fileDiv, and settButton to updateTopBar
+        }
+        if (currentSettButton && currentSettButton !== settButton) {
+          currentSettButton.style.display = 'none'; // Hide the previous settButton if it's not the same as the current one
+        }
+        currentSettButton = settButton;
       });
 
-      if (folderList.length > 0) {
-          console.log('Folders in the directory:', folderList);
-      } else {
-          console.log('No folders found in the directory.');
-      }
+    fileDiv.addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+      
+      console.log('Right-clicked!');
+    });
+
+    
+    settButton.addEventListener('click', (event) => {
+      // Prevent the click event from propagating to the fileDiv
+      event.stopPropagation();
+    
+      // Get the parent fileDiv of the clicked settButton
+      const fileDiv = event.currentTarget.parentNode;
+    
+      // Call settingsPanel with the fileDiv and fileName
+      settingsPanel(fileDiv, fileName);
+    });
+    
+
+    fsSpan.appendChild(fileDiv); 
   });
 });
 
@@ -393,44 +390,42 @@ ipcRenderer.on('file-path', (event, filepath) => {
 ipcRenderer.on('file-content', (event, fileData) => {
   const { fileName, content } = fileData;
   getLangName(fileName)
-    .then(lang => {
-      const language = lang;
-      ace.config.set("basePath", "./node_modules/ace-builds/src/ace.js");
-      const editor = ace.edit("editor");
-      editor.setTheme("ace/theme/monokai"); 
-      editor.session.setMode(`ace/mode/${language}`);
-      editor.setValue(content);
+      .then(lang => {
+          const language = lang;
+          ace.config.set("basePath", "./node_modules/ace-builds/src/ace.js");
+          const editor = ace.edit("editor");
+          editor.setTheme("ace/theme/monokai"); 
+          editor.session.setMode(`ace/mode/${language}`);
+          editor.setValue(content);
 
-      // Get the existing language button or create a new one
-      const bottom = document.getElementById('bottomBar');
-      let languageButton = bottom.querySelector('.languageName');
-      if (!languageButton) {
-        languageButton = document.createElement('button');
-        languageButton.className = "languageName";
-        bottom.appendChild(languageButton);
-      }
-      languageButton.textContent = language;
+          // Get the existing language button or create a new one
+          const bottom = document.getElementById('bottomBar');
+          let languageButton = bottom.querySelector('.languageName');
+          if (!languageButton) {
+              languageButton = document.createElement('button');
+              languageButton.className = "languageName";
+              bottom.appendChild(languageButton);
+          }
+          languageButton.textContent = language;
 
-      // Get the existing line and column button or create a new one
-      let lns = bottom.querySelector('.lineColumn');
-      if (!lns) {
-        lns = document.createElement('button');
-        lns.className = "lineColumn";
-        bottom.appendChild(lns);
-      }
+          // Get the existing line and column button or create a new one
+          let lns = bottom.querySelector('.lineColumn');
+          if (!lns) {
+              lns = document.createElement('button');
+              lns.className = "lineColumn";
+              bottom.appendChild(lns);
+          }
 
-      // Listen to changes in the editor content
-      editor.getSession().on('change', () => {
-        const cursorPos = editor.getCursorPosition();
-        lns.textContent = `Line: ${cursorPos.row + 1}, Column: ${cursorPos.column}`;
+          // Listen to changes in the cursor position (selection)
+          editor.getSelection().on('changeCursor', () => {
+              const cursorPos = editor.getCursorPosition();
+              lns.textContent = `Line: ${cursorPos.row + 1}, Column: ${cursorPos.column}`;
+          });
+      })
+      .catch(err => {
+          console.log("Error:", err);
       });
-    })
-    .catch(err => {
-      console.log("Error:", err);
-    });
 });
-
-
 
 function saveChanges() {
   const editor = ace.edit("editor"); 
