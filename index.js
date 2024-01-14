@@ -55,21 +55,7 @@ function createWindow() {
     });
   }
 // Function to get the list of folders in a directory
-function getFoldersInDirectory(directory) {
-const folderList = [];
-  try {
-        const files = fs.readdirSync(directory);
-        files.forEach(fileName => {
-          const stats = fs.statSync(path.join(directory, fileName));
-          if (stats.isDirectory()) {
-            folderList.push(fileName);
-          }
-        });
-      } catch (err) {
-        console.error(`Error getting folders in directory ${directory}:`, err);
-      }
-      return folderList;
-    }
+
 
 
 
@@ -249,22 +235,54 @@ ipcMain.on('folder-creation-request', (event, folderName) => {
 });
 
 
+
+function getFoldersInDirectory(directory) {
+  const folderList = [];
+  try {
+    const files = fs.readdirSync(directory);
+    files.forEach(fileName => {
+      const filePath = path.join(directory, fileName);
+      try {
+        const stats = fs.statSync(filePath);
+        if (stats.isDirectory()) {
+          folderList.push(fileName);
+        }
+      } catch (statErr) {
+        // Handle stat error, log or ignore as needed
+        console.error(`Error getting stats for ${filePath}:`, statErr);
+      }
+    });
+  } catch (err) {
+    // Handle readdirSync error, log or rethrow as needed
+    console.error(`Error reading directory ${directory}:`, err);
+  }
+  return folderList;
+}
+
+
 ipcMain.on('return-to-parent-directory', (event) => {
   if (!currentDirectory) {
-    // If the current directory is not set, do nothing or handle accordingly
+    console.error('Current directory not set.');
     return;
   }
   const parentDirectory = path.dirname(currentDirectory);
+
+  console.log('Returning to parent directory:', parentDirectory);
 
   fs.readdir(parentDirectory, (err, files) => {
     if (err) {
       console.error(err);
       event.sender.send('files-in-directory', []);
-    } else { 
+    } else {
       event.sender.send('files-in-directory', files);
-      const folderList = getFoldersInDirectory(currentDirectory);
+
+      const folderList = getFoldersInDirectory(parentDirectory);
+      console.log('Folders in parent directory:', folderList);
+
       event.sender.send('folders-in-directory-result', folderList);
-      console.log(files);
+
+      console.log('Files in parent directory:', files);
+
       currentDirectory = parentDirectory;
       ptyProcess.kill();
 
@@ -272,6 +290,8 @@ ipcMain.on('return-to-parent-directory', (event) => {
     }
   });
 });
+
+
 
 
 ipcMain.on('reload-folder', (event) => {
