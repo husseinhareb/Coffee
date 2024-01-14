@@ -54,13 +54,13 @@ function createWindow() {
       console.log("Data sent");
     });
   }
-  
-  // Attach the terminal keystroke listener outside the function
-  ipcMain.on("terminal.keystroke", (event, key) => {
+
+// Attach the terminal keystroke listener outside the function
+ipcMain.on("terminal.keystroke", (event, key) => {
     if (ptyProcess) {
       ptyProcess.write(key);
     }
-  });
+});
   
   
 
@@ -86,19 +86,24 @@ function createWindow() {
             event.sender.send('files-in-directory', files);
             currentDirectory = selectedDirectory;
             console.log(files);
-            console.log("Current Directory",currentDirectory);
+            console.log("Current Directory", currentDirectory);
             chTerminalPath(currentDirectory);
+  
+            // Retrieve and send the list of folders
+            const folderList = getFoldersInDirectory(currentDirectory);
+            event.sender.send('folders-in-directory-result', folderList);
           }
         });
       }
     }).catch(err => {
       console.error(err);
     });
-
-
   });
   
-  ipcMain.on('file-button-clicked', (event, fileName) => {
+
+  
+  
+ipcMain.on('file-button-clicked', (event, fileName) => {
     const clickedPath = path.join(currentDirectory, fileName);
   
     // Check if the clicked item is a file or directory
@@ -237,14 +242,15 @@ ipcMain.on('return-to-parent-directory', (event) => {
     if (err) {
       console.error(err);
       event.sender.send('files-in-directory', []);
-    } else {
+    } else { 
       event.sender.send('files-in-directory', files);
+      const folderList = getFoldersInDirectory(currentDirectory);
+      event.sender.send('folders-in-directory-result', folderList);
       console.log(files);
-      currentDirectory = parentDirectory; 
+      currentDirectory = parentDirectory;
       ptyProcess.kill();
 
       chTerminalPath(currentDirectory);
-
     }
   });
 });
@@ -326,4 +332,3 @@ app.on("activate", function () {
     createWindow();
   }
 });  
-
