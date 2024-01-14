@@ -54,6 +54,24 @@ function createWindow() {
       console.log("Data sent");
     });
   }
+// Function to get the list of folders in a directory
+function getFoldersInDirectory(directory) {
+const folderList = [];
+  try {
+        const files = fs.readdirSync(directory);
+        files.forEach(fileName => {
+          const stats = fs.statSync(path.join(directory, fileName));
+          if (stats.isDirectory()) {
+            folderList.push(fileName);
+          }
+        });
+      } catch (err) {
+        console.error(`Error getting folders in directory ${directory}:`, err);
+      }
+      return folderList;
+    }
+
+
 
 // Attach the terminal keystroke listener outside the function
 ipcMain.on("terminal.keystroke", (event, key) => {
