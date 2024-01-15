@@ -294,13 +294,22 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
         fileButton.innerHTML = content;
         fileButton.className = "topFiles";
         fileButton.addEventListener('click', () => {
-          displayFileContent(content, fileDiv, settButton);
-          console.log(`Button clicked: ${content}`);
+          if (isDirectory(content)) {
+            // Handle directory click if needed
+            console.log('Directory clicked:', content);
+          } else {
+            displayFileContent(content, fileDiv, settButton);
+          }
         });
 
         topBar.appendChild(fileButton);
       });
     });
+}
+
+// Assuming the isDirectory function is defined in your code
+function isDirectory(fileName) {
+  return folder_list.includes(fileName);
 }
 
 
