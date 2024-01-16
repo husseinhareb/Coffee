@@ -10,6 +10,8 @@ returnBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 returnBtn.className = "returnBtn";
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
+  clickedFiles = [];
+  topBar.innerHTML = '';
 
 });
 
@@ -149,7 +151,7 @@ function displayFileContent(fileName, fileDiv, settButton) {
   settButton.style.display = 'block';
 
   previousButton = fileDiv;
-
+  console.log(fileName);
   ipcRenderer.send('file-button-clicked', fileName);
 
   console.log("testing testing");
