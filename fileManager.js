@@ -285,7 +285,7 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
       })
       .catch(error => {
         console.log('Error fetching data:', error);
-        return ""; 
+        return "";
       });
   });
 
@@ -295,14 +295,17 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
         const fileButton = document.createElement('button');
         fileButton.innerHTML = content;
         fileButton.className = "topFiles";
-        fileButton.addEventListener('click', () => {
-          if (isDirectory(content)) {
-            // Handle directory click if needed
-            console.log('Directory clicked:', content);
-          } else {
-            displayFileContent(content, fileDiv, settButton);
-          }
-        });
+// Inside the updateTopBar function
+fileButton.addEventListener('click', () => {
+  if (isDirectory(content)) {
+    // Handle directory click if needed
+    console.log('Directory clicked:', content);
+  } else {
+    const fileName = extractFileName(content); // Implement this function to extract the file name
+    displayFileContent(fileName, fileDiv, settButton);
+  }
+});
+
 
         topBar.appendChild(fileButton);
       });
