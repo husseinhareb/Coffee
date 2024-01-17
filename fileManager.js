@@ -281,36 +281,36 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
       .then(response => response.json())
       .then(data => {
         let symbol = data[fileType] || " ";
-        return symbol + "  " + file;
+        return { symbol, fileName: file };
       })
       .catch(error => {
         console.log('Error fetching data:', error);
-        return "";
+        return { symbol: "", fileName: "" };
       });
   });
 
   Promise.all(fetchSymbolPromises)
     .then(fileButtonsContent => {
-      fileButtonsContent.forEach(content => {
+      fileButtonsContent.forEach(({ symbol, fileName }) => {
         const fileButton = document.createElement('button');
-        fileButton.innerHTML = content;
+        fileButton.innerHTML = symbol + " " + fileName; // Display symbol and file name
         fileButton.className = "topFiles";
-// Inside the updateTopBar function
-fileButton.addEventListener('click', () => {
-  if (isDirectory(content)) {
-    // Handle directory click if needed
-    console.log('Directory clicked:', content);
-  } else {
-    const fileName = extractFileName(content); // Implement this function to extract the file name
-    displayFileContent(fileName, fileDiv, settButton);
-  }
-});
-
+        fileButton.addEventListener('click', () => {
+          if (isDirectory(fileName)) {
+            // Handle directory click if needed
+            console.log('Directory clicked:', fileName);
+          } else {
+            console.log('File clicked:', fileName);
+            displayFileContent(fileName, fileDiv, settButton);
+          }
+        });
 
         topBar.appendChild(fileButton);
       });
     });
 }
+
+
 
 // Assuming the isDirectory function is defined in your code
 function isDirectory(fileName) {
