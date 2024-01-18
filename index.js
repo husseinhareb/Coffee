@@ -5,12 +5,6 @@ const pty = require("node-pty");
 const path = require('path');
 const fs = require('fs');
 const os = require("os");
-const reload = require('electron-reload');
-
-// Start Electron Reload
-reload(__dirname, {
-  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-});
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 
