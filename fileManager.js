@@ -270,7 +270,6 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
 
 
-
 function updateTopBar(clickedFile, fileDiv, settButton) {
   // Clear previous content
   topBar.innerHTML = '';
@@ -295,7 +294,23 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
         const fileButton = document.createElement('button');
         fileButton.innerHTML = symbol + " " + fileName; // Display symbol and file name
         fileButton.className = "topFiles";
-        fileButton.addEventListener('click', () => {
+
+        // Create close button (X) next to each file name
+        const closeButton = document.createElement('button');
+        closeButton.innerHTML = '<i class="fa-solid fa-times"></i>';
+        closeButton.className = "closeButton";
+        closeButton.addEventListener('click', (event) => {
+          event.stopPropagation();
+          closeFile(fileName);
+        });
+
+        // Create a container to hold both the file name and close button
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = "fileButtonContainer";
+        buttonContainer.appendChild(fileButton);
+        buttonContainer.appendChild(closeButton);
+
+        buttonContainer.addEventListener('click', () => {
           if (isDirectory(fileName)) {
             // Handle directory click if needed
             console.log('Directory clicked:', fileName);
@@ -305,10 +320,22 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
           }
         });
 
-        topBar.appendChild(fileButton);
+        topBar.appendChild(buttonContainer);
       });
     });
 }
+
+function closeFile(fileName) {
+  // Remove the closed file from the clickedFiles array
+  const index = clickedFiles.indexOf(fileName);
+  if (index !== -1) {
+    clickedFiles.splice(index, 1);
+  }
+
+  // Update the top bar to reflect the changes
+  updateTopBar();
+}
+
 
 
 
