@@ -291,36 +291,34 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
   Promise.all(fetchSymbolPromises)
     .then(fileButtonsContent => {
       fileButtonsContent.forEach(({ symbol, fileName }) => {
-        const fileButton = document.createElement('button');
-        fileButton.innerHTML = symbol + " " + fileName; // Display symbol and file name
-        fileButton.className = "topFiles";
+        // Exclude folders from being displayed in the top bar
+        if (!isDirectory(fileName)) {
+          const fileButton = document.createElement('button');
+          fileButton.innerHTML = symbol + " " + fileName; // Display symbol and file name
+          fileButton.className = "topFiles";
 
-        // Create close button (X) next to each file name
-        const closeButton = document.createElement('button');
-        closeButton.innerHTML = '<i class="fa-solid fa-times"></i>';
-        closeButton.className = "closeButton";
-        closeButton.addEventListener('click', (event) => {
-          event.stopPropagation();
-          closeFile(fileName);
-        });
+          // Create close button (X) next to each file name
+          const closeButton = document.createElement('button');
+          closeButton.innerHTML = '<i class="fa-solid fa-times"></i>';
+          closeButton.className = "closeButton";
+          closeButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            closeFile(fileName);
+          });
 
-        // Create a container to hold both the file name and close button
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = "fileButtonContainer";
-        buttonContainer.appendChild(fileButton);
-        buttonContainer.appendChild(closeButton);
+          // Create a container to hold both the file name and close button
+          const buttonContainer = document.createElement('div');
+          buttonContainer.className = "fileButtonContainer";
+          buttonContainer.appendChild(fileButton);
+          buttonContainer.appendChild(closeButton);
 
-        buttonContainer.addEventListener('click', () => {
-          if (isDirectory(fileName)) {
-            // Handle directory click if needed
-            console.log('Directory clicked:', fileName);
-          } else {
+          buttonContainer.addEventListener('click', () => {
             console.log('File clicked:', fileName);
             displayFileContent(fileName, fileDiv, settButton);
-          }
-        });
+          });
 
-        topBar.appendChild(buttonContainer);
+          topBar.appendChild(buttonContainer);
+        }
       });
     });
 }
