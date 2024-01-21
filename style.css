@@ -1,18 +1,21 @@
 @font-face {
     font-family: 'SymbolsNerdFont';
-    src: url('fonts/Symbols_Nerd_Font_Regular') format('truetype');
-  }
-  
-  @font-face {
-    font-family: 'JetBrainsMonoNerdFontRegular';
-    src: url('fonts/JetBrainsMono_Nerd_Font_Regular.ttf') format('truetype');
-  }
-  
+    src: url('fonts/Symbols_Nerd_Font_Regular.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'JetBrainsMonoNerdFontRegularMono';
+    src: url('fonts/JetBrainsMono_Nerd_Font_Mono_Regular.ttf') format('truetype');
+    font-style: normal;
+}
+
 * {
-    font-family: "JetBrainsMono Nerd Font";
+    font-family: "SymbolsNerdFont","JetBrainsMonoNerdFontRegularMono";
     box-sizing: border-box;
     margin: 0;
 }
+
 
 body, html {
     height: 100%;
@@ -26,6 +29,8 @@ body, html {
 }
 
 #fs {
+    font-family: "SymbolsNerdFont","JetBrainsMonoNerdFontRegularMono";
+
     flex: 0 0 auto;
     width: 200px;
     border-right: 3px solid #1b1e2e;
