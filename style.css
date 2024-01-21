@@ -29,8 +29,6 @@ body, html {
 }
 
 #fs {
-    font-family: "SymbolsNerdFont","JetBrainsMonoNerdFontRegularMono";
-
     flex: 0 0 auto;
     width: 200px;
     border-right: 3px solid #1b1e2e;
