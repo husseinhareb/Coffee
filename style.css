@@ -1,17 +1,12 @@
-@font-face {
-    font-family: 'SymbolsNerdFont';
-    src: url('fonts/Symbols_Nerd_Font_Regular.ttf') format('truetype');
-    font-style: normal;
-}
 
 @font-face {
     font-family: 'JetBrainsMonoNerdFontRegularMono';
-    src: url('fonts/JetBrainsMono_Nerd_Font_Mono_Regular.ttf') format('truetype');
+    src: url('fonts/JetBrainsMonoNLNerdFont-Regular.ttf');
     font-style: normal;
 }
 
 * {
-    font-family: "SymbolsNerdFont","JetBrainsMonoNerdFontRegularMono";
+    font-family: "JetBrainsMonoNerdFontRegularMono";
     box-sizing: border-box;
     margin: 0;
 }
