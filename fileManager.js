@@ -6,7 +6,7 @@ const fsSpan = document.getElementById('fs');
 const returnDiv = document.createElement('div');
 
 const returnBtn = document.createElement('button');
-returnBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
+returnBtn.innerHTML = '<sym class="fa-solid fa-arrow-left"></sym>';
 returnBtn.className = "returnBtn";
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
@@ -24,7 +24,7 @@ const buttonsDiv = document.createElement('div');
 buttonsDiv.className = "buttonsDiv";
 const chDir = document.createElement('button');
 chDir.className = "changeDir";
-chDir.innerHTML = '<i class="fa-solid fa-folder-open"></i>';
+chDir.innerHTML = '<sym class="fa-solid fa-folder-open"></sym>';
 chDir.addEventListener('click', () => {
   ipcRenderer.send('open-folder-dialog');
   clickedFiles = [];
@@ -33,20 +33,20 @@ chDir.addEventListener('click', () => {
 buttonsDiv.appendChild(chDir);
 
 const addFile = document.createElement('button');
-addFile.innerHTML = '<i class="nf-cod-new_file"></i>';
+addFile.innerHTML = '<sym class="nf-cod-new_file"></sym>';
 addFile.className = "addFile";
 addFile.addEventListener('click', addfile);
 buttonsDiv.appendChild(addFile);
 
 
 const addFolder = document.createElement('button');
-addFolder.innerHTML = '<i class="nf-cod-new_folder"></i>';
+addFolder.innerHTML = '<sym class="nf-cod-new_folder"></sym>';
 addFolder.className = "addFile";
 addFolder.addEventListener('click', addfolder);
 buttonsDiv.appendChild(addFolder);
 
 const reloadFolder = document.createElement('button');
-reloadFolder.innerHTML = '<i class="nf-md-reload"></i>';
+reloadFolder.innerHTML = '<sym class="nf-md-reload"></sym>';
 reloadFolder.className = "addFile";
 reloadFolder.addEventListener('click', () => {
   ipcRenderer.send('reload-folder');
@@ -207,7 +207,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
     fileDiv.appendChild(fileNameText);
 
-    settButton.innerHTML = '<i class="nf-oct-three_bars"></i>'; 
+    settButton.innerHTML = '<sym class="nf-oct-three_bars"></sym>'; 
     settButton.className = 'settButton';
     settButton.style.position = 'absolute'; 
     settButton.style.right = '0'; 
@@ -226,7 +226,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
         //Folder icon handling
         if (folder_list.includes(fileName)) {
           console.log("Folder found in folder_list:", fileName);
-          fileNameText.innerHTML = "<i class=\"nf-custom-folder\" style=\"color: #29B6F6;\"></i>" + " " + fileName;
+          fileNameText.innerHTML = "<sym class=\"nf-custom-folder\" style=\"color: #29B6F6;\"></sym>" + " " + fileName;
         } else {
           console.log("Folder not found in folder_list:", fileName);
         }
@@ -297,7 +297,7 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
 
         // Create close button (X) next to each file name
         const closeButton = document.createElement('button');
-        closeButton.innerHTML = '<i class="fa-solid fa-times"></i>';
+        closeButton.innerHTML = '<sym class="fa-solid fa-times"></sym>';
         closeButton.className = "closeButton";
         closeButton.addEventListener('click', (event) => {
           event.stopPropagation();
@@ -364,11 +364,11 @@ function settingsPanel(fileDiv, fileName) {
 
 
   const renameButton = document.createElement('button');
-  renameButton.innerHTML = '<i class="nf-md-rename_box"></i> Rename';
+  renameButton.innerHTML = '<sym class="nf-md-rename_box"></sym> Rename';
   renameButton.className = 'renameButton'
   
   const deleteButton = document.createElement('button');
-  deleteButton.innerHTML = '<i class="nf-md-delete"></i> Delete';
+  deleteButton.innerHTML = '<sym class="nf-md-delete"></sym> Delete';
   deleteButton.className = 'deleteButton'
   
   deleteButton.addEventListener('click', () => {
