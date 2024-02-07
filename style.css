@@ -235,6 +235,10 @@ body, html {
     white-space: nowrap;
 }
 
+
+.topFiles:hover{
+    background-color: #2c324a;
+}
 .closeButton{
     background-color: #1f2335;
     color: #959cbd;
