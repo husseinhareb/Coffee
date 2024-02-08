@@ -584,6 +584,3 @@ document.addEventListener('mouseup', () => {
   fs.style.borderRight = "3px solid #1b1e2e";
 
 });
-
-
-
