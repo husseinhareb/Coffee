@@ -14,7 +14,7 @@
     "electron": "^27.1.2"
   },
   "dependencies": {
-    "ace-builds": "^1.32.2",
+    "ace-builds": "^1.32.6",
     "child_process": "^1.0.2",
     "node-pty": "^1.0.0",
     "xterm": "^5.3.0"
