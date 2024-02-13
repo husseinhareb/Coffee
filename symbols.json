@@ -29,5 +29,11 @@
     "xml":  "<sym style=\"color: #29B6F6;\">󰗀</sym>",
     "jsx":  "<sym style=\"color: #61DAFB;\"></sym>",
     "ttf":  "<sym style=\"color: #A83432;\"></sym>",
-    "docx": "<sym style=\"color: #295496;\"> </sym> "
+    "docx": "<sym style=\"color: #295496;\"> </sym> ",
+    "folder": "<sym style=\"color: #29B6F6;\"></sym>",
+    "chDir": "<sym></sym>",
+    "returnBtn": "<sym></sym>",
+    "addFolder": "<sym></sym>",
+    "addFile": "<sym></sym>",
+    "reloadFolder": "<sym>󰑓</sym>"
 }
