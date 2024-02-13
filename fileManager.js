@@ -1,30 +1,42 @@
 //renderer.js
 const { ipcRenderer } = require('electron');
 
-const fsSpan = document.getElementById('fs');
+var fsSpan = document.getElementById('fs');
 
-const returnDiv = document.createElement('div');
+var returnDiv = document.createElement('div');
+var returnBtn = document.createElement('button');
 
-const returnBtn = document.createElement('button');
-returnBtn.innerHTML = '<sym></sym>';
+var buttonsDiv = document.createElement('div');
+var chDir = document.createElement('button');
+var addFile = document.createElement('button');
+var addFolder = document.createElement('button');
+var reloadFolder = document.createElement('button');
+
+
+fetch('./symbols.json')
+.then(response => response.json())
+.then(data => {
+  returnBtn.innerHTML = data['returnBtn'];
+  chDir.innerHTML = data['chDir'];
+  addFile.innerHTML = data['addFile'];
+  addFolder.innerHTML = data['addFolder'];
+  reloadFolder.innerHTML = data['reloadFolder'];
+
+})
+.catch(error => console.log('Error fetching data:', error));
+
 returnBtn.className = "returnBtn";
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
   clickedFiles = [];
   topBar.innerHTML = '';
-
 });
-
+fsSpan.appendChild(returnDiv);
 returnDiv.appendChild(returnBtn);
 
-fsSpan.appendChild(returnDiv);
-
-
-const buttonsDiv = document.createElement('div');
-buttonsDiv.className = "buttonsDiv";
-const chDir = document.createElement('button');
 chDir.className = "changeDir";
-chDir.innerHTML = '<sym></sym>';
+buttonsDiv.className = "buttonsDiv";
+
 chDir.addEventListener('click', () => {
   ipcRenderer.send('open-folder-dialog');
   clickedFiles = [];
@@ -32,21 +44,16 @@ chDir.addEventListener('click', () => {
 });
 buttonsDiv.appendChild(chDir);
 
-const addFile = document.createElement('button');
-addFile.innerHTML = '<sym></sym>';
+
 addFile.className = "addFile";
 addFile.addEventListener('click', addfile);
 buttonsDiv.appendChild(addFile);
 
-
-const addFolder = document.createElement('button');
-addFolder.innerHTML = '<sym></sym>';
 addFolder.className = "addFile";
 addFolder.addEventListener('click', addfolder);
 buttonsDiv.appendChild(addFolder);
 
-const reloadFolder = document.createElement('button');
-reloadFolder.innerHTML = '<sym>󰑓</sym>';
+
 reloadFolder.className = "addFile";
 reloadFolder.addEventListener('click', () => {
   ipcRenderer.send('reload-folder');
@@ -54,7 +61,10 @@ reloadFolder.addEventListener('click', () => {
 
 buttonsDiv.appendChild(reloadFolder);
 fsSpan.appendChild(buttonsDiv);
-    
+
+
+
+
 
 
 function addfolder() {
@@ -62,7 +72,7 @@ function addfolder() {
   const textArea = document.createElement('input');
   textArea.type = "text";
   textArea.placeholder = "foldername";
-  textArea.className="folderArea";
+  textArea.className = "folderArea";
   textArea.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && textArea.value.trim() !== '') {
       const folderName = textArea.value.trim(); // Get the folder name
@@ -114,7 +124,7 @@ function addfile() {
         .then(data => {
           let symbol = data[fileType] || " ";
           console.log(symbol);
-          newDiv.innerHTML = symbol + " " + textArea.value; 
+          newDiv.innerHTML = symbol + " " + textArea.value;
 
         })
         .catch(error => console.log('Error fetching data:', error));
@@ -196,27 +206,27 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     const settButton = document.createElement('button');
 
     fileDiv.className = "fileDiv";
-    fileDiv.style.display = 'flex'; 
-    fileDiv.style.position = 'relative'; 
+    fileDiv.style.display = 'flex';
+    fileDiv.style.position = 'relative';
 
-    fileNameText.textContent = fileName; 
+    fileNameText.textContent = fileName;
     fileNameText.style.overflow = 'hidden';
-    fileNameText.style.textOverflow = 'ellipsis'; 
-    fileNameText.style.whiteSpace = 'nowrap'; 
+    fileNameText.style.textOverflow = 'ellipsis';
+    fileNameText.style.whiteSpace = 'nowrap';
     fileNameText.className = "fileNameText";
 
     fileDiv.appendChild(fileNameText);
 
-    settButton.innerHTML = '<sym></sym>'; 
+    settButton.innerHTML = '<sym></sym>';
     settButton.className = 'settButton';
-    settButton.style.position = 'absolute'; 
-    settButton.style.right = '0'; 
+    settButton.style.position = 'absolute';
+    settButton.style.right = '0';
     settButton.style.display = 'none';
 
-    fileDiv.appendChild(settButton); 
+    fileDiv.appendChild(settButton);
     const fileType = getFileType(fileName);
 
-    
+
     fetch('./symbols.json')
       .then(response => response.json())
       .then(data => {
@@ -226,45 +236,45 @@ ipcRenderer.on('files-in-directory', (event, files) => {
         //Folder icon handling
         if (folder_list.includes(fileName)) {
           console.log("Folder found in folder_list:", fileName);
-          fileNameText.innerHTML = "<sym style=\"color: #29B6F6;\"></sym>" + " " + fileName;
+          fileNameText.innerHTML = data['folder'] + " " + fileName;
         } else {
           console.log("Folder not found in folder_list:", fileName);
         }
       })
       .catch(error => console.error('Error fetching data:', error));
 
-      fileDiv.addEventListener('click', () => {
-        displayFileContent(fileName, fileDiv, settButton);
-        if (!clickedFiles.includes(fileName)) {
-          clickedFiles.push(fileName);
-          updateTopBar(fileName, fileDiv, settButton); // Pass fileName, fileDiv, and settButton to updateTopBar
-        }
-        if (currentSettButton && currentSettButton !== settButton) {
-          currentSettButton.style.display = 'none'; // Hide the previous settButton if it's not the same as the current one
-        }
-        currentSettButton = settButton;
-      });
+    fileDiv.addEventListener('click', () => {
+      displayFileContent(fileName, fileDiv, settButton);
+      if (!clickedFiles.includes(fileName)) {
+        clickedFiles.push(fileName);
+        updateTopBar(fileName, fileDiv, settButton); // Pass fileName, fileDiv, and settButton to updateTopBar
+      }
+      if (currentSettButton && currentSettButton !== settButton) {
+        currentSettButton.style.display = 'none'; // Hide the previous settButton if it's not the same as the current one
+      }
+      currentSettButton = settButton;
+    });
 
-    fileDiv.addEventListener('contextmenu', function(event) {
+    fileDiv.addEventListener('contextmenu', function (event) {
       event.preventDefault();
-      
+
       console.log('Right-clicked!');
     });
 
-    
+
     settButton.addEventListener('click', (event) => {
       // Prevent the click event from propagating to the fileDiv
       event.stopPropagation();
-    
+
       // Get the parent fileDiv of the clicked settButton
       const fileDiv = event.currentTarget.parentNode;
-    
+
       // Call settingsPanel with the fileDiv and fileName
       settingsPanel(fileDiv, fileName);
     });
-    
 
-    fsSpan.appendChild(fileDiv); 
+
+    fsSpan.appendChild(fileDiv);
   });
 });
 
@@ -351,26 +361,26 @@ function isDirectory(fileName) {
 function settingsPanel(fileDiv, fileName) {
   // Get the position of the fileDiv relative to the viewport
   const fileRect = fileDiv.getBoundingClientRect();
-  console.log("filo namo",fileName);
+  console.log("filo namo", fileName);
   // Create a settings div
   const settingsDiv = document.createElement('div');
   settingsDiv.className = 'settingsDiv';
   settingsDiv.style.position = 'absolute';
 
   settingsDiv.style.top = `${fileRect.top}px`;
-  settingsDiv.style.left = `${fileRect.right}px`; 
+  settingsDiv.style.left = `${fileRect.right}px`;
   settingsDiv.style.padding = '10px';
-  settingsDiv.style.zIndex = '999'; 
+  settingsDiv.style.zIndex = '999';
 
 
   const renameButton = document.createElement('button');
   renameButton.innerHTML = '<sym>󰑕</sym> Rename';
   renameButton.className = 'renameButton'
-  
+
   const deleteButton = document.createElement('button');
   deleteButton.innerHTML = '<sym>󰆴</sym> Delete';
   deleteButton.className = 'deleteButton'
-  
+
   deleteButton.addEventListener('click', () => {
     ipcRenderer.send('delete-file', fileName);
     ipcRenderer.send('reload-folder');
@@ -396,17 +406,17 @@ function settingsPanel(fileDiv, fileName) {
   deleteButton.addEventListener('click', () => {
     ipcRenderer.send('delete-file', fileName);
     ipcRenderer.send('reload-folder');
-    closeSettingsDiv(); 
+    closeSettingsDiv();
   });
 
   renameButton.addEventListener('click', () => {
     const fileNameText = fileDiv.querySelector('.fileNameText'); // Get the existing span containing the file name
-  
+
     const inputElement = document.createElement('input');
     inputElement.type = 'text';
     inputElement.value = fileName; // Set the initial value as the current filename
     inputElement.className = 'renameInput';
-  
+
     inputElement.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         const newFileName = inputElement.value.trim();
@@ -416,11 +426,11 @@ function settingsPanel(fileDiv, fileName) {
         closeSettingsDiv();
       }
     });
-  
+
     fileDiv.replaceChild(inputElement, fileNameText); // Replace the span with the input element
     inputElement.focus();
   });
-  
+
 
   document.addEventListener('click', clickOutsideHandler);
 }
@@ -451,48 +461,48 @@ ipcRenderer.on('file-path', (event, filepath) => {
 ipcRenderer.on('file-content', (event, fileData) => {
   const { fileName, content } = fileData;
   getLangName(fileName)
-      .then(lang => {
-          const language = lang;
-          ace.config.set("basePath", "./node_modules/ace-builds/src/ace.js");
-          const editor = ace.edit("editor");
-          editor.setTheme("ace/theme/monokai"); 
-          editor.session.setMode(`ace/mode/${language}`);
-          editor.setValue(content);
+    .then(lang => {
+      const language = lang;
+      ace.config.set("basePath", "./node_modules/ace-builds/src/ace.js");
+      const editor = ace.edit("editor");
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode(`ace/mode/${language}`);
+      editor.setValue(content);
 
-          // Get the existing language button or create a new one
-          const bottom = document.getElementById('bottomBar');
-          let languageButton = bottom.querySelector('.languageName');
-          if (!languageButton) {
-              languageButton = document.createElement('button');
-              languageButton.className = "languageName";
-              bottom.appendChild(languageButton);
-          }
-          languageButton.textContent = language;
+      // Get the existing language button or create a new one
+      const bottom = document.getElementById('bottomBar');
+      let languageButton = bottom.querySelector('.languageName');
+      if (!languageButton) {
+        languageButton = document.createElement('button');
+        languageButton.className = "languageName";
+        bottom.appendChild(languageButton);
+      }
+      languageButton.textContent = language;
 
-          // Get the existing line and column button or create a new one
-          let lns = bottom.querySelector('.lineColumn');
-          if (!lns) {
-              lns = document.createElement('button');
-              lns.className = "lineColumn";
-              bottom.appendChild(lns);
-          }
+      // Get the existing line and column button or create a new one
+      let lns = bottom.querySelector('.lineColumn');
+      if (!lns) {
+        lns = document.createElement('button');
+        lns.className = "lineColumn";
+        bottom.appendChild(lns);
+      }
 
-          // Listen to changes in the cursor position (selection)
-          editor.getSelection().on('changeCursor', () => {
-              const cursorPos = editor.getCursorPosition();
-              lns.textContent = `Line: ${cursorPos.row + 1}, Column: ${cursorPos.column}`;
-          });
-      })
-      .catch(err => {
-          console.log("Error:", err);
+      // Listen to changes in the cursor position (selection)
+      editor.getSelection().on('changeCursor', () => {
+        const cursorPos = editor.getCursorPosition();
+        lns.textContent = `Line: ${cursorPos.row + 1}, Column: ${cursorPos.column}`;
       });
+    })
+    .catch(err => {
+      console.log("Error:", err);
+    });
 });
 
 function saveChanges() {
-  const editor = ace.edit("editor"); 
+  const editor = ace.edit("editor");
   const updatedContent = editor.getValue();
 
-  
+
   ipcRenderer.send('save-file', { filePath, content: updatedContent });
 }
 
@@ -500,8 +510,8 @@ function saveChanges() {
 
 document.addEventListener('keydown', (event) => {
   if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-    event.preventDefault(); 
-    saveChanges(); 
+    event.preventDefault();
+    saveChanges();
   }
 });
 
