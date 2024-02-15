@@ -36,5 +36,7 @@
     "addFolder": "<sym></sym>",
     "addFile": "<sym></sym>",
     "reloadFolder": "<sym>󰑓</sym>",
-    "settButton": "<sym></sym>"
+    "settButton": "<sym></sym>",
+    "settingsSymbol": "<sym></sym>",
+    "sideFolder": "<sym>󰈢</sym>"
 }
