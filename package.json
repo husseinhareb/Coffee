@@ -11,7 +11,8 @@
   "author": "shtam",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^27.1.2"
+    "electron": "^27.1.2",
+    "electron-reload": "^2.0.0-alpha.1"
   },
   "dependencies": {
     "ace-builds": "^1.32.6",

@@ -26,6 +26,7 @@ fetch('./symbols.json')
 .catch(error => console.log('Error fetching data:', error));
 
 returnBtn.className = "returnBtn";
+returnBtn.title="Parent Directory"
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
   clickedFiles = [];
@@ -35,6 +36,7 @@ fsSpan.appendChild(returnDiv);
 returnDiv.appendChild(returnBtn);
 
 chDir.className = "changeDir";
+chDir.title = "Open Folder";
 buttonsDiv.className = "buttonsDiv";
 
 chDir.addEventListener('click', () => {
@@ -47,23 +49,23 @@ buttonsDiv.appendChild(chDir);
 
 addFile.className = "addFile";
 addFile.addEventListener('click', addfile);
+addFile.title = "New File"
 buttonsDiv.appendChild(addFile);
 
 addFolder.className = "addFile";
+addFolder.title = "New Folder";
 addFolder.addEventListener('click', addfolder);
 buttonsDiv.appendChild(addFolder);
 
 
 reloadFolder.className = "addFile";
+reloadFolder.title = "Reload Folder"
 reloadFolder.addEventListener('click', () => {
   ipcRenderer.send('reload-folder');
 });
 
 buttonsDiv.appendChild(reloadFolder);
 fsSpan.appendChild(buttonsDiv);
-
-
-
 
 
 
@@ -203,7 +205,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
     const fileDiv = document.createElement('div');
     const fileNameText = document.createElement('span');
-    const settButton = document.createElement('button');
+    var settButton = document.createElement('button');
 
     fileDiv.className = "fileDiv";
     fileDiv.style.display = 'flex';
@@ -217,7 +219,6 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 
     fileDiv.appendChild(fileNameText);
 
-    settButton.innerHTML = '<sym></sym>';
     settButton.className = 'settButton';
     settButton.style.position = 'absolute';
     settButton.style.right = '0';
@@ -230,6 +231,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
     fetch('./symbols.json')
       .then(response => response.json())
       .then(data => {
+        settButton.innerHTML = data['settButton'];
         let symbol = data[fileType] || " ";
         console.log(symbol);
         fileNameText.innerHTML = symbol + " " + fileName;
@@ -307,7 +309,7 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
 
         // Create close button (X) next to each file name
         const closeButton = document.createElement('button');
-        closeButton.innerHTML = '<sym></sym>';
+        closeButton.innerHTML = 'X';
         closeButton.className = "closeButton";
         closeButton.addEventListener('click', (event) => {
           event.stopPropagation();
@@ -374,11 +376,11 @@ function settingsPanel(fileDiv, fileName) {
 
 
   const renameButton = document.createElement('button');
-  renameButton.innerHTML = '<sym>󰑕</sym> Rename';
+  renameButton.innerHTML = 'Rename';
   renameButton.className = 'renameButton'
 
   const deleteButton = document.createElement('button');
-  deleteButton.innerHTML = '<sym>󰆴</sym> Delete';
+  deleteButton.innerHTML = 'Delete';
   deleteButton.className = 'deleteButton'
 
   deleteButton.addEventListener('click', () => {

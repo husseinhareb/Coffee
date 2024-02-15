@@ -35,5 +35,6 @@
     "returnBtn": "<sym></sym>",
     "addFolder": "<sym></sym>",
     "addFile": "<sym></sym>",
-    "reloadFolder": "<sym>󰑓</sym>"
+    "reloadFolder": "<sym>󰑓</sym>",
+    "settButton": "<sym></sym>"
 }

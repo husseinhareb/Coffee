@@ -8,7 +8,6 @@ const term = new Terminal({
 });
 
 term.open(document.getElementById('terminal'));
-
 term.resize(80, 14);
 
 ipc.on("terminal.incomingData", (event, data) => {

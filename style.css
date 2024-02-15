@@ -24,7 +24,6 @@ body, html {
 }
 
 #fs {
-	font-family: "JetBrainsMonoNerdFontRegularMono";
     flex: 0 0 auto;
     width: 200px;
     border-right: 3px solid #1b1e2e;
@@ -77,6 +76,14 @@ body, html {
     padding: 10px;
 }
  
+
+#sideBar{
+    width: 48px;
+    background-color: #1f2335;
+    border-right: 2px solid #1b1e2e;
+    height: calc(100% - 23px);
+    min-width: 48px; 
+}
 
 .returnBtn{
     width: 30px;
@@ -251,3 +258,4 @@ body, html {
 .closeButton:hover{
     background-color: #2c324a;
 }
+

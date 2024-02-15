@@ -5,9 +5,10 @@ const pty = require("node-pty");
 const path = require('path');
 const fs = require('fs');
 const os = require("os");
+const electronReload = require('electron-reload');
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
-
+electronReload(__dirname);
 let mainWindow;
 
 function createWindow() {
