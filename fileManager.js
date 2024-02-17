@@ -3,70 +3,68 @@ const { ipcRenderer } = require('electron');
 
 var fsSpan = document.getElementById('fs');
 
-var returnDiv = document.createElement('div');
 var returnBtn = document.createElement('button');
+returnBtn.className = "returnBtn";
+returnBtn.title = "Parent Directory";
+
+var chDir = document.createElement('button');
+chDir.className = "changeDir";
+chDir.title = "Open Folder";
+
+var addFile = document.createElement('button');
+addFile.className = "addFile";
+addFile.title = "New File";
+
+var addFolder = document.createElement('button');
+addFolder.className = "addFolder";
+addFolder.title = "New Folder";
+
+var reloadFolder = document.createElement('button');
+reloadFolder.className = "reloadFolder";
+reloadFolder.title = "Reload Folder";
 
 var buttonsDiv = document.createElement('div');
-var chDir = document.createElement('button');
-var addFile = document.createElement('button');
-var addFolder = document.createElement('button');
-var reloadFolder = document.createElement('button');
+buttonsDiv.className = "buttonsDiv";
+buttonsDiv.appendChild(chDir);
+buttonsDiv.appendChild(addFile);
+buttonsDiv.appendChild(addFolder);
+buttonsDiv.appendChild(reloadFolder);
 
+var returnDiv = document.createElement('div');
+returnDiv.appendChild(returnBtn);
+
+fsSpan.appendChild(returnDiv);
+fsSpan.appendChild(buttonsDiv);
 
 fetch('./symbols.json')
-.then(response => response.json())
-.then(data => {
-  returnBtn.innerHTML = data['returnBtn'];
-  chDir.innerHTML = data['chDir'];
-  addFile.innerHTML = data['addFile'];
-  addFolder.innerHTML = data['addFolder'];
-  reloadFolder.innerHTML = data['reloadFolder'];
+  .then(response => response.json())
+  .then(data => {
+    returnBtn.innerHTML = data['returnBtn'];
+    chDir.innerHTML = data['chDir'];
+    addFile.innerHTML = data['addFile'];
+    addFolder.innerHTML = data['addFolder'];
+    reloadFolder.innerHTML = data['reloadFolder'];
+  })
+  .catch(error => console.log('Error fetching data:', error));
 
-})
-.catch(error => console.log('Error fetching data:', error));
-
-returnBtn.className = "returnBtn";
-returnBtn.title="Parent Directory"
 returnBtn.addEventListener('click', () => {
   ipcRenderer.send('return-to-parent-directory');
   clickedFiles = [];
   topBar.innerHTML = '';
 });
-fsSpan.appendChild(returnDiv);
-returnDiv.appendChild(returnBtn);
-
-chDir.className = "changeDir";
-chDir.title = "Open Folder";
-buttonsDiv.className = "buttonsDiv";
 
 chDir.addEventListener('click', () => {
   ipcRenderer.send('open-folder-dialog');
   clickedFiles = [];
   topBar.innerHTML = '';
 });
-buttonsDiv.appendChild(chDir);
 
-
-addFile.className = "addFile";
 addFile.addEventListener('click', addfile);
-addFile.title = "New File"
-buttonsDiv.appendChild(addFile);
-
-addFolder.className = "addFile";
-addFolder.title = "New Folder";
 addFolder.addEventListener('click', addfolder);
-buttonsDiv.appendChild(addFolder);
 
-
-reloadFolder.className = "addFile";
-reloadFolder.title = "Reload Folder"
 reloadFolder.addEventListener('click', () => {
   ipcRenderer.send('reload-folder');
 });
-
-buttonsDiv.appendChild(reloadFolder);
-fsSpan.appendChild(buttonsDiv);
-
 
 
 function addfolder() {
@@ -504,9 +502,9 @@ function saveChanges() {
   const editor = ace.edit("editor");
   const updatedContent = editor.getValue();
 
-
   ipcRenderer.send('save-file', { filePath, content: updatedContent });
 }
+
 
 
 
