@@ -14,13 +14,18 @@ fetch('./symbols.json')
 
 settings.className = 'settings';
 folder.className = 'folder';
+settings.title = 'Settings';
+folder.title = 'Workspace';
+folder.style.borderLeft = 'solid 2px #959cbd';
 
 folder.addEventListener('click', () => {
   const fs = document.getElementById('fs');
   if (fsVisibility) {
+    folder.style.borderLeft = 'solid 0px';
     fs.style.width = '0px'; 
     fs.style.borderWidth = '0px';
   } else {
+    folder.style.borderLeft = 'solid 2px #959cbd';
     fs.style.width = '200px';
     fs.style.borderWidth = '3px';
   }
