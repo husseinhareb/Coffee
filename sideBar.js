@@ -31,6 +31,23 @@ folder.addEventListener('click', () => {
   }
   fsVisibility = !fsVisibility; 
 });
+settings.addEventListener('click', settingsWindow);
+
+
+let settingsWindowVisible = false; 
+
+function settingsWindow(){
+  if (!settingsWindowVisible) {
+    var settingsWindow = document.createElement('div');
+    settingsWindow.className = 'settingsWindow';
+    sideBar.appendChild(settingsWindow);
+  } else {
+    var settingsWindow = document.querySelector('.settingsWindow');
+    settingsWindow.parentNode.removeChild(settingsWindow);
+  }
+  
+  settingsWindowVisible = !settingsWindowVisible;
+}
 
 sideBar.appendChild(folder);
 sideBar.appendChild(settings);
