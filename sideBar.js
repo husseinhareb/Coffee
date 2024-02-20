@@ -47,15 +47,17 @@ function settingsWindow(){
   }
   
   settingsWindowVisible = !settingsWindowVisible;
-  var themeToggle = document.createElement('button');
-  themeToggle.textContent = 'dark theme';
+  let themeToggle = document.createElement('input');
+  themeToggle.type = 'checkbox';
+  themeToggle.id = 'themeToggle';
+  themeToggle.checked = false;
   settingsWindow.appendChild(themeToggle);
-  themeToggle.addEventListener('click', changeTheme);
+  themeToggle.addEventListener('change', changeTheme);
+  
 
   var closeButton = document.createElement('button');
   closeButton.textContent= 'x';
   closeButton.addEventListener('click', () => {
-    console.log('re');
     settingsWindow.remove();
     settingsWindowVisible = !settingsWindowVisible;
 
@@ -69,15 +71,27 @@ function changeTheme(){
     const bottom = document.getElementById('bottomBar');
     const sideBar = document.getElementById('sideBar');
     const topBar = document.getElementById('topBar');
+    const returnBtns = document.getElementsByClassName('returnBtn');
+    const returnBtn = returnBtns[0];
+    const addFiles = document.getElementsByClassName('addFile');
+    const addFile = addFiles[0];
+    const addFolders = document.getElementsByClassName('addFolder');
+    const addFolder = addFolders[0];
+    const reloadFolders = document.getElementsByClassName('reloadFolder');
+    const reloadFolder = reloadFolders[0];
+    const changeDirs = document.getElementsByClassName('changeDir');
+    const changeDir = changeDirs[0];
     fs.classList.toggle("light");
     editor.classList.toggle("light");
     bottom.classList.toggle("light");
     sideBar.classList.toggle("light");
     topBar.classList.toggle("light");
-
-    
-
-}
+    returnBtn.classList.toggle("light");
+    addFile.classList.toggle("light");
+    addFolder.classList.toggle("light");
+    reloadFolder.classList.toggle("light");
+    changeDir.classList.toggle("light");
+  }
 
 sideBar.appendChild(folder);
 sideBar.appendChild(settings);
