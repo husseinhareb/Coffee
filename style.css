@@ -30,11 +30,11 @@ body, html {
     overflow-y: auto;
     padding-bottom: 10px;
     background-color: #1f2335;
-
 }
 
 #fs.light {
-    background-color: #d5d6db;
+    background-color: #cbccd1;
+    border-right: 3px solid #c1c2c7;
 }
 
 
@@ -58,7 +58,8 @@ body, html {
 }
 
 #topBar.light{
-    background-color: #d5d6db;
+    background-color: #cbccd1;
+    border-bottom: 3px solid #c1c2c7;
 
 }
 
@@ -71,6 +72,12 @@ body, html {
     z-index: 1; 
 }
 
+#bottomBar.light{
+    background-color: #cbccd1;
+    border-top: 3px solid #c1c2c7;
+
+}
+
 #terminal {
     border-top: 3px solid #1b1e2e;
     background-color: #1f2335;
@@ -78,6 +85,10 @@ body, html {
     font-size: 14px;
     margin-bottom: 23px;
   }
+
+#terminal.light{
+    background-color: #cbccd1;
+}
 
 #editor {
     flex: 1;
@@ -87,6 +98,10 @@ body, html {
     overflow-y: auto;
     padding: 10px;
 }
+
+#editor.light{
+    background-color: #d5d6db;
+}
  
 
 #sideBar{
@@ -95,6 +110,11 @@ body, html {
     border-right: 2px solid #1b1e2e;
     height: calc(100% - 23px);
     min-width: 48px; 
+}
+
+#sideBar.light{
+    background-color: #cbccd1;
+    border-right: 2px solid #c1c2c7;
 }
 
 .returnBtn{

@@ -67,8 +67,15 @@ function changeTheme(){
     const fs = document.getElementById('fs');
     const editor = document.getElementById('editor');
     const bottom = document.getElementById('bottomBar');
-
+    const sideBar = document.getElementById('sideBar');
+    const topBar = document.getElementById('topBar');
     fs.classList.toggle("light");
+    editor.classList.toggle("light");
+    bottom.classList.toggle("light");
+    sideBar.classList.toggle("light");
+    topBar.classList.toggle("light");
+
+    
 
 }
 
