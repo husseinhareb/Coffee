@@ -47,6 +47,29 @@ function settingsWindow(){
   }
   
   settingsWindowVisible = !settingsWindowVisible;
+  var themeToggle = document.createElement('button');
+  themeToggle.textContent = 'dark theme';
+  settingsWindow.appendChild(themeToggle);
+  themeToggle.addEventListener('click', changeTheme);
+
+  var closeButton = document.createElement('button');
+  closeButton.textContent= 'x';
+  closeButton.addEventListener('click', () => {
+    console.log('re');
+    settingsWindow.remove();
+    settingsWindowVisible = !settingsWindowVisible;
+
+  })
+  settingsWindow.appendChild(closeButton);
+}
+
+function changeTheme(){
+    const fs = document.getElementById('fs');
+    const editor = document.getElementById('editor');
+    const bottom = document.getElementById('bottomBar');
+
+    fs.classList.toggle("light");
+
 }
 
 sideBar.appendChild(folder);

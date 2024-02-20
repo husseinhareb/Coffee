@@ -31,6 +31,7 @@
     "ttf":  "<sym style=\"color: #A83432;\"></sym>",
     "docx": "<sym style=\"color: #295496;\"> </sym> ",
     "svg": "<sym style=\"color: #9b26ab;\"></sym>",
+    "php": "<",
     "folder": "<sym style=\"color: #29B6F6;\"></sym>",
     "chDir": "<sym></sym>",
     "returnBtn": "<sym></sym>",

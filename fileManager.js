@@ -24,11 +24,19 @@ reloadFolder.className = "reloadFolder";
 reloadFolder.title = "Reload Folder";
 
 var buttonsDiv = document.createElement('div');
+var rightDiv = document.createElement('div');
+var leftDiv = document.createElement('div');
 buttonsDiv.className = "buttonsDiv";
-buttonsDiv.appendChild(chDir);
-buttonsDiv.appendChild(addFile);
-buttonsDiv.appendChild(addFolder);
-buttonsDiv.appendChild(reloadFolder);
+
+
+
+leftDiv.appendChild(chDir);
+rightDiv.appendChild(addFile);
+rightDiv.appendChild(addFolder);
+rightDiv.appendChild(reloadFolder);
+
+buttonsDiv.appendChild(leftDiv);
+buttonsDiv.appendChild(rightDiv);
 
 var returnDiv = document.createElement('div');
 returnDiv.appendChild(returnBtn);
