@@ -196,11 +196,8 @@ let currentSettButton = null;
 
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
-  // Append returnBtn
 
   // Append chDir and addFile to buttonsDiv
-
-
   leftDiv.appendChild(chDir);
   rightDiv.appendChild(addFile);
   rightDiv.appendChild(addFolder);
@@ -210,7 +207,7 @@ ipcRenderer.on('files-in-directory', (event, files) => {
   buttonsDiv.appendChild(rightDiv);
 
   returnDiv.appendChild(returnBtn);
-
+  // Append returnBtn
   fsSpan.appendChild(returnDiv);
   fsSpan.appendChild(buttonsDiv);
   files.forEach(fileName => {

@@ -65,40 +65,38 @@ function settingsWindow() {
   })
   settingsWindow.appendChild(closeButton);
 }
-
 function changeTheme() {
-  const fs = document.getElementById('fs');
-  const editor = document.getElementById('editor');
-  const bottom = document.getElementById('bottomBar');
-  const sideBar = document.getElementById('sideBar');
-  const topBar = document.getElementById('topBar');
-  const returnBtns = document.getElementsByClassName('returnBtn');
-  const returnBtn = returnBtns[0];
-  const addFiles = document.getElementsByClassName('addFile');
-  const addFile = addFiles[0];
-  const addFolders = document.getElementsByClassName('addFolder');
-  const addFolder = addFolders[0];
-  const reloadFolders = document.getElementsByClassName('reloadFolder');
-  const reloadFolder = reloadFolders[0];
-  const changeDirs = document.getElementsByClassName('changeDir');
-  const changeDir = changeDirs[0];
-  const settingss = document.getElementsByClassName('settings');
-  const settings = settingss[0];
-  const folders = document.getElementsByClassName('folder');
-  const folder = folders[0];
-  fs.classList.toggle("light");
-  editor.classList.toggle("light");
-  bottom.classList.toggle("light");
-  sideBar.classList.toggle("light");
-  topBar.classList.toggle("light");
-  returnBtn.classList.toggle("light");
-  addFile.classList.toggle("light");
-  addFolder.classList.toggle("light");
-  reloadFolder.classList.toggle("light");
-  changeDir.classList.toggle("light");
-  settings.classList.toggle("light");
-  folder.classList.toggle("light");
+  const elementsToToggle = [
+    { type: 'id', name: 'fs' },
+    { type: 'id', name: 'editor' },
+    { type: 'id', name: 'bottomBar' },
+    { type: 'id', name: 'sideBar' },
+    { type: 'id', name: 'topBar' },
+    { type: 'className', name: 'returnBtn' },
+    { type: 'className', name: 'addFile' },
+    { type: 'className', name: 'addFolder' },
+    { type: 'className', name: 'reloadFolder' },
+    { type: 'className', name: 'changeDir' },
+    { type: 'className', name: 'settings' },
+    { type: 'className', name: 'folder' },
+    ...Array.from(document.getElementsByClassName('fileDiv')).map(element => ({ type: 'class', name: 'fileDiv', element }))
+  ];
+
+  elementsToToggle.forEach(({ type, name, element }) => {
+    if (type === 'id') {
+      const elementById = document.getElementById(name);
+      if (elementById) {
+        elementById.classList.toggle('light');
+      }
+    } else if (type === 'className' || type === 'class') {
+      const elementsByClassName = document.getElementsByClassName(name);
+      Array.from(elementsByClassName).forEach(elementByClass => {
+        elementByClass.classList.toggle('light');
+      });
+    }
+  });
 }
+
 
 
 sideBar.appendChild(folder);
