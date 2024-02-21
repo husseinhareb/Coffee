@@ -196,7 +196,6 @@ let currentSettButton = null;
 
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
-
   // Append returnBtn
   returnDiv.appendChild(returnBtn);
   fsSpan.appendChild(returnDiv);
@@ -287,8 +286,12 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 });
 
 
-
 function updateTopBar(clickedFile, fileDiv, settButton) {
+  // Check if the clicked file is a folder
+  if (isDirectory(clickedFile)) {
+    return; // If it's a folder, don't add it to the topBar
+  }
+
   // Clear previous content
   topBar.innerHTML = '';
 
@@ -342,6 +345,7 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
       });
     });
 }
+
 
 function closeFile(fileName) {
   // Remove the closed file from the clickedFiles array

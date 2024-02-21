@@ -88,6 +88,7 @@ body, html {
 
 #terminal.light{
     background-color: #cbccd1;
+    border-top: 3px solid #c1c2c7;
 }
 
 #editor {
@@ -226,6 +227,7 @@ body, html {
     background-color: #1f2335;
     text-align: left;
     border: 1px solid #959cbd;
+    margin-left: 4px;
 }
 
 .changeDir.light{
@@ -327,7 +329,10 @@ body, html {
 .settings.light{
     background-color: #cbccd1;
 }
+.folder.light{
+    background-color: #cbccd1;
 
+}
 .settingsWindow {
     position: fixed;
     top: 50%; 
@@ -341,4 +346,9 @@ body, html {
     border: 1px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 9999;
+}
+
+.closingButton{
+    position: fixed;
+    right: 10%;
 }

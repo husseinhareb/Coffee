@@ -57,6 +57,7 @@ function settingsWindow(){
 
   var closeButton = document.createElement('button');
   closeButton.textContent= 'x';
+  closeButton.className = 'closingButton'
   closeButton.addEventListener('click', () => {
     settingsWindow.remove();
     settingsWindowVisible = !settingsWindowVisible;
@@ -66,32 +67,39 @@ function settingsWindow(){
 }
 
 function changeTheme(){
-    const fs = document.getElementById('fs');
-    const editor = document.getElementById('editor');
-    const bottom = document.getElementById('bottomBar');
-    const sideBar = document.getElementById('sideBar');
-    const topBar = document.getElementById('topBar');
-    const returnBtns = document.getElementsByClassName('returnBtn');
-    const returnBtn = returnBtns[0];
-    const addFiles = document.getElementsByClassName('addFile');
-    const addFile = addFiles[0];
-    const addFolders = document.getElementsByClassName('addFolder');
-    const addFolder = addFolders[0];
-    const reloadFolders = document.getElementsByClassName('reloadFolder');
-    const reloadFolder = reloadFolders[0];
-    const changeDirs = document.getElementsByClassName('changeDir');
-    const changeDir = changeDirs[0];
-    fs.classList.toggle("light");
-    editor.classList.toggle("light");
-    bottom.classList.toggle("light");
-    sideBar.classList.toggle("light");
-    topBar.classList.toggle("light");
-    returnBtn.classList.toggle("light");
-    addFile.classList.toggle("light");
-    addFolder.classList.toggle("light");
-    reloadFolder.classList.toggle("light");
-    changeDir.classList.toggle("light");
-  }
+  const fs = document.getElementById('fs');
+  const editor = document.getElementById('editor');
+  const bottom = document.getElementById('bottomBar');
+  const sideBar = document.getElementById('sideBar');
+  const topBar = document.getElementById('topBar');
+  const returnBtns = document.getElementsByClassName('returnBtn');
+  const returnBtn = returnBtns[0];
+  const addFiles = document.getElementsByClassName('addFile');
+  const addFile = addFiles[0];
+  const addFolders = document.getElementsByClassName('addFolder');
+  const addFolder = addFolders[0];
+  const reloadFolders = document.getElementsByClassName('reloadFolder');
+  const reloadFolder = reloadFolders[0];
+  const changeDirs = document.getElementsByClassName('changeDir');
+  const changeDir = changeDirs[0];
+  const settingss = document.getElementsByClassName('settings');
+  const settings = settingss[0];
+  const folders = document.getElementsByClassName('folder');
+  const folder = folders[0];
+  fs.classList.toggle("light");
+  editor.classList.toggle("light");
+  bottom.classList.toggle("light");
+  sideBar.classList.toggle("light");
+  topBar.classList.toggle("light");
+  returnBtn.classList.toggle("light");
+  addFile.classList.toggle("light");
+  addFolder.classList.toggle("light");
+  reloadFolder.classList.toggle("light");
+  changeDir.classList.toggle("light");
+  settings.classList.toggle("light");
+  folder.classList.toggle("light");
+}
+
 
 sideBar.appendChild(folder);
 sideBar.appendChild(settings);
