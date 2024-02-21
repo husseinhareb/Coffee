@@ -2,7 +2,7 @@ const sideBar = document.getElementById('sideBar');
 const settings = document.createElement('button');
 const folder = document.createElement('button');
 
-let fsVisibility = true; 
+let fsVisibility = true;
 
 fetch('./symbols.json')
   .then(response => response.json())
@@ -22,21 +22,21 @@ folder.addEventListener('click', () => {
   const fs = document.getElementById('fs');
   if (fsVisibility) {
     folder.style.borderLeft = 'solid 0px';
-    fs.style.width = '0px'; 
+    fs.style.width = '0px';
     fs.style.borderWidth = '0px';
   } else {
     folder.style.borderLeft = 'solid 2px #959cbd';
     fs.style.width = '200px';
     fs.style.borderWidth = '3px';
   }
-  fsVisibility = !fsVisibility; 
+  fsVisibility = !fsVisibility;
 });
 settings.addEventListener('click', settingsWindow);
 
 
-let settingsWindowVisible = false; 
+let settingsWindowVisible = false;
 
-function settingsWindow(){
+function settingsWindow() {
   if (!settingsWindowVisible) {
     var settingsWindow = document.createElement('div');
     settingsWindow.className = 'settingsWindow';
@@ -45,7 +45,7 @@ function settingsWindow(){
     var settingsWindow = document.querySelector('.settingsWindow');
     settingsWindow.parentNode.removeChild(settingsWindow);
   }
-  
+
   settingsWindowVisible = !settingsWindowVisible;
   let themeToggle = document.createElement('input');
   themeToggle.type = 'checkbox';
@@ -53,10 +53,10 @@ function settingsWindow(){
   themeToggle.checked = false;
   settingsWindow.appendChild(themeToggle);
   themeToggle.addEventListener('change', changeTheme);
-  
+
 
   var closeButton = document.createElement('button');
-  closeButton.textContent= 'x';
+  closeButton.textContent = 'x';
   closeButton.className = 'closingButton'
   closeButton.addEventListener('click', () => {
     settingsWindow.remove();
@@ -66,7 +66,7 @@ function settingsWindow(){
   settingsWindow.appendChild(closeButton);
 }
 
-function changeTheme(){
+function changeTheme() {
   const fs = document.getElementById('fs');
   const editor = document.getElementById('editor');
   const bottom = document.getElementById('bottomBar');

@@ -1,9 +1,9 @@
 const ipc = require("electron").ipcRenderer;
 const term = new Terminal({
-    theme: {
-        background: '#1f2335',
-        fontFamily: "JetBrainsMono Nerd Font",
-    },
+  theme: {
+    background: '#1f2335',
+    fontFamily: "JetBrainsMono Nerd Font",
+  },
 
 });
 
@@ -11,11 +11,11 @@ term.open(document.getElementById('terminal'));
 term.resize(80, 14);
 
 ipc.on("terminal.incomingData", (event, data) => {
-    term.write(data);
+  term.write(data);
 });
 
 term.onData(e => {
-    ipc.send("terminal.keystroke", e);
+  ipc.send("terminal.keystroke", e);
 });
 
 
@@ -46,7 +46,7 @@ terminal.addEventListener('mousemove', (e) => {
 terminal.addEventListener('mouseleave', () => {
   clearTimeout(hoverTimeout);
 
-  terminal.style.transition = "border-top 0.5s ease"; 
+  terminal.style.transition = "border-top 0.5s ease";
   terminal.style.borderTop = "3px solid #1b1e2e";
 
   setTimeout(() => {
@@ -60,7 +60,7 @@ terminal.addEventListener('mousedown', (e) => {
   if (isNearTopEdge) {
     isResizingHeight = true;
     startY = e.clientY;
-    startHeight = terminal.offsetHeight; 
+    startHeight = terminal.offsetHeight;
     document.addEventListener('mousemove', handleMouseHeightMove);
   }
 });

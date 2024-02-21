@@ -197,14 +197,21 @@ let currentSettButton = null;
 ipcRenderer.on('files-in-directory', (event, files) => {
   fsSpan.innerHTML = ''; // Clear previous content
   // Append returnBtn
-  returnDiv.appendChild(returnBtn);
-  fsSpan.appendChild(returnDiv);
 
   // Append chDir and addFile to buttonsDiv
-  buttonsDiv.appendChild(chDir);
-  buttonsDiv.appendChild(addFile);
-  buttonsDiv.appendChild(addFolder);
-  buttonsDiv.appendChild(reloadFolder);
+
+
+  leftDiv.appendChild(chDir);
+  rightDiv.appendChild(addFile);
+  rightDiv.appendChild(addFolder);
+  rightDiv.appendChild(reloadFolder);
+
+  buttonsDiv.appendChild(leftDiv);
+  buttonsDiv.appendChild(rightDiv);
+
+  returnDiv.appendChild(returnBtn);
+
+  fsSpan.appendChild(returnDiv);
   fsSpan.appendChild(buttonsDiv);
   files.forEach(fileName => {
 
@@ -289,12 +296,12 @@ ipcRenderer.on('files-in-directory', (event, files) => {
 function updateTopBar(clickedFile, fileDiv, settButton) {
   // Check if the clicked file is a folder
   if (isDirectory(clickedFile)) {
+    topBar.innerHTML = '';
+    clickedFiles = [];
     return; // If it's a folder, don't add it to the topBar
   }
 
-  // Clear previous content
   topBar.innerHTML = '';
-
   const fetchSymbolPromises = clickedFiles.map(file => {
     const fileType = getFileType(file);
     return fetch('./symbols.json')
