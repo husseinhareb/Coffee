@@ -130,6 +130,7 @@ html {
 
 .returnBtn.light {
     background-color: #cbccd1;
+    color:#565a6e;
 }
 
 .returnBtn.light:hover {
@@ -150,7 +151,7 @@ html {
     border: 0px;
     display: flex;
     align-items: center;
-    margin-left: 5px;
+    margin-left: 2px;
 }
 
 .fileDiv:hover {
@@ -159,6 +160,7 @@ html {
 
 .fileDiv.light {
     background-color: #cbccd1;
+    color:#565a6e;
 }
 
 .fileDiv.light:hover {
@@ -188,11 +190,6 @@ html {
     margin-right: 4px;
 }
 
-.addFile.light,
-.addFolder.light,
-.reloadFolder.light {
-    background-color: #cbccd1;
-}
 
 .addFile:hover,
 .addFolder:hover,
@@ -200,6 +197,18 @@ html {
     background-color: #2c324a;
 }
 
+.addFile.light,
+.addFolder.light,
+.reloadFolder.light {
+    background-color: #cbccd1;
+    color:#565a6e;
+}
+
+.addFile.light:hover,
+.addFolder.light:hover,
+.reloadFolder.light:hover {
+    background-color: #d5d6db;
+}
 .folderArea,
 .fileArea {
     background-color: #1b1e2e;
@@ -242,15 +251,19 @@ html {
     margin-left: 4px;
 }
 
-.changeDir.light {
-    background-color: #cbccd1;
-
-}
-
 .changeDir:hover {
     background-color: #2c324a;
 }
 
+.changeDir.light {
+    background-color: #cbccd1;
+    color:#565a6e;
+    border: 1px solid #565a6e;
+}
+
+.changeDir.light:hover{
+    background-color: #d5d6db;
+}
 .languageName,
 .lineColumn {
     background-color: #1f2335;
@@ -306,7 +319,10 @@ html {
 .deleteButton:hover {
     background-color: #1f2335;
 }
-
+.fileButtonContainer{
+    border-right: 2px solid #1b1e2e ;
+    height: 100%;
+}
 
 .topFiles {
     height: 100%;
@@ -336,6 +352,14 @@ html {
     background-color: #2c324a;
 }
 
+.closeButton.light {
+    background-color: #cbccd1;
+    color:#565a6e;
+}
+
+.closeButton.light:hover {
+    background-color: #d5d6db;
+}
 .settings,
 .folder {
     width: 100%;
@@ -350,11 +374,12 @@ html {
 
 .settings.light {
     background-color: #cbccd1;
+    color:#565a6e;
 }
 
 .folder.light {
     background-color: #cbccd1;
-
+    color:#565a6e;
 }
 
 .settingsWindow {

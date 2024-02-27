@@ -33,7 +33,6 @@ folder.addEventListener('click', () => {
 });
 settings.addEventListener('click', settingsWindow);
 
-
 let settingsWindowVisible = false;
 
 function settingsWindow() {
@@ -54,17 +53,16 @@ function settingsWindow() {
   settingsWindow.appendChild(themeToggle);
   themeToggle.addEventListener('change', changeTheme);
 
-
   var closeButton = document.createElement('button');
   closeButton.textContent = 'x';
   closeButton.className = 'closingButton'
   closeButton.addEventListener('click', () => {
     settingsWindow.remove();
     settingsWindowVisible = !settingsWindowVisible;
-
-  })
+  });
   settingsWindow.appendChild(closeButton);
 }
+
 function changeTheme() {
   const elementsToToggle = [
     { type: 'id', name: 'fs' },
@@ -79,10 +77,10 @@ function changeTheme() {
     { type: 'className', name: 'changeDir' },
     { type: 'className', name: 'settings' },
     { type: 'className', name: 'folder' },
-    ...Array.from(document.getElementsByClassName('fileDiv')).map(element => ({ type: 'class', name: 'fileDiv', element }))
+    ...Array.from(document.getElementsByClassName('fileDiv'))
   ];
 
-  elementsToToggle.forEach(({ type, name, element }) => {
+  elementsToToggle.forEach(({ type, name }) => {
     if (type === 'id') {
       const elementById = document.getElementById(name);
       if (elementById) {
@@ -95,9 +93,26 @@ function changeTheme() {
       });
     }
   });
+
+  // Toggle theme for fileDiv elements
+  toggleFileDivTheme();
 }
 
+// Function to toggle theme for fileDiv elements
+function toggleFileDivTheme() {
+  const fileDivs = document.getElementsByClassName('fileDiv');
+  Array.from(fileDivs).forEach(fileDiv => {
+    fileDiv.classList.toggle('light');
+  });
+}
 
+toggleFileDivTheme();
 
+function addFileDiv() {
+
+  toggleFileDivTheme();
+}
+
+// Append buttons to sidebar
 sideBar.appendChild(folder);
 sideBar.appendChild(settings);
