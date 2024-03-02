@@ -345,8 +345,9 @@ function createWindow() {
     });
   });
 
-
-
+  ipcMain.on('theme-changer', (event, value) => {
+    console.log("changing theme with value:", value);
+  })
 
 }
 
