@@ -297,10 +297,6 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
     clickedFiles = [];
     return; // If it's a folder, don't add it to the topBar
   }
-  const themeToggle = document.getElementById('themeToggle');
-
-  const isLightThemeEnabled = themeToggle.checked;
-
 
   topBar.innerHTML = '';
   const fetchSymbolPromises = clickedFiles.map(file => {
@@ -323,9 +319,7 @@ function updateTopBar(clickedFile, fileDiv, settButton) {
         const fileButton = document.createElement('button');
         fileButton.innerHTML = symbol + " " + fileName; // Display symbol and file name
         fileButton.className = "topFiles";
-        if(isLightThemeEnabled){
-          
-        }
+
         // Create close button (X) next to each file name
         const closeButton = document.createElement('button');
         closeButton.innerHTML = 'X';
@@ -391,7 +385,7 @@ function settingsPanel(fileDiv, fileName) {
 
   settingsDiv.style.top = `${fileRect.top}px`;
   settingsDiv.style.left = `${fileRect.right}px`;
-  settingsDiv.style.padding = '10px';
+  settingsDiv.style.padding = '4px';
   settingsDiv.style.zIndex = '999';
 
 
