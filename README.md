@@ -84,5 +84,5 @@ Contributions are welcome! If you'd like to contribute:
 
 ## Licence
 
-This project is licensed under the [MIT License]().
+This project is licensed under the [MIT License](https://github.com/husseinhareb/Coffee/blob/master/LICENSE).
 
