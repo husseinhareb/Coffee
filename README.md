@@ -1,12 +1,14 @@
 Coffee is a  text editor built using Electron, offering  file management and integrated terminal functionality. 
 
-![Screenshot from 2024-03-02 22-16-04](https://github.com/husseinhareb/Coffee/assets/88323940/bb3a65eb-9280-4785-82dd-a9f512233e5b)
+![309498911-bb3a65eb-9280-4785-82dd-a9f512233e5b(1)](https://github.com/husseinhareb/Coffee/assets/88323940/18a0e185-028f-477b-ac7c-8e6d41793e30)
+
 
 Oriented for developers, Coffee provides a user-friendly solution for text editing.
 
 
 ## File Management
-![2024-03-0222-29-31online-video-cutter com-ezgif com-video-to-gif-converter](https://github.com/husseinhareb/Coffee/assets/88323940/28814493-7df5-49d2-a054-05dcd641b881)
+![309499748-28814493-7df5-49d2-a054-05dcd641b881-ezgif com-crop](https://github.com/husseinhareb/Coffee/assets/88323940/25846f3e-c547-46d1-a2e2-0189e3008d8d)
+
 
 
 Coffee provides comprehensive file management functionalities to streamline your workflow:
@@ -25,7 +27,8 @@ Coffee provides comprehensive file management functionalities to streamline your
 
 ## Text Editing with Ace Editor
 
-![2024-03-0222-46-14online-video-cutter com-ezgif com-video-to-gif-converter](https://github.com/husseinhareb/Coffee/assets/88323940/3cd9f213-827f-4a81-8ad7-641cc00822ec)
+![309500087-3cd9f213-827f-4a81-8ad7-641cc00822ec-ezgif com-crop](https://github.com/husseinhareb/Coffee/assets/88323940/3c0b104c-e691-49d6-b535-59d427d0314c)
+
 
 
 Coffee utilizes the powerful Ace editor to provide a rich and  text editing experience. Ace editor is renowned for its exceptional syntax highlighting, live error detection
@@ -38,7 +41,7 @@ Coffee utilizes the powerful Ace editor to provide a rich and  text editing expe
 
 
 ## Integrated Terminal with xterm.js
-![ezgif com-video-to-gif-converter](https://github.com/husseinhareb/Coffee/assets/88323940/c3cbab60-5b27-4ccb-a54b-a0888bcba3cd)
+![2024-03-3022-00-12-ezgif com-crop](https://github.com/husseinhareb/Coffee/assets/88323940/a1670fe1-21b4-4261-a73c-da4924fef378)
 
 Coffee features a fully integrated terminal powered by xterm.js,
 offering a robust command-line interface directly within the text editor environment,
