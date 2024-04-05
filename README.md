@@ -7,7 +7,7 @@ Oriented for developers, Coffee provides a user-friendly solution for text editi
 
 
 ## File Management
-![309499748-28814493-7df5-49d2-a054-05dcd641b881-ezgif com-crop](https://github.com/husseinhareb/Coffee/assets/88323940/25846f3e-c547-46d1-a2e2-0189e3008d8d)
+![318223154-25846f3e-c547-46d1-a2e2-0189e3008d8d-ezgif com-crop](https://github.com/husseinhareb/Coffee/assets/88323940/2d790b18-6df2-442e-b437-f0451c65b601)
 
 
 
@@ -27,7 +27,7 @@ Coffee provides comprehensive file management functionalities to streamline your
 
 ## Text Editing with Ace Editor
 
-![309500087-3cd9f213-827f-4a81-8ad7-641cc00822ec-ezgif com-crop](https://github.com/husseinhareb/Coffee/assets/88323940/3c0b104c-e691-49d6-b535-59d427d0314c)
+![318228637-3c0b104c-e691-49d6-b535-59d427d0314c-ezgif com-crop(1)](https://github.com/husseinhareb/Coffee/assets/88323940/1eae67b4-5917-45ae-a6c3-9dd979c2a3f9)
 
 
 
