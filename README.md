@@ -68,8 +68,13 @@ Follow these steps to run the app locally:
     cd Coffee/
     npm install
     ```
+3. **Rebuild the application**(One time thing):
 
-3. **Run the application**:
+    ```
+    npm run rebuild
+    ```
+
+4. **Run the application**:
 
     ```
     npm start
